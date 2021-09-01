@@ -1,0 +1,44 @@
+{
+    "type": "object",
+    "properties": {
+        "name": {
+            "$ref": "api://schema/reuse/name.json#"
+        },
+        "accessAdmin": {
+            "type": "boolean",
+            "default": false
+        },
+        "premisesAdmin": {
+            "type": "boolean",
+            "default": false
+        },
+        "keysAdmin": {
+            "type": "boolean",
+            "default": false
+        },
+        "reservationsAdmin": {
+            "type": "boolean",
+            "default": false
+        },
+        "reservationsAbility": {
+            "type": "boolean",
+            "default": false
+        },
+        "logsAdmin": {
+            "type": "boolean",
+            "default": false
+        },
+        "statsViewer": {
+            "type": "boolean",
+            "default": false
+        },
+        "reportsViewer": {
+            "type": "boolean",
+            "default": false
+        }
+    },
+    "required": [
+        "name"
+    ],
+    "additionalProperties": false
+}

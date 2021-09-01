@@ -1,0 +1,22 @@
+{
+    "type": "object",
+    "properties": {
+        "name": {
+            "$ref": "schema://models/defaults/name#"
+        },
+        "openTime": {
+            "type": "string",
+            "format": "time"
+        },
+        "closeTime": {
+            "type": "string",
+            "format": "time"
+        }
+    },
+    "required": [
+        "name",
+        "openTime",
+        "closeTime"
+    ],
+    "additionalProperties": false
+}

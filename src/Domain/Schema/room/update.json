@@ -1,0 +1,36 @@
+{
+	"type": "object",
+	"properties": {
+		"name": {
+            "$ref": "api://schema/reuse/name#"
+		},
+		"roomType": {
+            "enum": ["lecture", "laboratory"]
+		},
+		"seatsCount": {
+			"type": "integer",
+            "minimum": 5,
+            "maximum": 1000
+        },
+		"floor": {
+			"type": "integer",
+            "minimum": -1,
+            "maximum": 20
+		},
+        "imageId": {
+            "$ref": "api://schema/reuse/id#"
+        },
+        "buildingId": {
+            "$ref": "api://schema/reuse/id#"
+        },
+        "blocked": {
+            "type": "boolean"
+        },
+        "rfid": {
+            "type": "string",
+            "minLength": 5
+        }
+	},
+	"required": [],
+	"additionalProperties": false
+}

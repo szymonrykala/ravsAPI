@@ -1,0 +1,17 @@
+{
+	"type": "object",
+	"properties": {
+		"email": {
+			"type": "string",
+            "format": "email"
+		},
+		"password": {
+			"$ref": "api://schema/user/password.json#"
+		}
+	},
+	"required": [
+		"email",
+		"password"
+	],
+    "additionalProperties": false
+}

@@ -1,0 +1,24 @@
+{
+    "type": "object",
+    "properties": {
+        "name": {
+            "$ref": "api://schema/reuse/name#"
+        },
+        "imageId": {
+            "$ref":"api://schema/reuse/id#"
+        },
+        "addressId": {
+            "$ref":"api://schema/reuse/id#"
+        },
+        "openTime": {
+            "type": "string",
+            "format": "time"
+        },
+        "closeTime": {
+            "type": "string",
+            "format": "time"
+        }
+    },
+    "required": [],
+    "additionalProperties": false
+} 

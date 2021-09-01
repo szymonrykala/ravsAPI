@@ -1,0 +1,25 @@
+{
+	"type": "object",
+	"properties": {
+		"name": {
+			"$ref": "api://schema/reuse/name.json#"
+		},
+		"surname": {
+			"$ref": "api://schema/reuse/name.json#"
+		},
+		"email": {
+			"type": "string",
+            "format": "email"
+		},
+		"password": {
+			"$ref": "api://schema/user/password.json#"
+		}
+	},
+	"required": [
+		"name",
+		"surname",
+		"email",
+		"password"
+	],
+    "additionalProperties": false
+}

@@ -1,0 +1,22 @@
+{
+    "type": "string",
+    "format": "date-time",
+
+    "allowFilters": true,
+    "$filters": [
+        {
+            "$func": "min-datetime",
+            "$vars": {
+                "value": "2021-09-01T19:00:00Z",
+                "timezone": "UTC"
+            }
+        },
+        {
+            "$func": "max-datetime",
+            "$vars": {
+                "value": "2030-01-01T12:00:00Z",
+                "timezone": "UTC"
+            }
+        }
+    ]
+}
