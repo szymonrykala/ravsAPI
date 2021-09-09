@@ -6,9 +6,7 @@ namespace App\Application\Actions;
 
 
 use App\Domain\Exception as Ex;
-
-use App\Domain\Request\RequestRepositoryInterface;
-
+use App\Utils\Pagination;
 use Psr\Log\LoggerInterface;
 use Psr\Http\Message\{
     ResponseInterface as Response,
@@ -33,7 +31,7 @@ abstract class Action
     protected Request $request;
     protected Response $response;
 
-    protected Validator $schemaValidator;
+    protected ?Pagination $pagination = NULL;
 
     protected array $args;
 
@@ -41,11 +39,9 @@ abstract class Action
      * @param LoggerInterface $logger
      */
     public function __construct(
-        LoggerInterface $logger,
-        RequestRepositoryInterface $requestRepo
+        LoggerInterface $logger
     ) {
         $this->logger = $logger;
-        $this->requestRepository = $requestRepo;
     }
 
     /**
@@ -162,6 +158,14 @@ abstract class Action
         return (object) $data;
     }
 
+    /**
+     * @param Pagination data
+     * @return void
+     */
+    public function sendPaginationData(Pagination $data): void {
+        $this->pagination = $data;
+    }
+
 
     /**
      * @param array|object|null $data
@@ -170,7 +174,7 @@ abstract class Action
      */
     protected function respondWithData($data = null, int $statusCode = 200): Response
     {
-        $payload = new ActionPayload($statusCode, $data);
+        $payload = new ActionPayload($statusCode, $data, NULL, $this->pagination);
 
         return $this->respond($payload);
     }

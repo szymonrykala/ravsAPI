@@ -18,21 +18,6 @@ class ListAllUsersAction extends UserAction
         
         $users = $this->userRepository->all();
 
-        foreach($users as $user)
-        {   
-            $imageKey = Image::class.$user->imageId;
-
-            if($this->cache->contain($imageKey))
-            {
-                $image = $this->cache->get($imageKey);
-            } else {
-                $image = $this->imageRepository->byId($user->imageId);
-                $this->cache->set($imageKey, $image );    
-            }            
-                
-            $user->image = $image;    
-        }
-
         $this->logger->info("Users list was viewed.");
 
         return $this->respondWithData($users);

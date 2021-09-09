@@ -18,10 +18,9 @@ abstract class ImageAction extends Action
      */
     public function __construct(
         LoggerInterface $logger,
-        ImageRepositoryInterface $imageRepository,
-        RequestRepositoryInterface $requestRepo
+        ImageRepositoryInterface $imageRepository
     ) {
-        parent::__construct($logger, $requestRepo);
+        parent::__construct($logger);
         $this->imageRepository = $imageRepository;
     }
 }

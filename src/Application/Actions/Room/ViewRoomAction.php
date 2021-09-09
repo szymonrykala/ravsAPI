@@ -21,10 +21,9 @@ class ViewRoomAction extends RoomAction
         $buildingId = (int) $this->resolveArg('building_id');
     
         /** @var Room $room */
-        $room = $this->roomRepository->byIdAndBuildingId($roomId, $buildingId);
-
-        /** @var Image $room->image */
-        $room->image = $this->imageRepository->byId($room->imageId);
+        $room = $this->roomRepository
+                    ->withAddress()
+                    ->byIdAndBuildingId($roomId, $buildingId);
 
         $this->logger->info("Room id $roomId was viewed.");
 

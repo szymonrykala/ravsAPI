@@ -20,10 +20,9 @@ abstract class AccessAction extends Action
      */
     public function __construct(
         LoggerInterface $logger,
-        AccessRepositoryInterface $repository,
-        RequestRepositoryInterface $requestRepo
+        AccessRepositoryInterface $repository
     ) {
-        parent::__construct($logger, $requestRepo);
+        parent::__construct($logger);
         $this->accessRepository = $repository;
     }
 }

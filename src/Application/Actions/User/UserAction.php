@@ -8,42 +8,25 @@ use Slim\Exception\HttpNotFoundException;
 
 use App\Application\Actions\Action;
 use App\Domain\User\UserRepositoryInterface;
-use App\Domain\Access\AccessRepositoryInterface;
-use App\Domain\Image\ImageRepositoryInterface;
-use App\Domain\Request\RequestRepositoryInterface;
 
 use Psr\Log\LoggerInterface;
-use App\Application\Actions\IActionCache;
 
 
 abstract class UserAction extends Action
 {
-    protected $userRepository;    
-    protected $imageRepository;    
-    protected $accessRepository;
-
-    protected IActionCache $cache;
+    protected UserRepositoryInterface $userRepository; 
 
     /**
      * @param LoggerInterface $logger
      * @param UserRepository $userRepository
-     * @param ImageRepositoryInterface $imageRepository
-     * @param AccessRepositoryInterface $accessRepository
      */
     public function __construct(
         LoggerInterface $logger,
-        RequestRepositoryInterface $requestRepo,
-        IActionCache $cache,
-        UserRepositoryInterface $userRepository,
-        ImageRepositoryInterface $imageRepository,
-        AccessRepositoryInterface $accessRepository
+        UserRepositoryInterface $userRepository
     ) {
         
-        parent::__construct($logger, $requestRepo);
-        $this->cache = $cache;
+        parent::__construct($logger);
         $this->userRepository = $userRepository;
-        $this->imageRepository = $imageRepository;
-        $this->accessRepository = $accessRepository;
     }
 
     /**

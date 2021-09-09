@@ -22,26 +22,8 @@ class ListRoomsAction extends RoomAction
                     ->where(['building' => $buildingId])
                     ->all();
 
-        foreach($rooms as $room) $this->loadImage($room);
-
         $this->logger->info("Rooms list for building id $buildingId was viewed.");
 
         return $this->respondWithData($rooms);
-    }
-
-    private function loadImage(Room $room): Room
-    {
-        $imageKey = Image::class.$room->imageId;
-
-        if($this->cache->contain($imageKey))
-        {
-            $image = $this->cache->get($imageKey);
-        } else {
-            $image = $this->imageRepository->byId($room->imageId);
-            $this->cache->set($imageKey, $image );
-        }
-
-        $room->image = $image;
-        return $room;
     }
 }

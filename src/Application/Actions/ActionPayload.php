@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Application\Actions;
 
+use App\Utils\Pagination;
 use JsonSerializable;
 
 class ActionPayload implements JsonSerializable
@@ -22,6 +23,9 @@ class ActionPayload implements JsonSerializable
      */
     private $error;
 
+    private ?Pagination $pagination;
+
+
     /**
      * @param int                   $statusCode
      * @param array|object|null     $data
@@ -29,12 +33,14 @@ class ActionPayload implements JsonSerializable
      */
     public function __construct(
         int $statusCode = 200,
-        $data = null,
-        ?ActionError $error = null
+        $data = NULL,
+        ?ActionError $error = NULL,
+        ?Pagination $pagination = NULL
     ) {
         $this->statusCode = $statusCode;
         $this->data = $data;
         $this->error = $error;
+        $this->pagination = $pagination;
     }
 
     /**
@@ -69,6 +75,8 @@ class ActionPayload implements JsonSerializable
         $payload = [
             'statusCode' => $this->statusCode,
         ];
+
+        $this->pagination && $payload['pagination'] = $this->pagination;
 
         if ($this->data !== null) {
             $payload['data'] = $this->data;

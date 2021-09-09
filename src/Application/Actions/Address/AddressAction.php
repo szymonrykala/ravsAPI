@@ -18,10 +18,9 @@ abstract class AddressAction extends Action
      */
     public function __construct(
         LoggerInterface $logger,
-        IAddressRepository $addressRepository,
-        RequestRepositoryInterface $requestRepo
+        IAddressRepository $addressRepository
     ) {
-        parent::__construct($logger, $requestRepo);
+        parent::__construct($logger);
         $this->addressRepository = $addressRepository;
     }
 }

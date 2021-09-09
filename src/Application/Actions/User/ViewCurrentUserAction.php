@@ -15,12 +15,11 @@ class ViewCurrentUserAction extends UserAction
         $userId = $this->session->userId;
 
         /** @var User $user */
-        $user = $this->userRepository->byId($userId);
+        $user = $this->userRepository
+                    ->withAccess()
+                    ->byId($userId);
 
         $user->loadMetadata();
-        
-        $user->image = $this->imageRepository->byId($user->imageId);
-        $user->access = $this->accessRepository->byId($user->accessId);
 
         $this->logger->info("User of id `${userId}` was viewed.");
 

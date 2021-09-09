@@ -7,17 +7,21 @@ use App\Domain\Request\RequestRepositoryInterface;
 use App\Domain\User\UserRepositoryInterface;
 use App\Application\Actions\Action;
 use Psr\Log\LoggerInterface;
-use App\Application\Actions\IActionCache;
+
 
 abstract class RequestAction extends Action
 {
+
+    protected RequestRepositoryInterface $requestRepository;
+
     public function __construct(
         RequestRepositoryInterface $requestRepository,
         LoggerInterface $logger,
         UserRepositoryInterface $userRepository
     )
     {
-        parent::__construct($logger, $requestRepository);
+        parent::__construct($logger);
+        $this->requestRepository = $requestRepository;
         $this->userRepository = $userRepository;
     }
 }
