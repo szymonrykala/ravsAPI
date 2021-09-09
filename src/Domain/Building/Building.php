@@ -13,7 +13,7 @@ class Building extends Model
 {
     public string $name;
     public Image $image;
-    public Address $address;
+    public ?Address $address;
 
     public DateTime $openTime;    
     public DateTime $closeTime;
@@ -25,28 +25,35 @@ class Building extends Model
     /**
      * @param int    id
      * @param string name
-     * @param int    imageId
-     * @param int    addressId
+     * @param Image  image
+     * @param Address|NULL address
      * @param string created
      * @param string updated
+     * @param int imageId
+     * @param int addressId
      */
     public function __construct(
         int $id,
         string $name,
-        int $imageId,
-        int $addressId,
+        Image $image,
+        ?Address $address,
         DateTime $openTime,
         DateTime $closeTime,
         DateTime $created,
-        DateTime $updated
+        DateTime $updated,
+        int $imageId,
+        int $addressId
     ){
         parent::__construct($id, $created, $updated);
 
         $this->name = $name;
-        $this->imageId = $imageId;
-        $this->addressId = $addressId;
+        $this->image = $image;
+        $this->address = $address;
         $this->closeTime = $closeTime;
         $this->openTime = $openTime;
+
+        $this->addressId = $addressId;
+        $this->imageId = $imageId;
     }
 
 
@@ -58,7 +65,7 @@ class Building extends Model
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'image' => $this->image ?? $this->imageId,
+            'image' => $this->image,
             'address' => $this->address ?? $this->addressId,
             'openTime' => $this->openTime->format('H:i:s'),
             'closeTime' => $this->closeTime->format('H:i:s'),

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Domain\Reservation;
@@ -15,13 +16,13 @@ class Reservation extends Model
     public string      $description;
     public Room        $room;
     public User        $user;
-    public DateTime    $planned_start;
-    public DateTime    $planned_end;
-    public DateTime    $actual_start;
-    public DateTime    $actual_end; 
+    public DateTime    $plannedStart;
+    public DateTime    $plannedEnd;
+    public ?DateTime    $actualStart;
+    public ?DateTime    $actualEnd;
     public bool        $confirmed;
-    public User        $confirmed_by;
-    public DateTime    $confirmed_at;
+    public ?User        $confirmedBy;
+    public ?DateTime    $confirmedAt;
 
     public int $userId;
     public int $confirmingUserId;
@@ -32,32 +33,31 @@ class Reservation extends Model
         int         $id,
         string      $title,
         string      $description,
-        int         $room,
-        int         $user,
+        Room         $room,
+        User         $user,
         DateTime    $planned_start,
         DateTime    $planned_end,
-        DateTime    $actual_start,
-        DateTime    $actual_end,
+        ?DateTime    $actual_start,
+        ?DateTime    $actual_end,
         bool        $confirmed,
-        int         $confirmed_by,
-        DateTime    $confirmed_at,
+        ?User         $confirmed_by,
+        ?DateTime    $confirmed_at,
         DateTime    $created,
         DateTime    $updated
-    )
-    {
+    ) {
         parent::__construct($id, $created, $updated);
 
         $this->title = $title;
         $this->description = $description;
         $this->room = $room;
         $this->user = $user;
-        $this->planned_start = $planned_start;
-        $this->planned_end = $planned_end;
-        $this->actual_start = $actual_start;
-        $this->actual_end = $actual_end;
+        $this->plannedStart = $planned_start;
+        $this->plannedEnd = $planned_end;
+        $this->actualStart = $actual_start;
+        $this->actualEnd = $actual_end;
         $this->confirmed = $confirmed;
-        $this->confirmed_by = $confirmed_by;
-        $this->confirmed_at = $confirmed_at;
+        $this->confirmedBy = $confirmed_by;
+        $this->confirmedAt = $confirmed_at;
     }
 
 
@@ -73,7 +73,7 @@ class Reservation extends Model
     /**
      * @return array
      */
-    public function jsonSerialize():array
+    public function jsonSerialize(): array
     {
         return [
             'id' => $this->id,
@@ -81,15 +81,15 @@ class Reservation extends Model
             'description' => $this->description,
             'room' => $this->room ?? $this->roomId,
             'user' => $this->user ?? $this->userId,
-            'planned_start' => $this->planned_start->format('c'),
-            'planned_end' => $this->planned_end->format('c'),
-            'actual_start' => $this->actual_start->format('c'),
-            'actual_end' => $this->actual_end->format('c'),
+            'plannedStart' => $this->plannedStart->format('c'),
+            'plannedEnd' => $this->plannedEnd->format('c'),
+            'actualStart' => $this->actualStart && $this->actualStart->format('c'),
+            'actualEnd' => $this->actualEnd && $this->actualEnd->format('c'),
             'confirmed' => $this->confirmed,
-            'confirmed_by' => $this->confirmed_by,
-            'confirmed_at' => $this->confirmed_at->format('c'),
-            'created' => $this->created,
-            'updated' => $this->updated,
+            'confirmedBy' => $this->confirmedBy,
+            'confirmedAt' => $this->confirmedAt && $this->confirmedAt->format('c'),
+            'created' => $this->created->format('c'),
+            'updated' => $this->updated->format('c'),
         ];
     }
 }

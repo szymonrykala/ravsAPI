@@ -9,6 +9,13 @@ use App\Domain\Model\RepositoryInterface;
 
 interface RoomRepositoryInterface extends RepositoryInterface
 {
+
+    /**
+     * enable building loading
+     * @return RoomRepositoryInterfave
+     */
+    public function withAddress(): RoomRepositoryInterface;
+
     /**
      * @param int id
      */
@@ -21,8 +28,10 @@ interface RoomRepositoryInterface extends RepositoryInterface
 
     /**
      * @param string name
-     * @param int imageId
-     * @param int addressId
+     * @param int buildingId
+     * @param string roomType
+     * @param int seatsCount
+     * @param int floor
      */
     public function create(
         string  $name,

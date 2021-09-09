@@ -9,6 +9,13 @@ use DateTime;
 
 interface IBuildingRepository extends RepositoryInterface
 {
+
+    /**
+     * enable address loading
+     * @return IBuildingRepository
+     */
+    public function withAddress(): IBuildingRepository;
+
     /**
      * @param int id
      */

@@ -10,6 +10,11 @@ use App\Domain\Model\RepositoryInterface;
 interface UserRepositoryInterface extends RepositoryInterface
 {
 
+    /**
+     * enable access loading
+     * @return UserRepositoryInterface
+     */
+    public function withAccess(): UserRepositoryInterface;
 
     /**
      * @param User $user

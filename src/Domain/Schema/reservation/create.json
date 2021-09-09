@@ -1,0 +1,27 @@
+{
+	"type": "object",
+	"properties": {
+		"title": {
+			"$ref": "api://schema/reservation/title.json#"
+		},
+		"description": {
+			"type": "string",
+			"pattern": "^[\\w\\s\\.-]+$",
+			"maxLength": 800,
+			"default": "No description"
+		},
+		"plannedStart": {
+			"$ref": "api://schema/reuse/datetime.json#"
+		},
+		"plannedEnd": {
+			"$ref": "api://schema/reuse/datetime.json#"
+		}
+	},
+	"required": [
+		"title",
+		"description",
+		"plannedStart",
+		"plannedEnd"
+	],
+	"additionalProperties": false
+}

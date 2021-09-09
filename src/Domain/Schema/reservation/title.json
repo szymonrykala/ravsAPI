@@ -1,0 +1,6 @@
+{
+    "type": "string",
+    "minLength": 2,
+    "maxLength": 100,
+    "pattern": "^[\\w\\s\\-\\.\\,]+$"
+}

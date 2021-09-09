@@ -6,7 +6,6 @@ namespace App\Domain\Model;
 use stdClass;
 use JsonSerializable;
 use DateTime;
-use App\Domain\ModelPropertyNotExistException;
 
 
 abstract class Model implements JsonSerializable{

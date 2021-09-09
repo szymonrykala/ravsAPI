@@ -15,7 +15,7 @@ class Room extends Model
 {
     public string $name;
     public Image $image;
-    public Building $building;
+    public ?Building $building;
     public string $rfid;
     public string $roomType;
     public int $seatsCount;
@@ -30,8 +30,8 @@ class Room extends Model
     public function __construct(
         int     $id,
         string  $name,
-        int     $imageId,
-        int     $buildingId,
+        Image   $image,
+        ?Building $building,
         string  $rfid,
         string  $roomType,
         int     $seatsCount,
@@ -39,19 +39,25 @@ class Room extends Model
         bool    $blocked,
         bool    $occupied,
         DateTime  $created,
-        DateTime  $updated
+        DateTime  $updated,
+        int     $imageId,
+        int     $buildingId
     ){
         parent::__construct($id, $created, $updated);
 
         $this->name = $name;
-        $this->imageId = $imageId;
-        $this->buildingId = $buildingId;
+        $this->image = $image;
+        $this->building = $building;
         $this->rfid = $rfid;
         $this->roomType = $roomType;
         $this->seatsCount = $seatsCount;
         $this->floor = $floor;
         $this->blocked = $blocked;
         $this->occupied = $occupied;
+
+        $this->buildingId = $buildingId;
+        $this->imageId = $imageId;
+
     }
 
     /**
@@ -73,7 +79,7 @@ class Room extends Model
         return [
             "id" => $this->id,
             "name" => $this->name,
-            "image" => $this->image ?? $this->imageId,
+            "image" => $this->image,
             "building" => $this->building ?? $this->buildingId,
             "roomType" => $this->roomType,
             "seatsCount" => $this->seatsCount,

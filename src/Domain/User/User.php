@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Domain\User;
@@ -22,9 +23,9 @@ class User extends Model
     public bool $blocked;
     public string $uniqueKey;
     public DateTime $lastGeneratedKeyDate;
-    public stdClass $metadata;
-    
-    public Access $access;
+    public ?stdClass $metadata;
+
+    public ?Access $access;
     public Image $image;
 
     public int $imageId;
@@ -46,16 +47,18 @@ class User extends Model
      * @param bool      blocked
      * @param string    uniqueKey
      * @param DateTime    lastGeneratedKeyDate,
-     * @param int       accessId
-     * @param int       imageId
+     * @param Access|NULL access
+     * @param Image       image
      * @param stdClass    metadata
      * @param DateTime    created
      * @param DateTime    updated
+     * @param int       imageId
+     * @param int       accessId
      */
     public function __construct(
-        int $id, 
-        string $name, 
-        string $surname, 
+        int $id,
+        string $name,
+        string $surname,
         string $email,
         string $password,
         bool $activated,
@@ -63,13 +66,14 @@ class User extends Model
         bool $blocked,
         string $uniqueKey,
         DateTime $lastGeneratedKeyDate,
-        int $accessId,
-        int $imageId,
+        ?Access $access,
+        Image $image,
         stdClass $metadata,
         DateTime $created,
-        DateTime $updated
-    )
-    {
+        DateTime $updated,
+        int $imageId,
+        int $accessId
+    ) {
         parent::__construct($id, $created, $updated);
 
         $this->name = ucfirst($name);
@@ -81,11 +85,15 @@ class User extends Model
         $this->blocked = $blocked;
         $this->uniqueKey = $uniqueKey;
         $this->lastGeneratedKeyDate = $lastGeneratedKeyDate;
-
-        $this->accessId = $accessId;
-        $this->imageId = $imageId;
+        
+        $this->image = $image;
+        $this->access = $access;
 
         $this->metadata = $metadata;
+
+        $this->imageId = $imageId;
+        $this->accessId = $accessId;
+
     }
 
     /** 
@@ -102,17 +110,17 @@ class User extends Model
      * @param string $userUniqueKey
      * @throws InvalidUserCodeException
      */
-    private function assertUniqueKeyIsCorrect(string $userKey):void
+    private function assertUniqueKeyIsCorrect(string $userKey): void
     {
-        if(empty($this->uniqueKey) || $userKey !== $this->uniqueKey){
+        if (empty($this->uniqueKey) || $userKey !== $this->uniqueKey) {
             throw new Exceptions\InvalidUserCodeException();
-        } 
+        }
     }
 
     /**
      * @return DateTime $lastGeneratedKeyDate
      */
-    public function getLastGeneratedKeyDate():DateTime
+    public function getLastGeneratedKeyDate(): DateTime
     {
         return $this->lastGeneratedKeyDate;
     }
@@ -121,7 +129,7 @@ class User extends Model
     /**
      * @return void
      */
-    public function assignUniqueKey(int $length=8):void
+    public function assignUniqueKey(int $length = 8): void
     {
         $this->lastGeneratedKeyDate = new DateTime('now');
         $this->uniqueKey = User::generateUniqueKey($length);
@@ -157,31 +165,31 @@ class User extends Model
     public function login(string $userPassword): void
     {
 
-        if($this->blocked === TRUE){
+        if ($this->blocked === TRUE) {
             throw new Exceptions\UserBlockedException();
         }
 
-        if(password_verify($userPassword, $this->password)){
+        if (password_verify($userPassword, $this->password)) {
             $this->loginFails = 0;
-        }else{
+        } else {
             $this->loginFails += 1;
-            if($this->loginFails > 3){
+            if ($this->loginFails > 3) {
                 $this->blocked = TRUE;
             }
             throw new Exceptions\BadCredentialsException();
         }
-    
-        if(!$this->activated){
+
+        if (!$this->activated) {
             throw new Exceptions\UserNotActivatedException();
-        }      
+        }
     }
 
-    public function isSessionUser(stdClass $session):bool
+    public function isSessionUser(stdClass $session): bool
     {
         return $this->id === $session->userId;
     }
 
-    public function loadMetadata():void
+    public function loadMetadata(): void
     {
         $this->metadataShouldBeLoaded = TRUE;
     }
@@ -189,7 +197,7 @@ class User extends Model
     /**
      * @return array
      */
-    public function jsonSerialize() : array
+    public function jsonSerialize(): array
     {
         $view = [
             'id' => $this->id,
@@ -197,12 +205,12 @@ class User extends Model
             'name' => $this->name,
             'surname' => $this->surname,
             'activated' => $this->activated,
-            'image' => $this->image ?? $this->imageId,
+            'image' => $this->image,
             'access' => $this->access ?? $this->accessId,
             "created" => $this->created->format('c'),
             "updated" => $this->updated->format('c'),
         ];
-        if($this->metadataShouldBeLoaded) $view["metadata"] = $this->metadata;
+        if ($this->metadataShouldBeLoaded) $view["metadata"] = $this->metadata;
 
         return $view;
     }

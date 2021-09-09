@@ -2,7 +2,7 @@
 	"type": "object",
 	"properties": {
 		"name": {
-            "$ref": "api://schema/reuse/name#"
+            "$ref": "api://schema/reuse/name.json"
 		},
 		"roomType": {
             "enum": ["lecture", "laboratory"]
@@ -18,10 +18,10 @@
             "maximum": 20
 		},
         "imageId": {
-            "$ref": "api://schema/reuse/id#"
+            "$ref": "api://schema/reuse/id.json"
         },
         "buildingId": {
-            "$ref": "api://schema/reuse/id#"
+            "$ref": "api://schema/reuse/id.json"
         },
         "blocked": {
             "type": "boolean"
