@@ -11,13 +11,13 @@
 			"default": "No description"
 		},
 		"plannedStart": {
-			"$ref": "api://schema/reuse/datetime#"
+			"$ref": "api://schema/reuse/datetime.json"
 		},
 		"plannedEnd": {
-			"$ref": "api://schema/reuse/datetime#"
+			"$ref": "api://schema/reuse/datetime.json"
 		},
 		"roomId": {
-			"$ref": "api://schema/reuse/id.json#"
+			"$ref": "api://schema/reuse/id.json"
 		}
 	},
 	"required": [],

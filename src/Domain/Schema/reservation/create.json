@@ -2,7 +2,7 @@
 	"type": "object",
 	"properties": {
 		"title": {
-			"$ref": "api://schema/reservation/title.json#"
+			"$ref": "api://schema/reservation/title.json"
 		},
 		"description": {
 			"type": "string",
@@ -11,10 +11,10 @@
 			"default": "No description"
 		},
 		"plannedStart": {
-			"$ref": "api://schema/reuse/datetime.json#"
+			"$ref": "api://schema/reuse/datetime.json"
 		},
 		"plannedEnd": {
-			"$ref": "api://schema/reuse/datetime.json#"
+			"$ref": "api://schema/reuse/datetime.json"
 		}
 	},
 	"required": [

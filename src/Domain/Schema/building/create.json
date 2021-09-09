@@ -2,7 +2,7 @@
     "type": "object",
     "properties": {
         "name": {
-            "$ref": "schema://models/defaults/name#"
+            "$ref": "schema://models/defaults/name.json"
         },
         "openTime": {
             "type": "string",

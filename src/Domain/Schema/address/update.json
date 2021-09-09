@@ -2,19 +2,19 @@
 	"type": "object",
 	"properties": {
 		"country": {
-			"$ref": "api://schema/reuse/name.json#"
+			"$ref": "api://schema/reuse/name.json"
 		},
 		"town": {
-			"$ref": "api://schema/reuse/name.json#"
+			"$ref": "api://schema/reuse/name.json"
 		},
 		"postalCode": {
-			"$ref": "api://schema/address/postalCode.json#"
+			"$ref": "api://schema/address/postalCode.json"
 		},
 		"street": {
-			"$ref": "api://schema/reuse/name.json#"
+			"$ref": "api://schema/reuse/name.json"
 		},
 		"number": {
-			"$ref": "api://schema/address/number.json#"
+			"$ref": "api://schema/address/number.json"
 		}
 	},
 	"required": [],
