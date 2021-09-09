@@ -1,11 +1,16 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Infrastructure\Repository;
 
 use App\Infrastructure\Repository\BaseRepository;
+
+use App\Domain\Access\AccessRepositoryInterface;
+use App\Domain\Image\ImageRepositoryInterface;
 use App\Domain\User\UserRepositoryInterface;
 use App\Domain\User\User;
+use App\Infrastructure\Database\IDatabase;
 use DateTime;
 
 
@@ -13,6 +18,34 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
 {
     protected string $table = 'user';
 
+    private ImageRepositoryInterface $imageRepository;
+    private AccessRepositoryInterface $accessRepository;
+
+    private bool $accessLoading = FALSE;
+
+
+    /**
+     * @param IDatabase db database
+     * @param ImageInterfaceRepository imagerRpository
+     */
+    public function __construct(
+        IDatabase $db,
+        ImageRepositoryInterface $imageRepository,
+        AccessRepositoryInterface $accessRepository
+    ) {
+        parent::__construct($db);
+        $this->imageRepository = $imageRepository;
+        $this->accessRepository = $accessRepository;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function withAccess(): UserRepositoryInterface
+    {
+        $this->accessLoading = TRUE;
+        return $this;
+    }
 
     /**
      * @param array $data from database
@@ -20,22 +53,27 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
      */
     protected function newItem(array $data): User
     {
+        $image = $this->imageRepository->byId((int)$data['image']);
+        $access = $this->accessLoading ? $this->accessRepository->byId((int) $data['access']) : NULL;
+        
         return new User(
             (int)   $data['id'],
-                    $data['name'],
-                    $data['surname'],
-                    $data['email'],
-                    $data['password'],
+            $data['name'],
+            $data['surname'],
+            $data['email'],
+            $data['password'],
             (bool)  $data['activated'],
             (int)   $data['login_fails'],
             (bool)  $data['blocked'],
-                    $data['unique_key'],
-                    new DateTime($data['last_generated_key_date']),
-            (int)   $data['access'],
+            $data['unique_key'],
+            new DateTime($data['last_generated_key_date']),
+            $access,
+            $image,
+            json_decode($data['metadata']),
+            new DateTime($data['created']),
+            new DateTime($data['updated']),
             (int)   $data['image'],
-                    json_decode($data['metadata']),
-                    new DateTime($data['created']),
-                    new DateTime($data['updated'])
+            (int)   $data['access']
         );
     }
 
@@ -86,8 +124,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         string $surname,
         string $email,
         string $password
-    ): int
-    {
+    ): int {
 
 
         $sql = "INSERT `$this->table`
@@ -105,5 +142,4 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         $this->db->query($sql, $params);
         return $this->db->lastInsertId();
     }
-
 }

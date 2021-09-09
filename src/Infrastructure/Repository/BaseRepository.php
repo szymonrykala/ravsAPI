@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Infrastructure\Repository;
@@ -10,11 +11,14 @@ use App\Domain\Model\Model;
 
 
 use App\Domain\Exception\DomainResourceNotFoundException;
+use App\Utils\RepositoryCache;
 
+abstract class BaseRepository implements RepositoryInterface
+{
 
-abstract class BaseRepository implements RepositoryInterface{
+    protected RepositoryCache $cache;
 
-    private string $dateSearch="";
+    private string $dateSearch = "";
     private string $limit = "";
 
     protected string $table;
@@ -22,12 +26,13 @@ abstract class BaseRepository implements RepositoryInterface{
     protected array $params = [];
 
     /**
-     * @param ContainerInterface $DIcontainer
+     * @param IDatabase db database
      */
     public function __construct(IDatabase $db)
     {
         $this->db = $db;
         $this->db->connect();
+        $this->cache = new RepositoryCache();
     }
 
     /**
@@ -54,7 +59,7 @@ abstract class BaseRepository implements RepositoryInterface{
     public function where(array $searchParams): BaseRepository
     {
         $this->sql = ' WHERE 1=1';
-        foreach($searchParams as $key => $value){
+        foreach ($searchParams as $key => $value) {
             $this->sql .= " AND `$this->table`.`$key`=:$key";
             $this->params[":$key"] = $value;
         }
@@ -74,10 +79,9 @@ abstract class BaseRepository implements RepositoryInterface{
          *      'value' = timestamp ISO format
          *  }, {...}]
          */
-        foreach($dateFields as $key => $field)
-        {
+        foreach ($dateFields as $key => $field) {
             $this->dateSearch .= " AND `$field->name` $field->operator TIMESTAMP(:$key$field->name)";
-            $this->params[$key.$field->name] = $field->value;
+            $this->params[$key . $field->name] = $field->value;
         }
 
         return $this;
@@ -86,22 +90,22 @@ abstract class BaseRepository implements RepositoryInterface{
     /**
      * {@inheritdoc}
      */
-    public function page(int $number, int $limit=20): array
+    public function page(int $number, int $limit = 20): array
     {
 
         $localSql = 'SELECT count(id) as `rows_count` FROM '
-                        .$this->table
-                        .$this->sql
-                        .$this->dateSearch;
+            . $this->table
+            . $this->sql
+            . $this->dateSearch;
 
         $rowsCount = (int) $this->db->query($localSql, $this->params)[0]['rows_count'];
 
-        $this->limit = 'LIMIT '.$limit*($number-1).','.$limit;
+        $this->limit = 'LIMIT ' . $limit * ($number - 1) . ',' . $limit;
 
         return [
             'page' => $number,
             'perPage' => $limit,
-            'pagesCount' => ceil($rowsCount/$limit),
+            'pagesCount' => ceil($rowsCount / $limit),
             'data' => $this->all()
         ];
     }
@@ -112,15 +116,15 @@ abstract class BaseRepository implements RepositoryInterface{
     public function all(): array
     {
         $this->sql = 'SELECT * FROM '
-                        .$this->table
-                        .$this->sql
-                        .$this->dateSearch
-                        .$this->limit;
+            . $this->table
+            . $this->sql
+            . $this->dateSearch
+            . $this->limit;
 
         $data = $this->executeQuery();
 
         $items = [];
-        foreach($data as $userData){
+        foreach ($data as $userData) {
             array_push($items, $this->newItem($userData));
         }
 
@@ -133,16 +137,22 @@ abstract class BaseRepository implements RepositoryInterface{
     public function byId(int $id): Model
     {
         $sql = "SELECT * FROM `$this->table` WHERE `id` = :id";
-        $params = [':id'=> $id];
+
+        $item = $this->cache->get($sql.$id);
+        if (!empty($item)) return $item;
+
+        $params = [':id' => $id];
 
         $result = $this->db->query($sql, $params);
         $item = array_pop($result);
-        
-        if( empty($item)){
+
+        if (empty($item)) {
             throw new DomainResourceNotFoundException();
         }
 
-        return $this->newItem($item);
+        $item = $this->cache->add($sql.$id, $this->newItem($item));
+
+        return $item;
     }
 
     /**
@@ -155,5 +165,4 @@ abstract class BaseRepository implements RepositoryInterface{
             [':id' => $object->id]
         );
     }
-
 }

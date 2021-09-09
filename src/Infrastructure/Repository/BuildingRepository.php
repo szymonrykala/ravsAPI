@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Repository;
 
+use App\Domain\Address\IAddressRepository;
 use App\Infrastructure\Repository\BaseRepository;
 
 use App\Domain\Building\{
@@ -12,14 +13,42 @@ use App\Domain\Building\{
 };
 
 use App\Domain\Exception\DomainResourceNotFoundException;
-
+use App\Domain\Image\ImageRepositoryInterface;
+use App\Infrastructure\Database\IDatabase;
 use DateTime;
 
 
 
-class BuildingRepository extends BaseRepository implements IBuildingRepository
+final class BuildingRepository extends BaseRepository implements IBuildingRepository
 {
     protected string $table = 'building';
+    private ImageRepositoryInterface $imageRepository;
+    private IAddressRepository $addressRepository;
+
+    private bool $addressLoading = FALSE;
+
+    /**
+     * @param IDatabase db database
+     * @param ImageInterfaceRepository imagerRpository
+     */
+    public function __construct(
+        IDatabase $db,
+        ImageRepositoryInterface $imageRepository,
+        IAddressRepository $addressRepository
+    ) {
+        parent::__construct($db);
+        $this->imageRepository = $imageRepository;
+        $this->addressRepository = $addressRepository;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function withAddress(): IBuildingRepository
+    {
+        $this->addressLoading = TRUE;
+        return $this;
+    }
 
     /**
      * @param array $data from database
@@ -27,15 +56,20 @@ class BuildingRepository extends BaseRepository implements IBuildingRepository
      */
     protected function newItem(array $data): Building
     {
+        $image = $this->imageRepository->byId((int)$data['image']);
+        $address = $this->addressLoading ? $this->addressRepository->byId((int) $data['address']): NULL;
+
         return new Building(
             (int)   $data['id'],
                     $data['name'],
-            (int)   $data['image'],
-            (int)   $data['address'],
+                    $image,
+                   $address,
             new DateTime($data['open_time']),
             new DateTime($data['close_time']),
             new DateTime($data['created']),
             new DateTime($data['updated']),
+            (int) $data['image'],
+            (int) $data['address']
         );
     }
 

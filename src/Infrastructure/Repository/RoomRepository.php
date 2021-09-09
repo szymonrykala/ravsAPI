@@ -1,21 +1,54 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Infrastructure\Repository;
 
+use App\Domain\Building\IBuildingRepository;
 use App\Domain\Room\{
     RoomRepositoryInterface,
     Room
 };
 
 use App\Domain\Exception\DomainResourceNotFoundException;
-
+use App\Domain\Image\ImageRepositoryInterface;
+use App\Infrastructure\Database\IDatabase;
 use DateTime;
 
 
 class RoomRepository extends BaseRepository implements RoomRepositoryInterface
 {
     protected string $table = 'room';
+    private ImageRepositoryInterface $imageRepository;
+    private IBuildingRepository $buildingRepository;
+
+    private bool $buildingLoading = FALSE;
+
+    
+    /**
+     * @param IDatabase db database
+     * @param ImageInterfaceRepository imagerRpository
+     * @param IBuildingRepository buildingRepository
+     */
+    public function __construct(
+        IDatabase $db,
+        ImageRepositoryInterface $imageRepository,
+        IBuildingRepository $buildingRepository
+        ) {
+            parent::__construct($db);
+            $this->imageRepository = $imageRepository;
+            $this->buildingRepository = $buildingRepository;
+        }
+        
+    /**
+     * {@inheritdoc}
+     */
+    public function withAddress(): RoomRepositoryInterface
+    {
+        $this->buildingLoading = TRUE;
+        return $this;
+    }
+
 
     /**
      * @param array $data from database
@@ -23,19 +56,23 @@ class RoomRepository extends BaseRepository implements RoomRepositoryInterface
      */
     protected function newItem(array $data): Room
     {
+        $image = $this->imageRepository->byId((int) $data['image']);
+        $building = $this->buildingLoading ? $this->buildingRepository->byId((int) $data['building']) : NULL;
         return new Room(
             (int)   $data['id'],
-                    $data['name'],
-            (int)   $data['image'],
-            (int)   $data['building'],
-                    $data['rfid'],
-                    $data['room_type'],
+            $data['name'],
+            $image,
+            $building,
+            $data['rfid'],
+            $data['room_type'],
             (int)   $data['seats_count'],
             (int)   $data['floor'],
             (bool)  $data['blocked'],
             (bool)  $data['occupied'],
-                    new DateTime($data['created']),
-                    new DateTime($data['updated']),
+            new DateTime($data['created']),
+            new DateTime($data['updated']),
+            (int)   $data['image'],
+            (int)   $data['building']
         );
     }
 
@@ -45,8 +82,8 @@ class RoomRepository extends BaseRepository implements RoomRepositoryInterface
         $params = [':id' => $roomId, ':buildingId' => $buildingId];
         $result = $this->db->query($sql, $params);
         $roomData = array_pop($result);
-        
-        if( empty($roomData)){
+
+        if (empty($roomData)) {
             throw new DomainResourceNotFoundException();
         }
 
@@ -66,7 +103,7 @@ class RoomRepository extends BaseRepository implements RoomRepositoryInterface
     /**
      * @param Room room
      */
-    public function save(Room $room ): void
+    public function save(Room $room): void
     {
         $room->validate();
         $sql = "UPDATE `$this->table` SET
@@ -110,11 +147,10 @@ class RoomRepository extends BaseRepository implements RoomRepositoryInterface
         string  $roomType,
         int     $seatsCount,
         int     $floor
-    ): int
-    {
+    ): int {
         $sql = "INSERT `$this->table`(name, building, room_type, seats_count, floor)
                 VALUES(:name, :buildingId, :roomType, :seatsCount, :floor)";
-        
+
         $params =  [
             ':name' => $name,
             ':buildingId' => $buildingId,
