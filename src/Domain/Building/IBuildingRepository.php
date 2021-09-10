@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace App\Domain\Building;
 
 use App\Domain\Model\RepositoryInterface;
+use App\Utils\JsonDateTime;
 
-use DateTime;
 
 interface IBuildingRepository extends RepositoryInterface
 {
@@ -33,8 +33,8 @@ interface IBuildingRepository extends RepositoryInterface
      */
     public function create(
         string $name,
-        DateTime $openTime,
-        DateTime $closeTime,
+        JsonDateTime $openTime,
+        JsonDateTime $closeTime,
         int $addressId
     ): int;
 

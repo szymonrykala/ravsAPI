@@ -1,20 +1,22 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Domain\Request;
 
 use App\Domain\Model\Model;
 use App\Domain\User\User;
+use App\Utils\JsonDateTime;
 
-use DateTime;
 
-Class Request extends Model{
+class Request extends Model
+{
 
     public string $method;
     public string $endpoint;
     public User $user;
     public array $payload;
-    
+
     public int $userId;
 
     /**
@@ -29,10 +31,9 @@ Class Request extends Model{
         string $endpoint,
         int $userId,
         string $payload,
-        DateTime $created,
-        DateTime $updated
-    )
-    {
+        JsonDateTime $created,
+        JsonDateTime $updated
+    ) {
         parent::__construct($id, $created, $updated);
 
         $this->method = $method;
@@ -44,17 +45,16 @@ Class Request extends Model{
     /**
      * @return array
      */
-    public function jsonSerialize():array
+    public function jsonSerialize(): array
     {
-        return [
-            "id" => $this->id,
-            "method" => $this->method,
-            "endpoint" => $this->endpoint,
-            "user" => $this->user ?? $this->userId,
-            "payload" => $this->payload,
-            "created" => $this->created->format('c'),
-            "updated" => $this->updated->format('c')
-        ];
+        return array_merge(
+            [
+                "method" => $this->method,
+                "endpoint" => $this->endpoint,
+                "user" => $this->user ?? $this->userId,
+                "payload" => $this->payload
+            ],
+            parent::jsonSerialize()
+        );
     }
-
 }

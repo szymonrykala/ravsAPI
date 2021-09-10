@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Domain\Room;
@@ -7,7 +8,7 @@ use App\Domain\Model\Model;
 use App\Domain\Image\Image;
 use App\Domain\Building\Building;
 use App\Domain\Exception\DomainConflictException;
-use DateTime;
+use App\Utils\JsonDateTime;
 
 
 
@@ -38,11 +39,11 @@ class Room extends Model
         int     $floor,
         bool    $blocked,
         bool    $occupied,
-        DateTime  $created,
-        DateTime  $updated,
+        JsonDateTime  $created,
+        JsonDateTime  $updated,
         int     $imageId,
         int     $buildingId
-    ){
+    ) {
         parent::__construct($id, $created, $updated);
 
         $this->name = $name;
@@ -57,7 +58,6 @@ class Room extends Model
 
         $this->buildingId = $buildingId;
         $this->imageId = $imageId;
-
     }
 
     /**
@@ -66,7 +66,7 @@ class Room extends Model
      */
     protected function validateCallback(): void
     {
-        if( $this->blocked === FALSE && empty($this->rfid)){
+        if ($this->blocked === FALSE && empty($this->rfid)) {
             throw new DomainConflictException("Room without 'NFCTag' cannot be unblocked");
         }
     }
@@ -74,21 +74,21 @@ class Room extends Model
     /**
      * @return array
      */
-    public function jsonSerialize():array
+    public function jsonSerialize(): array
     {
-        return [
-            "id" => $this->id,
-            "name" => $this->name,
-            "image" => $this->image,
-            "building" => $this->building ?? $this->buildingId,
-            "roomType" => $this->roomType,
-            "seatsCount" => $this->seatsCount,
-            "floor" => $this->floor,
-            "blocked" => $this->blocked,
-            "occupied" => $this->occupied,
-            "hasNFCTag" => (bool) $this->rfid,
-            "created" => $this->created->format('c'),
-            "updated" => $this->updated->format('c')
-        ];
+        return array_merge(
+            [
+                "name" => $this->name,
+                "image" => $this->image,
+                "building" => $this->building ?? $this->buildingId,
+                "roomType" => $this->roomType,
+                "seatsCount" => $this->seatsCount,
+                "floor" => $this->floor,
+                "blocked" => $this->blocked,
+                "occupied" => $this->occupied,
+                "hasNFCTag" => (bool) $this->rfid
+            ],
+            parent::jsonSerialize()
+        );
     }
-} 
+}

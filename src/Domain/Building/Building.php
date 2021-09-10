@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Domain\Building;
@@ -6,7 +7,7 @@ namespace App\Domain\Building;
 use App\Domain\Model\Model;
 use App\Domain\Image\Image;
 use App\Domain\Address\Address;
-use DateTime;
+use App\Utils\JsonDateTime;
 
 
 class Building extends Model
@@ -15,12 +16,12 @@ class Building extends Model
     public Image $image;
     public ?Address $address;
 
-    public DateTime $openTime;    
-    public DateTime $closeTime;
+    public JsonDateTime $openTime;
+    public JsonDateTime $closeTime;
 
     public int $imageId;
     public int $addressId;
-    
+
 
     /**
      * @param int    id
@@ -37,13 +38,13 @@ class Building extends Model
         string $name,
         Image $image,
         ?Address $address,
-        DateTime $openTime,
-        DateTime $closeTime,
-        DateTime $created,
-        DateTime $updated,
+        JsonDateTime $openTime,
+        JsonDateTime $closeTime,
+        JsonDateTime $created,
+        JsonDateTime $updated,
         int $imageId,
         int $addressId
-    ){
+    ) {
         parent::__construct($id, $created, $updated);
 
         $this->name = $name;
@@ -60,17 +61,17 @@ class Building extends Model
     /**
      * @return array
      */
-    public function jsonSerialize():array
+    public function jsonSerialize(): array
     {
-        return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'image' => $this->image,
-            'address' => $this->address ?? $this->addressId,
-            'openTime' => $this->openTime->format('H:i:s'),
-            'closeTime' => $this->closeTime->format('H:i:s'),
-            'created' => $this->created->format('c'),
-            'updated' => $this->updated->format('c')
-        ];
+        return array_merge(
+            [
+                'name' => $this->name,
+                'image' => $this->image,
+                'address' => $this->address ?? $this->addressId,
+                'openTime' => $this->openTime->format('H:i:s'),
+                'closeTime' => $this->closeTime->format('H:i:s'),
+            ],
+            parent::jsonSerialize()
+        );
     }
 }

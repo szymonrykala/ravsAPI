@@ -1,22 +1,24 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Domain\Model;
 
+use App\Utils\JsonDateTime;
 use stdClass;
 use JsonSerializable;
-use DateTime;
 
 
-abstract class Model implements JsonSerializable{
+
+abstract class Model implements JsonSerializable
+{
 
     public int $id;
-    public DateTime $created;
-    public DateTime $updated;
+    public JsonDateTime $created;
+    public JsonDateTime $updated;
 
-    abstract public function jsonSerialize():array;
 
-    public function __construct(int $id, DateTime $created, DateTime $updated)
+    public function __construct(int $id, JsonDateTime $created, JsonDateTime $updated)
     {
         $this->id = $id;
 
@@ -24,7 +26,8 @@ abstract class Model implements JsonSerializable{
         $this->updated = $updated;
     }
 
-    public function __set(string $name, $value){
+    public function __set(string $name, $value)
+    {
         throw new ModelPropertyNotExistException($name);
     }
 
@@ -35,23 +38,32 @@ abstract class Model implements JsonSerializable{
      */
     public function update(stdClass $form): void
     {
-        foreach($form as $key => $value) $this->$key = $value;
+        foreach ($form as $key => $value) $this->$key = $value;
     }
 
     /**
      * optional model object validation rules bfore saving
      * @return void
      */
-    protected function validateCallback():void
-    {}
+    protected function validateCallback(): void
+    {
+    }
 
     /**
      * validation trigger fo validateCallback
      * @return void
      */
-    public function validate():void
+    public function validate(): void
     {
         $this->validateCallback();
     }
 
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->id,
+            '_created' => $this->created,
+            '_updated' => $this->updated
+        ];
+    }
 }

@@ -7,8 +7,9 @@ namespace App\Domain\User;
 use App\Domain\Image\Image;
 use App\Domain\Access\Access;
 use App\Domain\Model\Model;
-use DateTime;
+use App\Utils\JsonDateTime;
 use stdClass;
+
 
 
 class User extends Model
@@ -22,7 +23,7 @@ class User extends Model
     public int $loginFails;
     public bool $blocked;
     public string $uniqueKey;
-    public DateTime $lastGeneratedKeyDate;
+    public JsonDateTime $lastGeneratedKeyDate;
     public ?stdClass $metadata;
 
     public ?Access $access;
@@ -31,8 +32,8 @@ class User extends Model
     public int $imageId;
     public int $accessId;
 
-    public DateTime $created;
-    public DateTime $updated;
+    public JsonDateTime $created;
+    public JsonDateTime $updated;
 
     private bool $metadataShouldBeLoaded = FALSE;
 
@@ -46,12 +47,12 @@ class User extends Model
      * @param int       loginFails
      * @param bool      blocked
      * @param string    uniqueKey
-     * @param DateTime    lastGeneratedKeyDate,
+     * @param JsonDateTime    lastGeneratedKeyDate,
      * @param Access|NULL access
      * @param Image       image
      * @param stdClass    metadata
-     * @param DateTime    created
-     * @param DateTime    updated
+     * @param JsonDateTime    created
+     * @param JsonDateTime    updated
      * @param int       imageId
      * @param int       accessId
      */
@@ -65,12 +66,12 @@ class User extends Model
         int $loginFails,
         bool $blocked,
         string $uniqueKey,
-        DateTime $lastGeneratedKeyDate,
+        JsonDateTime $lastGeneratedKeyDate,
         ?Access $access,
         Image $image,
         stdClass $metadata,
-        DateTime $created,
-        DateTime $updated,
+        JsonDateTime $created,
+        JsonDateTime $updated,
         int $imageId,
         int $accessId
     ) {
@@ -85,7 +86,7 @@ class User extends Model
         $this->blocked = $blocked;
         $this->uniqueKey = $uniqueKey;
         $this->lastGeneratedKeyDate = $lastGeneratedKeyDate;
-        
+
         $this->image = $image;
         $this->access = $access;
 
@@ -93,7 +94,6 @@ class User extends Model
 
         $this->imageId = $imageId;
         $this->accessId = $accessId;
-
     }
 
     /** 
@@ -118,9 +118,9 @@ class User extends Model
     }
 
     /**
-     * @return DateTime $lastGeneratedKeyDate
+     * @return JsonDateTime $lastGeneratedKeyDate
      */
-    public function getLastGeneratedKeyDate(): DateTime
+    public function getLastGeneratedKeyDate(): JsonDateTime
     {
         return $this->lastGeneratedKeyDate;
     }
@@ -131,7 +131,7 @@ class User extends Model
      */
     public function assignUniqueKey(int $length = 8): void
     {
-        $this->lastGeneratedKeyDate = new DateTime('now');
+        $this->lastGeneratedKeyDate = new JsonDateTime('now');
         $this->uniqueKey = User::generateUniqueKey($length);
     }
 
@@ -199,17 +199,18 @@ class User extends Model
      */
     public function jsonSerialize(): array
     {
-        $view = [
-            'id' => $this->id,
-            'email' => $this->email,
-            'name' => $this->name,
-            'surname' => $this->surname,
-            'activated' => $this->activated,
-            'image' => $this->image,
-            'access' => $this->access ?? $this->accessId,
-            "created" => $this->created->format('c'),
-            "updated" => $this->updated->format('c'),
-        ];
+        $view = array_merge(
+            [
+                'email' => $this->email,
+                'name' => $this->name,
+                'surname' => $this->surname,
+                'activated' => $this->activated,
+                'image' => $this->image,
+                'access' => $this->access ?? $this->accessId,
+            ],
+            parent::jsonSerialize()
+        );
+
         if ($this->metadataShouldBeLoaded) $view["metadata"] = $this->metadata;
 
         return $view;

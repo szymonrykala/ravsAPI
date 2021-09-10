@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Image;
 
 use App\Domain\Model\Model;
-use DateTime;
+use App\Utils\JsonDateTime;
 
 class Image extends Model
 {
@@ -13,16 +13,16 @@ class Image extends Model
     public string $path;
 
     /**
-     * @param int       $id,
-     * @param string    $path,
-     * @param DateTime    $created,
-     * @param DateTime    $updated
+     * @param int       id,
+     * @param string    path,
+     * @param JsonDateTime    created,
+     * @param JsonDateTime    updated
      */
     public function __construct(
         int $id,
         string $path,
-        DateTime $created,
-        DateTime $updated
+        JsonDateTime $created,
+        JsonDateTime $updated
     ) {
         parent::__construct($id, $created, $updated);
 
@@ -34,11 +34,11 @@ class Image extends Model
      */
     public function jsonSerialize(): array
     {
-        return [
-            "id" => $this->id,
-            "path" => $this->path,
-            "created" => $this->created->format('c'),
-            "updated" => $this->updated->format('c')
-        ];
+        return array_merge(
+            [
+                "path" => $this->path,
+            ],
+            parent::jsonSerialize()
+        );
     }
 }

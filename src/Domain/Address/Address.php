@@ -6,7 +6,7 @@ namespace App\Domain\Address;
 
 use App\Domain\Model\Model;
 
-use DateTime;
+use App\Utils\JsonDateTime;
 
 class Address extends Model
 {
@@ -16,8 +16,6 @@ class Address extends Model
     public string $street;
     public string $number;
 
-    private array $buildings = [];
-    private bool $buildingsWasSet = FALSE;
 
     /**
      * @param int    $id
@@ -36,8 +34,8 @@ class Address extends Model
         string $postalCode,
         string $street,
         string $number,
-        DateTime $created,
-        DateTime $updated
+        JsonDateTime $created,
+        JsonDateTime $updated
     ) {
         parent::__construct($id, $created, $updated);
 
@@ -49,32 +47,21 @@ class Address extends Model
     }
 
     /**
-     * @param Building[]
-     * @return void
-     */
-    public function setBuildings(array $buildings): void
-    {
-        $this->buildings = $buildings;
-        $this->buildingsWasSet = TRUE;
-    }
-
-    /**
      * @return array
      */
     public function jsonSerialize(): array
     {
-        $out = [
-            "id" => $this->id,
-            "country" => $this->country,
-            "town" => $this->town,
-            "postalCode" => $this->postalCode,
-            "street" => $this->street,
-            "number" => $this->number,
-            "created" => $this->created->format('c'),
-            "updated" => $this->updated->format('c')
-        ];
-        if ($this->buildingsWasSet) $out['buildings'] = $this->buildings;
-        
+        $out = array_merge(
+            [
+                "country" => $this->country,
+                "town" => $this->town,
+                "postalCode" => $this->postalCode,
+                "street" => $this->street,
+                "number" => $this->number,
+            ],
+            parent::jsonSerialize()
+        );
+
         return $out;
     }
 }

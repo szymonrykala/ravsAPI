@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Access;
 
 use App\Domain\Model\Model;
-use DateTime;
+use App\Utils\JsonDateTime;
 
 
 class Access extends Model
@@ -47,8 +47,8 @@ class Access extends Model
         bool $logsAdmin,
         bool $statsViewer,
         bool $reportsViewer,
-        DateTime $created,
-        DateTime $updated
+        JsonDateTime $created,
+        JsonDateTime $updated
     ) {
         parent::__construct($id, $created, $updated);
 
@@ -67,9 +67,9 @@ class Access extends Model
     /**
      * {@inheritdoc}
      */
-    public function validateCallback():void
+    public function validateCallback(): void
     {
-        if($this->id === 1){
+        if ($this->id === 1) {
             throw new AccessUpdateException();
         }
     }
@@ -79,19 +79,19 @@ class Access extends Model
      */
     public function jsonSerialize(): array
     {
-        return [
-            "id" => $this->id,
-            "name" => $this->name,
-            "accessAdmin" => $this->accessAdmin,
-            "premisesAdmin" => $this->premisesAdmin,
-            "keysAdmin" => $this->keysAdmin,
-            "reservationsAdmin" => $this->reservationsAdmin,
-            "reservationsAbility" => $this->reservationsAbility,
-            "logsAdmin" => $this->logsAdmin,
-            "statsViewer" => $this->statsViewer,
-            "reportsViewer" => $this->reportsViewer,
-            "created" => $this->created->format('c'),
-            "updated" => $this->updated->format('c')
-        ];
+        return array_merge(
+            [
+                "name" => $this->name,
+                "accessAdmin" => $this->accessAdmin,
+                "premisesAdmin" => $this->premisesAdmin,
+                "keysAdmin" => $this->keysAdmin,
+                "reservationsAdmin" => $this->reservationsAdmin,
+                "reservationsAbility" => $this->reservationsAbility,
+                "logsAdmin" => $this->logsAdmin,
+                "statsViewer" => $this->statsViewer,
+                "reportsViewer" => $this->reportsViewer,
+            ],
+            parent::jsonSerialize()
+        );
     }
 }
