@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application\Actions\Building;
@@ -17,12 +18,15 @@ class ViewBuildingAction extends BuildingAction
         $addressId = (int) $this->resolveArg('address_id');
 
         $building = $this->buildingRepository
-                        ->withAddress()
-                        ->byIdAndAddressId($buildingId, $addressId);
+            ->withAddress()
+            ->where([
+                ':id' => $buildingId,
+                ':address_id' => $addressId
+            ])->one();
 
-        
 
-        $this->logger->info("Building id ".$building->id." was viewed.");
+
+        $this->logger->info("Building id " . $building->id . " was viewed.");
 
         return $this->respondWithData($building);
     }

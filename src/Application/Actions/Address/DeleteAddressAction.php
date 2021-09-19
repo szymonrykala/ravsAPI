@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application\Actions\Address;
@@ -13,9 +14,10 @@ class DeleteAddressAction extends AddressAction
      */
     protected function action(): Response
     {
-        $id = $this->resolveArg('address_id');
+        $id = (int) $this->resolveArg('address_id');
 
-        $this->addressRepository->deleteById( (int) $id);
+        $address = $this->addressRepository->byId($id);
+        $this->addressRepository->delete($address);
 
         $this->logger->info("Address id {$id} was deleted.");
 

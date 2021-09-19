@@ -8,7 +8,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\User\User;
 use Slim\Exception\HttpForbiddenException;
 
-class UpdateUserAccessAction extends UserAction
+class UpdateUserAccess extends UserAction
 {
     /**
      * {@inheritdoc}
@@ -16,7 +16,7 @@ class UpdateUserAccessAction extends UserAction
     public function action(): Response
     {
 
-        $userId = (int) $this->resolveArg('userId');
+        $userId = (int) $this->resolveArg('user_id');
         $form = $this->getFormData();
 
         /** @var User $user */

@@ -18,6 +18,7 @@ class ListBuildingsAction extends BuildingAction
 
         $buildings = $this->buildingRepository
                             ->where(['address' => $addressId])
+                            ->orderBy('name','ASC')
                             ->all();
 
 

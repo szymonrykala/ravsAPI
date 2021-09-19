@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application\Actions\Building;
@@ -16,8 +17,13 @@ class DeleteBuildingAction extends BuildingAction
         $buildingId = (int) $this->resolveArg('building_id');
         $addressId = (int) $this->resolveArg('address_id');
 
-        $this->buildingRepository->byIdAndAddressId($buildingId, $addressId);
-        $this->buildingRepository->deleteById( (int) $buildingId);
+        $building = $this->buildingRepository->where([
+            ':id' => $buildingId,
+            ':address_id' => $addressId
+        ])->one();
+
+
+        $this->buildingRepository->delete($building);
 
         $this->logger->info("Building id ${buildingId} was deleted.");
 

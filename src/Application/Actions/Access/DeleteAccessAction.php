@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application\Actions\Access;
@@ -15,10 +16,11 @@ class DeleteAccessAction extends AccessAction
     {
         $accessId = (int) $this->resolveArg('id');
 
-        $this->accessRepository->deleteById($accessId);
+        $access = $this->accessRepository->byId($accessId);
+        $this->accessRepository->delete($access);
 
         $this->logger->info("Access id=${accessId} has been deleted.");
-        
+
         return $this->respondWithData();
     }
 }

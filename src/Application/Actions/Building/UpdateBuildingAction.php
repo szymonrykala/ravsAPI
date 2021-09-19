@@ -3,12 +3,10 @@ declare(strict_types=1);
 
 namespace App\Application\Actions\Building;
 
+use App\Utils\JsonDateTime;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Exception\HttpNotFoundException;
 
-use App\Domain\Image\Image;
-use App\Domain\Address\Address;
-use DateTime;
 
 class UpdateBuildingAction extends BuildingAction
 {
@@ -35,12 +33,12 @@ class UpdateBuildingAction extends BuildingAction
 
         $form = $this->getFormData();
 
-        if(isset($form->closeTime)) $form->closeTime = new DateTime($form->closeTime);
-        if(isset($form->openTime)) $form->openTime = new DateTime($form->openTime);
+        if(isset($form->closeTime)) $form->closeTime = new JsonDateTime($form->closeTime);
+        if(isset($form->openTime)) $form->openTime = new JsonDateTime($form->openTime);
 
         $building->update($form);
 
-        $this->buildingRepository->save($building);
+        // $this->buildingRepository->save($building);
 
 
         $this->logger->info("Building id $buildingId was updated.");

@@ -12,18 +12,19 @@ class ListRequestsAction extends RequestAction
      */
     public function action(): Response
     {
+        $pagination = $this->preparePagination();
+
         $searchParams = [];
 
-        if(isset($this->args['subject']))
-        {
-            $subject = $this->resolveArg('subject');
+        $subject = $this->resolveArg('subject');
+        
             $searchParams['endpoint'] = '/'.$subject;
 
-            if(isset($this->args['subjectId']))
+            if(isset($this->args['subject_id']))
             {
-                $searchParams['endpoint'] .= '/'.$this->resolveArg('subjectId');
+                $searchParams['endpoint'] .= '/'.$this->resolveArg('subject_id');
             }
-        }
+        
 
 
         $fields = [
@@ -37,22 +38,14 @@ class ListRequestsAction extends RequestAction
             }
         }
 
-        $repoState = $this->requestRepository
-                    ->where($searchParams)
-                    ->withDates($this->collectDatesSearchParam());
 
-        $data = [];
+        $requests = $this->requestRepository->where($searchParams)
+            ->setPagination($pagination)
+            ->all();
 
-        $pager = $this->collectPageQueryParams();
-
-        if($pager->isset){
-            $data = $repoState->page($pager->page, $pager->limit);
-        }else{
-            $data = $repoState->all();
-        }
-
+        
         $this->logger->info("User id {$this->session->userId} listed requests");
 
-        return $this->respondWithData($data);
+        return $this->respondWithData($requests);
     }
 }

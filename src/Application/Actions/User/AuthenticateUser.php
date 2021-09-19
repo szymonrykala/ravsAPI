@@ -9,7 +9,7 @@ use App\Utils\JWTFactory;
 
 
 
-class AuthenticateUserAction extends UserAction
+class AuthenticateUser extends UserAction
 {
     /**
      * {@inheritdoc}

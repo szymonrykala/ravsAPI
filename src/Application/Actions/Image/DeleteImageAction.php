@@ -7,6 +7,7 @@ use Slim\Exception\HttpBadRequestException;
 use Psr\Http\Message\ResponseInterface as Response;
 
 use App\Domain\Image\ImageDeleteException;
+use Slim\Exception\HttpForbiddenException;
 
 class DeleteImageAction extends ImageAction
 {
@@ -16,11 +17,9 @@ class DeleteImageAction extends ImageAction
     protected function action(): Response
     {
         $imageId = (int) $this->resolveArg('id');
-        try{
-            $this->imageRepository->deleteById($imageId);
-        }catch(ImageDeleteException $e){
-            throw new HttpBadRequestException($this->request,$e->getMessage());
-        }
+
+        $image = $this->imageRepository->byId($imageId);
+        $this->imageRepository->delete($image);
 
         $this->logger->info("Image of id `${imageId}` has been deleted.");
 

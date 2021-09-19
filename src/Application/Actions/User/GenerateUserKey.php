@@ -13,7 +13,7 @@ use DateInterval;
 use DateTime;
 
 
-class GenerateUserKeyAction extends UserAction
+class GenerateUserKey extends UserAction
 {
     /**
      * {@inheritdoc}

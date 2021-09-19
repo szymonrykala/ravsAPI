@@ -7,7 +7,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 use App\Domain\User\Exceptions\UserNotActivatedException;
 
-class ActivateUserAction extends UserAction
+class ActivateUser extends UserAction
 {
     /**
      * {@inheritdoc}

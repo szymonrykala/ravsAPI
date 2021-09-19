@@ -98,72 +98,50 @@ abstract class Action
 
 
     /**
-     * @param  string $name
-     * @return mixed
+     * Resolves argument from URI.
+     * @param mixed $default
      * @throws HttpBadRequestException
      */
-    protected function resolveArg(string $name)
+    protected function resolveArg(string $name, $default = NULL)
     {
         if (!isset($this->args[$name])) {
-            throw new HttpBadRequestException($this->request, "Could not resolve argument `{$name}`.");
+            if ($default !== NULL) return $default;
+
+            throw new HttpBadRequestException($this->request, "Could not resolve URI argument `{$name}`.");
         }
 
         return $this->args[$name];
     }
 
-
     /**
-     * @param string $keys
-     * @return stdClass[] 
+     * Resolves argument from query string.
+     * @param mixed $default
+     * @throws HttpBadRequestException
      */
-    public function collectDatesSearchParam(string $keys = 'created|updated'): array
+    protected function resolveQueryArg(string $name, $default = NULL)
     {
-        $query = $this->request->getUri()->getQuery();
+        // $isset = ;
+        if (!isset($_GET[$name])) {
+            if ($default !== NULL) return $default;
 
-        preg_match_all(
-            "/($keys)([=<>])(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\+\d{4})?)/",
-            urldecode($query),
-            $output_array
-        );
-
-        if (empty($output_array) || empty($output_array[0])) {
-            return [];
+            throw new HttpBadRequestException($this->request, "Could not resolve query argument `${name}`.");
         }
 
-        $results = [];
-        for ($i = 0; $i < count($output_array[0]); $i++) {
-            array_push($results, (object)[
-                'name' => $output_array[1][$i],
-                'operator' => $output_array[2][$i],
-                'value' => $output_array[3][$i]
-            ]);
-        }
-
-        return $results;
+        return $_GET[$name];
     }
 
 
-    public function collectPageQueryParams(): stdClass
-    {
-        $isPage = isset($_GET['page']) && is_numeric($_GET['page']);
-        $pageLimit = isset($_GET['page_limit']) && is_numeric($_GET['page_limit']);
-
-        $data = ['isset' => $isPage];
-
-        if ($isPage) {
-            $data['page'] = (int) $_GET['page'];
-            $data['limit'] = $pageLimit ?  (int) $_GET['page_limit'] : 20;
-        }
-
-        return (object) $data;
-    }
-
     /**
-     * @param Pagination data
-     * @return void
+     * @return Pagination
      */
-    public function sendPaginationData(Pagination $data): void {
-        $this->pagination = $data;
+    public function preparePagination(): Pagination
+    {
+        $currentPage = (int) $this->resolveQueryArg(Pagination::CURRENT_PAGE, 1);
+
+        $onPage = (int) $this->resolveQueryArg(Pagination::ITEMS_ON_PAGE, 15);
+
+        $this->pagination = new Pagination($currentPage, $onPage);
+        return $this->pagination;
     }
 
 

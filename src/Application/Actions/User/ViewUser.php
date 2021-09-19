@@ -5,14 +5,14 @@ namespace App\Application\Actions\User;
 
 use Psr\Http\Message\ResponseInterface as Response;
 
-class ViewUserAction extends UserAction
+class ViewUser extends UserAction
 {
     /**
      * {@inheritdoc}
      */
     protected function action(): Response
     {
-        $userId = (int) $this->resolveArg('userId');
+        $userId = (int) $this->resolveArg('user_id');
 
         $user = $this->userRepository
                     ->withAccess()

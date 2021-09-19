@@ -8,7 +8,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\User\User;
 
 
-class ChangeUserPasswordAction extends UserAction
+class ChangeUserPassword extends UserAction
 {
     /**
      * {@inheritdoc}

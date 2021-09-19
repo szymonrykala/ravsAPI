@@ -17,18 +17,18 @@ class CreateAccessAction extends AccessAction
  
         $accessId = $this->accessRepository->create(
             $form->name,
+            $form->owner,
             $form->accessAdmin,
             $form->premisesAdmin,
             $form->keysAdmin,
             $form->reservationsAdmin,
             $form->reservationsAbility,
             $form->logsAdmin,
-            $form->statsViewer,
-            $form->reportsViewer
+            $form->statsViewer
         );
 
         $this->logger->info("Access id=${accessId} has been created.");
-        
+
         return $this->respondWithData($accessId, 201);
     }
 }

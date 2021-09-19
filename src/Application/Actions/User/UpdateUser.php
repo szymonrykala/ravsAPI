@@ -9,7 +9,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\User\User;
 use Slim\Exception\HttpUnauthorizedException;
 
-class UpdateUserAction extends UserAction
+class UpdateUser extends UserAction
 {
     /**
      * {@inheritdoc}
@@ -18,7 +18,7 @@ class UpdateUserAction extends UserAction
     {
         $session = $this->request->getAttribute('session');
 
-        $userId = (int) $this->resolveArg('userId');
+        $userId = (int) $this->resolveArg('user_id');
 
         $form = $this->getFormData();
 

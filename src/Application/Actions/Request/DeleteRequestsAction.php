@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application\Actions\Request;
@@ -16,19 +17,13 @@ class DeleteRequestsAction extends RequestAction
     {
         $form = $this->getFormData();
 
-        $this->assertRequiredFields($form, ['ids' => gettype([])]);
-
-        $str_list = '';
-        foreach($form->ids as &$id)
-        {
-            if(!is_numeric($id)) throw new HttpBadRequestException($this->request, "Value '{$id}' is not numeric value.");
-            $id = (int) $id;
-            $str_list .= $id.', ';
-        }
-        
+        if (!isset($form->ids) || gettype($form->ids) !== 'array')
+            throw new HttpBadRequestException($this->request, 'You have to specify `ids` (type array) parameter');
+               
         $this->requestRepository->deleteList($form->ids);
 
-        $this->logger->info("User id {$this->session->userId} deleted {$str_list}");
+
+        $this->logger->info("User id {$this->session->userId} deleted {} images");
 
         return $this->respondWithData();
     }

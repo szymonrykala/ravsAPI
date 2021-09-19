@@ -79,7 +79,7 @@ class ActionPayload implements JsonSerializable
         $this->pagination && $payload['pagination'] = $this->pagination;
 
         if ($this->data !== null) {
-            $payload['data'] = $this->data;
+            $payload['data'] =  $this->data;
         } elseif ($this->error !== null) {
             $payload['error'] = $this->error;
         }

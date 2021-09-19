@@ -3,11 +3,9 @@ declare(strict_types=1);
 
 namespace App\Application\Actions\Building;
 
+use App\Utils\JsonDateTime;
 use Psr\Http\Message\ResponseInterface as Response;
 
-use App\Domain\Image\Image;
-use App\Domain\Address\Address;
-use DateTime;
 
 class CreateBuildingAction extends BuildingAction
 {
@@ -23,8 +21,8 @@ class CreateBuildingAction extends BuildingAction
 
         $createdBuildingId = $this->buildingRepository->create(
             $form->name,
-            new DateTime($form->open_time),
-            new DateTime($form->close_time),
+            new JsonDateTime($form->open_time),
+            new JsonDateTime($form->close_time),
             $addressId
         );
 
