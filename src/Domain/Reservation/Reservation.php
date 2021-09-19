@@ -7,8 +7,8 @@ namespace App\Domain\Reservation;
 use App\Domain\Model\Model;
 use App\Domain\Room\Room;
 use App\Domain\User\User;
-use DateTime;
-
+use App\Utils\JsonDateTime;
+use stdClass;
 
 class Reservation extends Model
 {
@@ -16,16 +16,12 @@ class Reservation extends Model
     public string      $description;
     public Room        $room;
     public User        $user;
-    public DateTime    $plannedStart;
-    public DateTime    $plannedEnd;
-    public ?DateTime    $actualStart;
-    public ?DateTime    $actualEnd;
-    public bool        $confirmed;
-    public ?User        $confirmedBy;
-    public ?DateTime    $confirmedAt;
+    public JsonDateTime    $plannedStart;
+    public JsonDateTime    $plannedEnd;
+    public ?JsonDateTime    $actualStart;
+    public ?JsonDateTime    $actualEnd;
 
     public int $userId;
-    public int $confirmingUserId;
     public int $roomId;
 
 
@@ -35,15 +31,12 @@ class Reservation extends Model
         string      $description,
         Room         $room,
         User         $user,
-        DateTime    $planned_start,
-        DateTime    $planned_end,
-        ?DateTime    $actual_start,
-        ?DateTime    $actual_end,
-        bool        $confirmed,
-        ?User         $confirmed_by,
-        ?DateTime    $confirmed_at,
-        DateTime    $created,
-        DateTime    $updated
+        JsonDateTime    $planned_start,
+        JsonDateTime    $planned_end,
+        ?JsonDateTime    $actual_start,
+        ?JsonDateTime    $actual_end,
+        JsonDateTime    $created,
+        JsonDateTime    $updated
     ) {
         parent::__construct($id, $created, $updated);
 
@@ -55,15 +48,62 @@ class Reservation extends Model
         $this->plannedEnd = $planned_end;
         $this->actualStart = $actual_start;
         $this->actualEnd = $actual_end;
-        $this->confirmed = $confirmed;
-        $this->confirmedBy = $confirmed_by;
-        $this->confirmedAt = $confirmed_at;
+
+        $this->roomId = $room->id;
+        $this->userId = $user->id;
+    }
+
+    /**
+     * @return bool
+     */
+    public function notStarted(): bool
+    {
+        return !$this->actualStart && !$this->actualEnd;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasStarted(): bool
+    {
+        return $this->actualStart && !$this->actualEnd;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasEnded(): bool
+    {
+        return $this->actualStart && $this->actualEnd;
+    }
+
+    /**
+     * @return void
+     * @throws ReservationAlreadyStartedException
+     */
+    public function start(): void
+    {
+        if (!$this->actualStart && !$this->actualEnd) {
+            $this->actualStart = new JsonDateTime();
+        } else
+            throw new ReservationAlreadyStartedException();
+    }
+
+    /**
+     * @return void
+     * @throws ReservationAlreadyEndedException
+     */
+    public function end(): void
+    {
+        if ($this->actualStart && !$this->actualEnd) {
+            $this->actualEnd = new JsonDateTime();
+        } else
+            throw new ReservationAlreadyEndedException();
     }
 
 
     /**
      * {@inheritdoc}
-     * @throws DomainConflictException
      */
     protected function validateCallback(): void
     {
@@ -75,21 +115,18 @@ class Reservation extends Model
      */
     public function jsonSerialize(): array
     {
-        return [
-            'id' => $this->id,
-            'title' => $this->title,
-            'description' => $this->description,
-            'room' => $this->room ?? $this->roomId,
-            'user' => $this->user ?? $this->userId,
-            'plannedStart' => $this->plannedStart->format('c'),
-            'plannedEnd' => $this->plannedEnd->format('c'),
-            'actualStart' => $this->actualStart && $this->actualStart->format('c'),
-            'actualEnd' => $this->actualEnd && $this->actualEnd->format('c'),
-            'confirmed' => $this->confirmed,
-            'confirmedBy' => $this->confirmedBy,
-            'confirmedAt' => $this->confirmedAt && $this->confirmedAt->format('c'),
-            'created' => $this->created->format('c'),
-            'updated' => $this->updated->format('c'),
-        ];
+        return array_merge(
+            [
+                'title' => $this->title,
+                'description' => $this->description,
+                'room' => $this->room ?? $this->roomId,
+                'user' => $this->user ?? $this->userId,
+                'plannedStart' => $this->plannedStart,
+                'plannedEnd' => $this->plannedEnd,
+                'actualStart' => $this->actualStart,
+                'actualEnd' => $this->actualEnd
+            ],
+            parent::jsonSerialize()
+        );
     }
 }

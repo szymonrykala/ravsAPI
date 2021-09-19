@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Domain\Reservation\Policy;
 
-use App\Domain\Exception\DomainBadRequestException;
+use App\Domain\Exception\DomainConflictException;
 
 
 
-class IncorrectTimeSlotException extends DomainBadRequestException
+class IncorrectTimeSlotException extends DomainConflictException
 {
     public function __construct(?string $message = NULL)
     {

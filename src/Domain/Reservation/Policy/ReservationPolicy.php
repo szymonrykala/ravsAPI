@@ -8,13 +8,13 @@ namespace App\Domain\Reservation\Policy;
 
 use App\Domain\Building\Building;
 use App\Domain\Building\IBuildingRepository;
-use App\Domain\Exception\DomainBadRequestException;
+use App\Domain\Reservation\Reservation;
 use App\Domain\Room\Room;
 use App\Domain\Room\RoomRepositoryInterface;
 use App\Domain\User\User;
 use App\Domain\User\UserRepositoryInterface;
 use App\Infrastructure\Database\IDatabase;
-use DateTime;
+use App\Utils\JsonDateTime;
 use DateInterval;
 use stdClass;
 
@@ -31,8 +31,6 @@ abstract class ReservationPolicy
     protected User $user;
     protected Room $room;
     protected Building $building;
-
-    protected stdClass $form;
 
 
     /**
@@ -57,30 +55,83 @@ abstract class ReservationPolicy
 
     /**
      * @param stdClass form data
+     * @return void
      */
-    abstract function __invoke(stdClass $form): void;
+    abstract function __invoke(stdClass $form, ?Reservation $originalReservation = NULL): void;
 
     /**
      * check if the room is blocked
      * @throws BlockedRoomException
+     * @return void
      */
-    protected function checkRoom(): void
+    protected function roomCannotBeBlocked(): void
+    {
+        if ($this->room->blocked)
+            throw new BlockedRoomException();
+    }
+
+    /**
+     * @throws RoomBuildingConflictException
+     * @return void
+     */
+    protected function roomBelongsToBuilding(): void
     {
         if ($this->room->buildingId !== $this->building->id)
             throw new RoomBuildingConflictException(
                 $this->room->id,
                 $this->building->id
             );
-
-        if ($this->room->blocked)
-            throw new BlockedRoomException();
     }
 
-    protected function checkTimePolicies(?int $excludeSelfId = NULL): void
+    /**
+     * @throws IncorrectTimeSlotException
+     * @return void
+     */
+    protected function reservationHasFutureTime(): void
     {
-        $this->checkTimeSlot();
-        $this->checkBuildingOpeningHours();
-        $this->checkSimilarReservationTimeSlot($excludeSelfId);
+        $now = new JsonDateTime('now');
+
+        $futureTime = $this->start > $now;
+
+        if (!$futureTime)
+            throw new IncorrectTimeSlotException(
+                'The time you want to reserve has already passed.'
+            );
+    }
+
+    /**
+     * @throws IncorrectTimeSlotException
+     * @return void
+     */
+    protected function reservationTimeSlotLengthIsOk(): void
+    {
+        /** @var DateInterval $timeDiff*/
+        $timeDiff = $this->start->diff($this->end);
+
+        if ($timeDiff->invert === 1)
+            throw new IncorrectTimeSlotException(
+                'Incorrect time slot: \'plannedStart\' have to be earlier then \'plannedEnd\''
+            );
+
+
+        // 0 days, 0 months, 0 years, max time is 12:59:59
+        $timeSlotToLong = !($timeDiff->h <= 12
+            && $timeDiff->d === 0
+            && $timeDiff->m === 0
+            && $timeDiff->y === 0);
+
+        // at least 30 minutes
+        $timeSlotToShort = !($timeDiff->i >= 30 || $timeDiff->h > 0);
+
+        if ($timeSlotToLong)
+            throw new IncorrectTimeSlotException(
+                'Reservation time slot is too long - maximum time is 12 hours.'
+            );
+
+        if ($timeSlotToShort)
+            throw new IncorrectTimeSlotException(
+                'Reservation time is to short - at least 30 minutes is required.'
+            );
     }
 
     /**
@@ -88,46 +139,18 @@ abstract class ReservationPolicy
      * @throws TimeSlotConflictException
      * @return void
      */
-    private function checkBuildingOpeningHours(): void
+    protected function reservationWhenBuildingIsOpen(): void
     {
 
-        $startTimeCorrect = $this->form->plannedStart > $this->building->openTime;
-        $endTimeCorrect = $this->form->plannedEnd < $this->building->closeTime;
+        $startsAfterOpen = $this->start->getTime() > $this->building->openTime->getTime();
+        $endsBeforeClose = $this->end->getTime() < $this->building->closeTime->getTime();
 
-        if (!$startTimeCorrect && !$endTimeCorrect)
+        if (!$startsAfterOpen || !$endsBeforeClose)
             throw new TimeSlotConflictException(
-                'Building opening hours are '
-                    . $this->building->openTime->format('H:i:s')
-                    . ' to ' . $this->building->closeTime->format('H:i:s')
-                    . '. Please, change reservation time slot.'
-            );
-    }
-
-
-    /**
-     * check if the time slot is correct
-     * @throws IncorrectTimeSlotException
-     * @return void
-     */
-    private function checkTimeSlot(): void
-    {
-        /** @var DateInterval $timeDiff*/
-        $timeDiff = $this->form->plannedStart->diff($this->form->plannedEnd);
-
-        if ($timeDiff->invert === 1)
-            throw new IncorrectTimeSlotException(
-                'Incorrect time slot: plannedStart have to be earlier then plannedEnd'
-            );
-
-        // 0 days, 0 months, 0 years, max time is 12:59:59
-        $correctTimeSpan = $timeDiff->h <= 12
-            && $timeDiff->d === 0
-            && $timeDiff->m === 0
-            && $timeDiff->y === 0;
-
-        if (!$correctTimeSpan)
-            throw new IncorrectTimeSlotException(
-                "Reservation time slot is too big. Maximum time is 12 hours."
+                'Building opening hours are \''
+                    . $this->building->openTime->getTime()
+                    . '\' to \'' . $this->building->closeTime->getTime()
+                    . '\'. Please, change reservation time slot.\''
             );
     }
 
@@ -136,19 +159,27 @@ abstract class ReservationPolicy
      * @throws TimeSlotConflictException
      * @return void
      */
-    private function checkSimilarReservationTimeSlot(?int $excludeId = NULL): void
+    protected function noCrossingReservationWasMade(?int $excludeId = NULL): void
     {
         $sql = 'SELECT `id` from `reservation` WHERE '
-            .( $excludeId ? '`id` ~= :reservationId AND ':'' ).
+            . ($excludeId ? '`id` != :reservationId AND ' : '') . //excluding current reservation while updating
             '`room` = :roomId 
-                    AND (`planned_start` BETWEEN :plannedStart AND :plannedEnd
-                    OR `planned_end` BETWEEN :plannedStart AND :plannedEnd)
+                AND (
+                        (
+                            `planned_start` BETWEEN :plannedStart AND :plannedEnd
+                            OR `planned_end` BETWEEN :plannedStart AND :plannedEnd
+                        )
+                        OR 
+                        (
+                            `planned_start` < :plannedStart AND `planned_end` > :plannedEnd
+                        )
+                    )
          ';
 
         $params = [
             ':roomId' => $this->room->id,
-            ':plannedStart' => $this->form->plannedStart->format('c'),
-            ':plannedEnd' => $this->form->plannedEnd->format('c')
+            ':plannedStart' => $this->start,
+            ':plannedEnd' => $this->end
         ];
 
         if ($excludeId) $params[':reservationId'] = $excludeId;

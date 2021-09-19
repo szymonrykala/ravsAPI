@@ -6,79 +6,65 @@ namespace App\Domain\Reservation;
 
 use App\Domain\Model\RepositoryInterface;
 use App\Utils\Pagination;
-use DateTime;
+use App\Utils\JsonDateTime;
 
 
 interface IReservationRepository extends RepositoryInterface
 {
     /**
-     * @param Reservation reservation
-     * @return void
+     * Saves reservation object state
      */
     public function save(Reservation $reservation): void;
 
     /**
-     * @param string      title,
-     * @param string      description,
-     * @param int         room,
-     * @param int         user,
-     * @param DateTime    planned_start,
-     * @param DateTime    planned_end,
-     * @return int
+     * Creates new reservation object
      */
     public function create(
         string      $title,
         string      $description,
         int         $room,
         int         $user,
-        DateTime    $planned_start,
-        DateTime    $planned_end
+        JsonDateTime    $planned_start,
+        JsonDateTime    $planned_end
     ): int;
 
     /**
-     * @param Pagination data
-     * @return int pagesCount
+     * @param int $deletedUserId
      */
-    public function setPagination(Pagination $pagination): void;
+    public function deleteAllFutureUserReservations(int $deletedUserId): void;
 
     /**
-     * @return Pagination
+     * Read reservation from given date
      */
-    public function getPagination(): Pagination;
+    public function fromDate(JsonDateTime $date): void;
 
     /**
-     * @param DateTime date
-     * @return void
-     */
-    public function withDate(DateTime $date): void;
-
-    /**
-     * @param DateTime date
-     * @return void
-     */
-    public function withCreateDate(DateTime $date): void;
-
-    /**
-     * @return void
+     * Search given phrase in title and description of reservations
      */
     public function like(string $stringToSearch): void;
 
     /**
-     * @param int userId
-     * @return void
+     * Read reservations from specific building
+     */
+    public function whereBuildingId(int $buildingId): void;
+
+    /**
+     * Read reservations from specific address
+     */
+    public function whereAddressId(int $addressId): void;
+
+    /**
+     * Read reservations from specific address and building
+     */
+    public function whereAddressAndBuilding(int $addressId, int $buildingId): void;
+
+    /**
+     * Read reservation for specific user
      */
     public function forUser(int $userId): void;
 
     /**
-     * @param int userId
-     * @return void
-     */
-    public function confirmedByUser(int $userId): void;
-
-    /**
-     * @param int roomId
-     * @return void
+     * Read reservations for specific room
      */
     public function forRoom(int $roomId): void;
-
 }
