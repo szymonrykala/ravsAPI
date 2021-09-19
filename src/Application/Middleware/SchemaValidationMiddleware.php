@@ -24,7 +24,6 @@ use App\Utils\JsonSchemaValidator;
 class SchemaValidationMiddleware implements Middleware
 {
 
-    //// ODWRÓCIĆ KOLEJNOŚĆ POST => [/use=>link, ...]
     private array $loadMap = [
         'POST' => [
             '/users/auth' => '/user/login.json',
@@ -34,6 +33,7 @@ class SchemaValidationMiddleware implements Middleware
             '/addresses' => '/address/create.json',
             '/addresses/id/buildings' => '/building/create.json',
             '/addresses/id/buildings/id/rooms' => '/room/create.json',
+            '/addresses/id/buildings/id/rooms/id/reservations' => '/reservation/create.json',
         ],
         'PATCH' => [
             '/users/activate' => '/user/activate.json',
@@ -44,6 +44,11 @@ class SchemaValidationMiddleware implements Middleware
             '/addresses/id' => '/address/update.json',
             '/addresses/id/buildings/id' => '/building/update.json',
             '/addresses/id/buildings/id/rooms/id' => '/room/update.json',
+            '/addresses/id/buildings/id/rooms/id/reservations/id' => '/reservation/update.json',
+            '/configurations' => '/configuration/update.json',
+            '/addresses/id/buildings/id/rooms/id/reservations/id/keys' => '/key/update.json',
+            '/addresses/id/buildings/id/rooms/id/keys' => '/key/update.json',
+
         ]
     ];
 
@@ -103,7 +108,8 @@ class SchemaValidationMiddleware implements Middleware
     private function getProcessURI(): string
     {
         return preg_replace(
-            '/([a-z]+)\/(\d+)/', '$1/id', 
+            '/([a-z]+)\/(\d+)/',
+            '$1/id',
             $this->request->getUri()->getPath()
         );
     }
