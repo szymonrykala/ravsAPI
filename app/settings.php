@@ -17,7 +17,7 @@ return function (ContainerBuilder $containerBuilder) {
                 'logError'            => false,
                 'logErrorDetails'     => false,
                 'logger' => [
-                    'name' => 'slim-app',
+                    'name' => 'ravs_api',
                     'path' => isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app.log',
                     'level' => Logger::DEBUG,
                 ],
@@ -31,7 +31,7 @@ return function (ContainerBuilder $containerBuilder) {
 
                 'image' => [
                     'directory' => '/resources' . DIRECTORY_SEPARATOR,
-                    'maxSize' => 500 * 1000
+                    'maxSize' => 500 * 1000 // 500kb
                 ]
             ]);
         }

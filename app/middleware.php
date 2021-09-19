@@ -8,12 +8,15 @@ use App\Application\Middleware\{
     SchemaValidationMiddleware,
     BodyParsingMiddleware,
     RequestLoggingMiddleware,
-    SessionMiddleware
+    SessionMiddleware,
+    ConfigurationLoadingMiddleware,
+    AuthorizationMiddleware
 };
 
 return function (App $app) {
     $app
     ->add(SchemaValidationMiddleware::class)
+    ->add(ConfigurationLoadingMiddleware::class)
     ->add(RequestLoggingMiddleware::class)
     ->add(SessionMiddleware::class)
     ->add(BodyParsingMiddleware::class);

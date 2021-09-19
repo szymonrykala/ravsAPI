@@ -5,3 +5,8 @@
 /logs/*
 !/logs/README.md
 .phpunit.result.cache
+
+/docs
+/phpdoc.xml
+.phpdoc
+.editorconfig

@@ -1,5 +1,5 @@
 {
-    "name": "ravs_api",
+    "name": "ravs/api",
     "description": "REST API for RAVS system",
     "keywords": [
         "microframework",
@@ -10,7 +10,7 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "Szymon Rykała",
+            "name": "Szymon Rykala",
             "email": "szymonrykala@gmail.com"
         }
     ],

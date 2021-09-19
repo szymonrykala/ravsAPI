@@ -14,6 +14,10 @@ use App\Infrastructure\Database;
 use App\Application\Actions\IActionCache;
 use App\Application\Actions\ActionMemoryCache;
 
+use App\Domain\Reservation\Policy\ReservationCreatePolicy;
+
+use function DI\autowire;
+
 return function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
         LoggerInterface::class => function (ContainerInterface $c) {
@@ -46,6 +50,8 @@ return function (ContainerBuilder $containerBuilder) {
             );
 
             return $database;
-        }
+        },
+
+        ReservationCreatePolicy::class => autowire(ReservationCreatePolicy::class)
     ]);
 };
