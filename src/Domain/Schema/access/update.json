@@ -2,7 +2,11 @@
     "type": "object",
     "properties": {
         "name": {
-            "$ref": "api://schema/reuse/name.json.json"
+            "$ref": "api://schema/reuse/name.json"
+        },
+        "owner": {
+            "type": "boolean",
+            "default": false
         },
         "accessAdmin": {
             "type": "boolean",
@@ -29,10 +33,6 @@
             "default": false
         },
         "statsViewer": {
-            "type": "boolean",
-            "default": false
-        },
-        "reportsViewer": {
             "type": "boolean",
             "default": false
         }

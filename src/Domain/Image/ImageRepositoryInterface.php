@@ -12,12 +12,6 @@ interface ImageRepositoryInterface extends RepositoryInterface
 {
 
     /**
-     * @param int $id
-     * @throws ImageDeleteException
-     */
-    public function deleteById(int $id): void;
-
-    /**
      * @param UploadedFileInterface $file
      * @return int $id of saved image
      * 

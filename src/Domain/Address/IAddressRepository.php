@@ -9,11 +9,7 @@ use App\Domain\Model\RepositoryInterface;
 
 interface IAddressRepository extends RepositoryInterface
 {
-        /**
-     * @param int $id
-     */
-    public function deleteById(int $id): void;
-    
+
     /**
      * @param Address $access
      */

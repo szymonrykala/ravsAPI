@@ -1,46 +1,48 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Domain\Model;
 
+use App\Utils\Pagination;
 
 interface RepositoryInterface
 {
 
     /**
-     * @param array $searchParams
-     * @return self
+     * Builds WHERE clause of query with provided data of array
      */
-    public function where(array $searchParams): self;
+    public function where(array $searchParams): RepositoryInterface;
 
     /**
-     * @param array $dateParams
-     * @return self
+     * Enables ordering on results
      */
-    public function withDates(array $dateParams): self;
-    
-    /**
-     * @param int $number
-     * @param int $limit
-     * @return array
-     */
-    public function page(int $number, int $limit): array;
+    public function orderBy(string $name, string $direction = 'DESC'): RepositoryInterface;
 
     /**
+     * Sets pagination feature enabled
+     */
+    public function setPagination(Pagination &$pagination): RepositoryInterface;
+
+    /**
+     * reads all results of query
      * @return Model[]
      */
     public function all(): array;
 
     /**
-     * @param int $id
      * @return Model
+     */
+    public function one(): Model;
+
+    /**
+     * Reads specific object by provided id
      * @throws DomainRecordNotFoundException
      */
     public function byId(int $id): Model;
 
     /**
-     * @param Model $object
-     * @return void
+     * Deletes provided object
      */
     public function delete(Model $object): void;
 }

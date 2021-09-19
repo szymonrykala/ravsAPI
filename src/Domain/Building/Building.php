@@ -68,8 +68,8 @@ class Building extends Model
                 'name' => $this->name,
                 'image' => $this->image,
                 'address' => $this->address ?? $this->addressId,
-                'openTime' => $this->openTime->format('H:i:s'),
-                'closeTime' => $this->closeTime->format('H:i:s'),
+                'openTime' => $this->openTime->getTime(),
+                'closeTime' => $this->closeTime->getTime(),
             ],
             parent::jsonSerialize()
         );

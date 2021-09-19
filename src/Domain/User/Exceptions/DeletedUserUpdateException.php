@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Domain\User\Exceptions;
 use App\Domain\Exception\DomainForbiddenOperationException;
 
-class DefaultUserUpdateException extends DomainForbiddenOperationException
+class DeletedUserUpdateException extends DomainForbiddenOperationException
 {
-    public $message = "Can not update default admin user.";
+    public $message = "Can not update deleted user.";
 }

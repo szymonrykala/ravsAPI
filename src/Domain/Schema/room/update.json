@@ -25,10 +25,6 @@
         },
         "blocked": {
             "type": "boolean"
-        },
-        "rfid": {
-            "type": "string",
-            "minLength": 5
         }
 	},
 	"required": [],

@@ -15,11 +15,6 @@ interface IBuildingRepository extends RepositoryInterface
      * @return IBuildingRepository
      */
     public function withAddress(): IBuildingRepository;
-
-    /**
-     * @param int id
-     */
-    public function deleteById(int $id): void;
     
     /**
      * @param Building building
@@ -38,11 +33,4 @@ interface IBuildingRepository extends RepositoryInterface
         int $addressId
     ): int;
 
-    /**
-     * @param int buildingId
-     * @param int addressId
-     * @return Building
-     * @throws DomainRecordNotFoundException
-     */
-    public function byIdAndAddressId(int $buildingId, int $addressId): Building;
 }

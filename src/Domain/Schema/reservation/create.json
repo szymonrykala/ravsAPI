@@ -6,7 +6,7 @@
 		},
 		"description": {
 			"type": "string",
-			"pattern": "^[\\w\\s\\.-]+$",
+			"pattern": "^[\\w\\s\\.\\-\\,\\!\\?\\+\\*]+$",
 			"maxLength": 800,
 			"default": "No description"
 		},
@@ -15,6 +15,9 @@
 		},
 		"plannedEnd": {
 			"$ref": "api://schema/reuse/datetime.json"
+		},
+		"roomId": {
+			"$ref":"api://schema/reuse/id.json"
 		}
 	},
 	"required": [

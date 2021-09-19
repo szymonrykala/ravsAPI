@@ -72,6 +72,41 @@ class Room extends Model
     }
 
     /**
+     * @param string key
+     * @return void
+     * @throws RfidKeyNotValidException
+     */
+    public function valiadateRfidKey(string $key): void
+    {
+        if ($key !== $this->rfid)
+            throw new RfidKeyNotValidException();
+    }
+
+    /**
+     * @return void
+     * @throws RoomAlreadyOccupiedException
+     */
+    public function occupy(): void
+    {
+        if ($this->occupied)
+            throw new RoomAlreadyOccupiedException();
+
+        $this->occupied = TRUE;
+    }
+
+    /**
+     * @return void
+     * @throws RoomAlreadyEmptyException
+     */
+    public function release(): void
+    {
+        if ($this->occupied === FALSE)
+            throw new RoomAlreadyEmptyException();
+
+        $this->occupied = FALSE;
+    }
+
+    /**
      * @return array
      */
     public function jsonSerialize(): array
