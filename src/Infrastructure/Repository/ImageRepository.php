@@ -17,8 +17,8 @@ use App\Domain\Image\{
     ImageSizeExceededException,
     ImageRepositoryInterface
 };
-
-use DateTime;
+use App\Domain\Model\Model;
+use App\Utils\JsonDateTime;
 
 
 
@@ -38,7 +38,7 @@ class ImageRepository extends BaseRepository implements ImageRepositoryInterface
     }
 
     /**
-     * @param array $data from database
+     * {@inheritDoc}
      * @return Image $image
      */
     protected function newItem(array $data): Image
@@ -46,30 +46,41 @@ class ImageRepository extends BaseRepository implements ImageRepositoryInterface
         return new Image(
             (int) $data['id'],
             $data['path'],
-            new DateTime($data['created']),
-            new DateTime($data['updated'])
+            new JsonDateTime($data['created']),
+            new JsonDateTime($data['updated'])
         );
     }
 
 
     /**
-     * {@inheritdoc}
+     * Delete image is it is not default and nobody is use it
+     * {@inheritDoc}
+     * @throws ImageDeleteException
      */
-    public function deleteById(int $id): void
+    public function delete(Model $image): void
     {
-        $image = $this->byId($id);
-
+        // if image is one of the defaults, or can not delete from some reason throw error
         if (strpos($image->path, 'default') !== False || !unlink($this->public . $image->path)) {
             throw new ImageDeleteException($image->path);
         }
 
-        $sql = "DELETE FROM `$this->table` WHERE `id` = :id";
-        $params = [':id' => $image->id];
-        $this->db->query($sql, $params);
+        // image is not default imageand is used by noone
+        $sql = "DELETE FROM $this->table WHERE `id` = :imageId
+                    AND `id` NOT IN (SELECT `value` FROM $this->configTable WHERE `key` IN ('BUILDING_IMAGE','ROOM_IMAGE','USER_IMAGE'))
+                    AND (
+                        SELECT COUNT(i.id) 
+                            FROM image i
+                                LEFT JOIN user u ON i.id = u.image 
+                                LEFT JOIN room r ON i.id = r.image 
+                                LEFT JOIN building b ON b.image = i.id 
+                            WHERE i.id = :imageId
+                    ) = 0
+        ";
+        $this->db->query($sql, [':imageId' => $image->id]);
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      * @throws ImageSizeExceededException
      */
     public function save(UploadedFileInterface $file): int
@@ -89,9 +100,7 @@ class ImageRepository extends BaseRepository implements ImageRepositoryInterface
     }
 
     /**
-     * @param string $directory
-     * @param UploadFileInterface $uploadedFile
-     * @return string $filename
+     * Moves uploaded file to new location and return it's name
      */
     private function moveUploadedFile(string $directory, UploadedFileInterface $uploadedFile): string
     {

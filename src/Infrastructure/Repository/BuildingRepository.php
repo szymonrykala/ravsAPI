@@ -12,11 +12,10 @@ use App\Domain\Building\{
     Building
 };
 
-use App\Domain\Exception\DomainResourceNotFoundException;
 use App\Domain\Image\ImageRepositoryInterface;
+use App\Domain\Model\Model;
 use App\Infrastructure\Database\IDatabase;
-use DateTime;
-
+use App\Utils\JsonDateTime;
 
 
 final class BuildingRepository extends BaseRepository implements IBuildingRepository
@@ -27,10 +26,7 @@ final class BuildingRepository extends BaseRepository implements IBuildingReposi
 
     private bool $addressLoading = FALSE;
 
-    /**
-     * @param IDatabase db database
-     * @param ImageInterfaceRepository imagerRpository
-     */
+
     public function __construct(
         IDatabase $db,
         ImageRepositoryInterface $imageRepository,
@@ -42,7 +38,7 @@ final class BuildingRepository extends BaseRepository implements IBuildingReposi
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function withAddress(): IBuildingRepository
     {
@@ -51,30 +47,29 @@ final class BuildingRepository extends BaseRepository implements IBuildingReposi
     }
 
     /**
-     * @param array $data from database
-     * @return Building
+     * {@inheritDoc}
      */
     protected function newItem(array $data): Building
     {
         $image = $this->imageRepository->byId((int)$data['image']);
-        $address = $this->addressLoading ? $this->addressRepository->byId((int) $data['address']): NULL;
+        $address = $this->addressLoading ? $this->addressRepository->byId((int) $data['address']) : NULL;
 
         return new Building(
             (int)   $data['id'],
-                    $data['name'],
-                    $image,
-                   $address,
-            new DateTime($data['open_time']),
-            new DateTime($data['close_time']),
-            new DateTime($data['created']),
-            new DateTime($data['updated']),
+            $data['name'],
+            $image,
+            $address,
+            new JsonDateTime($data['open_time']),
+            new JsonDateTime($data['close_time']),
+            new JsonDateTime($data['created']),
+            new JsonDateTime($data['updated']),
             (int) $data['image'],
             (int) $data['address']
         );
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function save(Building $building): void
     {
@@ -91,8 +86,8 @@ final class BuildingRepository extends BaseRepository implements IBuildingReposi
             ':name' => $building->name,
             ':addressId' => $building->addressId,
             ':imageId' => $building->imageId,
-            ':openTime' =>  $building->openTime->format('H:i:s'),
-            ':closeTime' => $building->closeTime->format('H:i:s'),
+            ':openTime' =>  $building->openTime->getTime(),
+            ':closeTime' => $building->closeTime->getTime(),
             ':id' => $building->id
         ];
 
@@ -100,21 +95,21 @@ final class BuildingRepository extends BaseRepository implements IBuildingReposi
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function create(
         string $name,
-        DateTime $openTime,
-        DateTime $closeTime,
+        JsonDateTime $openTime,
+        JsonDateTime $closeTime,
         int $addressId
     ): int {
-        $sql = "INSERT `$this->table`(name, address, open_time, close_time) 
-                    VALUES(:name, :address, :openTime, :closeTime)";
+        $sql = "INSERT `$this->table`(name, address, open_time, close_time, image) 
+                    VALUES(:name, :address, :openTime, :closeTime, (SELECT `value` FROM configuration WHERE `key`='BUILDING_IMAGE'))";
         $params = [
             ':name' => $name,
             ':address' => $addressId,
-            ':openTime' => $openTime->format('H:i:s'),
-            ':closeTime' => $closeTime->format('H:i:s'),
+            ':openTime' => $openTime->getTime(),
+            ':closeTime' => $closeTime->getTime(),
         ];
 
         $this->db->query($sql, $params);
@@ -122,33 +117,12 @@ final class BuildingRepository extends BaseRepository implements IBuildingReposi
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
+     * @param Building
      */
-    public function byIdAndAddressId(int $buildingId, int $addressId): Building
+    public function delete(Model $building): void
     {
-        $sql = "SELECT * FROM `$this->table` WHERE `id` = :id AND `address` = :addressId";
-        $params = [
-            ':id' => $buildingId,
-            ':addressId' => $addressId
-        ];
-
-        $result = $this->db->query($sql, $params);
-        $buildingData = array_pop($result);
-
-        if (empty($buildingData)) {
-            throw new DomainResourceNotFoundException();
-        }
-
-        return $this->newItem($buildingData);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function deleteById(int $id): void
-    {
-        $sql = "DELETE FROM `$this->table` WHERE `id` = :id";
-        $params = [':id' => $id];
-        $this->db->query($sql, $params);
+        parent::delete($building);
+        $this->imageRepository->delete($building->image);
     }
 }

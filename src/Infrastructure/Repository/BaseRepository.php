@@ -4,26 +4,33 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Repository;
 
-use Psr\Container\ContainerInterface;
 use App\Infrastructure\Database\IDatabase;
 use App\Domain\Model\RepositoryInterface;
 use App\Domain\Model\Model;
 
 
 use App\Domain\Exception\DomainResourceNotFoundException;
+use App\Utils\Pagination;
 use App\Utils\RepositoryCache;
+
 
 abstract class BaseRepository implements RepositoryInterface
 {
+    private Pagination $pagination;
 
     protected RepositoryCache $cache;
+    protected string $configTable = 'configuration';
 
-    private string $dateSearch = "";
-    private string $limit = "";
+    protected string $SQL;
+    protected string $SQLwhere = ' WHERE 1=1';
+    protected string $SQLlimit = '';
+    protected string $SQLorder = ' ORDER BY `created` DESC';
 
+    protected array $params = [];
+
+    /** Database table name */
     protected string $table;
     protected string $sql = ' ';
-    protected array $params = [];
 
     /**
      * @param IDatabase db database
@@ -32,35 +39,27 @@ abstract class BaseRepository implements RepositoryInterface
     {
         $this->db = $db;
         $this->db->connect();
+
+        $this->SQL = 'SELECT * FROM ' . $this->table;
+
+
         $this->cache = new RepositoryCache();
     }
 
     /**
-     * @param array $data
+     * Creates new Domain object from provided data
      * @return Model
      */
     abstract protected function newItem(array $data): Model;
 
-    /**
-     * @return array
-     */
-    private function executeQuery(): array
-    {
-        $data = $this->db->query($this->sql, $this->params);
-
-        $this->sql = ' ';
-        $this->params = [];
-        return $data;
-    }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function where(array $searchParams): BaseRepository
+    public function where(array $searchParams): RepositoryInterface
     {
-        $this->sql = ' WHERE 1=1';
         foreach ($searchParams as $key => $value) {
-            $this->sql .= " AND `$this->table`.`$key`=:$key";
+            $this->SQLwhere .= " AND `$this->table`.`$key`=:$key";
             $this->params[":$key"] = $value;
         }
 
@@ -68,95 +67,101 @@ abstract class BaseRepository implements RepositoryInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function withDates(array $dateFields): self
+    public function orderBy(string $name, string $direction = 'DESC'): RepositoryInterface
     {
-        /**
-         * [{
-         *      'name' = any timestamped field
-         *      'operator' = [<>=]
-         *      'value' = timestamp ISO format
-         *  }, {...}]
-         */
-        foreach ($dateFields as $key => $field) {
-            $this->dateSearch .= " AND `$field->name` $field->operator TIMESTAMP(:$key$field->name)";
-            $this->params[$key . $field->name] = $field->value;
-        }
+        $this->SQLorder = " ORDER BY `${name}` ${direction}";
 
         return $this;
     }
 
+
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function page(int $number, int $limit = 20): array
+    public function setPagination(Pagination &$pagination): RepositoryInterface
     {
+        $this->pagination = $pagination;
+        /** @var string localSQL */
+        $localSQL = $this->SQL . $this->SQLwhere;
 
-        $localSql = 'SELECT count(id) as `rows_count` FROM '
-            . $this->table
-            . $this->sql
-            . $this->dateSearch;
+        $localSQL = preg_replace('/SELECT(.*)FROM\s(\w+)(.*)/i', 'SELECT COUNT($2.id) as items_count FROM $2 $3', $localSQL);;
+        // print_r($localSQL);
 
-        $rowsCount = (int) $this->db->query($localSql, $this->params)[0]['rows_count'];
+        $result = $this->db->query($localSQL, $this->params)[0];
 
-        $this->limit = 'LIMIT ' . $limit * ($number - 1) . ',' . $limit;
+        $this->pagination->calculatePagesCount((int) $result['items_count']);
+        $this->SQLlimit = $this->pagination->generateSQL();
 
-        return [
-            'page' => $number,
-            'perPage' => $limit,
-            'pagesCount' => ceil($rowsCount / $limit),
-            'data' => $this->all()
-        ];
+        return $this;
     }
 
+
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function all(): array
     {
-        $this->sql = 'SELECT * FROM '
-            . $this->table
-            . $this->sql
-            . $this->dateSearch
-            . $this->limit;
+        $results = $this->executeQuery();
 
-        $data = $this->executeQuery();
-
-        $items = [];
-        foreach ($data as $userData) {
-            array_push($items, $this->newItem($userData));
-        }
-
-        return $items;
+        return array_map(fn ($data) => $this->newItem($data), $results);
     }
 
+
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function byId(int $id): Model
+    public function one(): Model
     {
-        $sql = "SELECT * FROM `$this->table` WHERE `id` = :id";
-
-        $item = $this->cache->get($sql.$id);
-        if (!empty($item)) return $item;
-
-        $params = [':id' => $id];
-
-        $result = $this->db->query($sql, $params);
-        $item = array_pop($result);
+        $results = $this->executeQuery();
+        $item = array_pop($results);
 
         if (empty($item)) {
             throw new DomainResourceNotFoundException();
         }
 
-        $item = $this->cache->add($sql.$id, $this->newItem($item));
+        return $this->newItem($item);
+    }
+
+    protected function executeQuery(): array
+    {
+        // echo "\n" . $this->SQL . $this->SQLwhere . $this->SQLorder . $this->SQLlimit . "\n";
+
+        $result =  $this->db->query(
+            $this->SQL . $this->SQLwhere . $this->SQLorder . $this->SQLlimit,
+            $this->params
+        );
+        $this->SQLwhere = ' WHERE 1=1';
+
+        return $result;
+    }
+
+    /** 
+     * {@inheritDoc}
+     */
+    public function byId(int $id): Model
+    {
+        $result = $this->db->query(
+            "SELECT * FROM $this->table WHERE id=:id",
+            [':id' => $id]
+        );
+
+        if (empty($result)) throw new DomainResourceNotFoundException();
+
+        $key = get_class($this) . $id;
+
+        $item = $this->cache->get($key);
+        if (!empty($item)) return $item;
+
+        $item = $this->newItem(array_pop($result));
+        $this->cache->add($key, $item);
 
         return $item;
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function delete(Model $object): void
     {

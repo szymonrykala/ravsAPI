@@ -34,7 +34,7 @@ class MySQLDatabase implements IDatabase
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function connect(): void
     {
@@ -51,7 +51,7 @@ class MySQLDatabase implements IDatabase
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function query(string $sql, array $params = []): array
     {
@@ -60,7 +60,7 @@ class MySQLDatabase implements IDatabase
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function lastInsertId(): int
     {
