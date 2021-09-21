@@ -36,7 +36,7 @@ class HandOverKey extends KeyAction
             $policy = new KeyReturnPolicy($reservation);
 
         } elseif ($reservation->hasEnded()) {
-            throw new HttpConflictException($this->request, 'Reservation already ended.');
+            throw new HttpConflictException($this->request, 'Reservation has already ended.');
         }
 
         $reservation = $policy($form->NFCTag);

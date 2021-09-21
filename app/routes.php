@@ -34,17 +34,20 @@ function addReservationGets(&$resourcePath)
     });
 }
 
-function registerReservation(&$roomPath)
-{
-    $roomPath->group('/reservations', function (Group $reservations) {
-        $reservations->get('', Reservation\ListReservations::class);
-        $reservations->post('', Reservation\CreateReservation::class);
+// function registerReservation(&$roomPath)
+// {
+//     $roomPath->group('/reservations', function (Group $reservations) {
+//         $reservations->get('', Reservation\ListReservations::class);
+//         $reservations->post('', Reservation\CreateReservation::class);
 
-        $reservations->group('/{reservation_id}', function (Group $reservation) {
-            $reservation->get('', Reservation\ViewReservation::class);
-        });
-    });
-}
+//         $reservations->group('/{reservation_id}', function (Group $reservation) {
+//             $reservation->get('', Reservation\ViewReservationAction::class);
+//             $reservation->patch('', Reservation\UpdateReservationAction::class);
+
+//             $reservation->patch('/keys', Key\AssignKey::class);
+//         });
+//     });
+// }
 
 function registerRooms(&$buildingPath)
 {
@@ -59,7 +62,9 @@ function registerRooms(&$buildingPath)
 
             $one->patch('/keys', Key\AssignKey::class);
 
-            registerReservation($one);
+            // registerReservation($one);
+            $one->post('/reservations', Reservation\CreateReservation::class);
+            addReservationGets($one);
         });
     });
 }

@@ -8,4 +8,5 @@ use Slim\Exception\HttpException;
 
 class HttpConflictException extends HttpException
 {
+    public $code = 409;
 }

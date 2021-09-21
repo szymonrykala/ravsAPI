@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application\Actions\Request;
@@ -17,23 +18,23 @@ class ListRequestsAction extends RequestAction
         $searchParams = [];
 
         $subject = $this->resolveArg('subject');
-        
-            $searchParams['endpoint'] = '/'.$subject;
 
-            if(isset($this->args['subject_id']))
-            {
-                $searchParams['endpoint'] .= '/'.$this->resolveArg('subject_id');
-            }
-        
+        $searchParams['endpoint'] = '/' . $subject;
+
+        if (isset($this->args['subject_id'])) {
+            $searchParams['endpoint'] .= '/' . $this->resolveArg('subject_id');
+        }
+
 
 
         $fields = [
             'user_id' => 'userId',
             'method' => 'method'
         ];
-        foreach($fields as $param => $field)
-        {
-            if(isset($_GET[$field])){
+        foreach ($fields as $param => $field) {
+            $value = $this->resolveQueryArg($field, FALSE);
+
+            if ($value) {
                 $searchParams[$param] = $_GET[$field];
             }
         }
@@ -43,7 +44,7 @@ class ListRequestsAction extends RequestAction
             ->setPagination($pagination)
             ->all();
 
-        
+
         $this->logger->info("User id {$this->session->userId} listed requests");
 
         return $this->respondWithData($requests);
