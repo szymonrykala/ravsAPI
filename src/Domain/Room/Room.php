@@ -72,8 +72,7 @@ class Room extends Model
     }
 
     /**
-     * @param string key
-     * @return void
+     * Validates if provided rfid key is correct
      * @throws RfidKeyNotValidException
      */
     public function valiadateRfidKey(string $key): void
@@ -83,7 +82,7 @@ class Room extends Model
     }
 
     /**
-     * @return void
+     * Mark room as occupied - is under pending reservation
      * @throws RoomAlreadyOccupiedException
      */
     public function occupy(): void
@@ -95,7 +94,7 @@ class Room extends Model
     }
 
     /**
-     * @return void
+     * Marks room as free
      * @throws RoomAlreadyEmptyException
      */
     public function release(): void
@@ -107,7 +106,7 @@ class Room extends Model
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
     public function jsonSerialize(): array
     {

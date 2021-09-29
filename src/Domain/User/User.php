@@ -17,7 +17,7 @@ use stdClass;
 
 
 
-class User extends Model
+final class User extends Model
 {
     public int $id;
     public string $name;
@@ -88,7 +88,7 @@ class User extends Model
     /** 
      * generates unique key
      */
-    public static function generateUniqueKey(int $length = 8): string
+    public static function generateUniqueKey(int $length): string
     {
         return strtoupper(substr(uniqid(), 0, $length));
     }
@@ -108,7 +108,7 @@ class User extends Model
     /**
      * Assigns unique key to the user
      */
-    public function assignUniqueKey(int $length = 8): void
+    public function assignUniqueKey(int $length = 10): void
     {
         $this->lastGeneratedKeyDate = new JsonDateTime('now');
         $this->uniqueKey = User::generateUniqueKey($length);

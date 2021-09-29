@@ -6,7 +6,7 @@ namespace App\Application\Actions\User;
 use Psr\Http\Message\ResponseInterface as Response;
 
 use App\Domain\User\User;
-use Slim\Exception\HttpForbiddenException;
+
 
 class UpdateUserAccess extends UserAction
 {
@@ -22,15 +22,6 @@ class UpdateUserAccess extends UserAction
         /** @var User $user */
         $user = $this->userRepository->byId($userId);
 
-        /** @var Access $sessionAccess */
-        $sessionAccess = $this->accessRepository->byId($this->session->accessId);
-        
-        if($sessionAccess->accessEdit === FALSE){
-            throw new HttpForbiddenException(
-                $this->request,
-                "You cannot change the access permissions."
-            );
-        }
 
         $user->accessId = $form->accessId;
 

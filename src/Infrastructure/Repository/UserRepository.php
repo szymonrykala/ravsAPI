@@ -9,6 +9,7 @@ use App\Infrastructure\Repository\BaseRepository;
 use App\Domain\Access\AccessRepositoryInterface;
 use App\Domain\Image\ImageRepositoryInterface;
 use App\Domain\Model\Model;
+use App\Domain\User\Exceptions\DefaultUserDeleteException;
 use App\Domain\User\UserRepositoryInterface;
 use App\Domain\User\User;
 use App\Infrastructure\Database\IDatabase;
@@ -150,13 +151,31 @@ final class UserRepository extends BaseRepository implements UserRepositoryInter
 
 
     /**
+     * {@inheritDoc}
+     */
+    public function search(string $phrase): UserRepository
+    {
+        $this->SQLwhere = " WHERE 
+                        email LIKE :phrase
+                        OR name LIKE :phrase
+                        OR surname LIKE :phrase ";
+        $this->params[':phrase'] = '%' . str_replace(' ', '%', $phrase) . '%';
+
+        return $this;
+    }
+
+    /**
      * If used twice on same user, will casuse permanently deletion of the user and all resources related to it.
      * Sets default iamge to the user and deletes used previously
      * {@inheritDoc}
      * @param User $user
+     * @throws DefaultUserDeleteException
      */
     public function delete(Model $user): void
     {
+        // cannot delete user with predefined access class
+        if ($user->accessId === 1) throw new DefaultUserDeleteException();
+
         if ($user->deleted) {
             //permanently deleting
             parent::delete($user);
@@ -164,8 +183,8 @@ final class UserRepository extends BaseRepository implements UserRepositoryInter
         }
 
         $user->setAsDeleted();
-        
-        
+
+
         $sql = "UPDATE `$this->table` SET
                     `name` = :name,
                     `surname` = :surname,
@@ -183,7 +202,7 @@ final class UserRepository extends BaseRepository implements UserRepositoryInter
         ];
 
         $this->db->query($sql, $params);
-        
+
         // deleting image
         $this->imageRepository->delete($user->image);
     }

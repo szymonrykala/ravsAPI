@@ -5,6 +5,8 @@ declare(strict_types=1);
 
 namespace App\Domain\Reservation\Policy;
 
+use App\Domain\Reservation\Policy\Exception\PassedReservationUpdateException;
+use App\Domain\Reservation\Policy\Exception\TooLateReservationUpdateException;
 use App\Domain\Reservation\Reservation;
 use App\Utils\JsonDateTime;
 use stdClass;
@@ -28,7 +30,7 @@ final class ReservationUpdatePolicy extends ReservationPolicy
         $this->updateMaxOneDayBefore();
 
         $timeUpdate = isset($form->plannedEnd) || isset($form->plannedStart);
-        $placeUpdate = isset($form->buildingId) || isset($form->roomId);
+        $placeUpdate = isset($form->roomId);
 
 
 

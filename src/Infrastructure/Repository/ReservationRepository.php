@@ -172,13 +172,13 @@ final class ReservationRepository extends BaseRepository implements IReservation
     /**
      * {@inheritDoc}
      */
-    public function like(string $stringToSearch): void
+    public function search(string $phrase): void
     {
         $this->SQLwhere .= ' AND (
             `description` LIKE :searchString
             OR `title` LIKE :searchString
         )';
-        $this->params[':searchString'] = '%' . str_replace(' ', '%', $stringToSearch) . '%';
+        $this->params[':searchString'] = '%' . str_replace(' ', '%', $phrase) . '%';
     }
 
 

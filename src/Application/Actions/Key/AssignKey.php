@@ -11,7 +11,7 @@ use Slim\Exception\HttpBadRequestException;
 class AssignKey extends KeyAction
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function action(): Response
     {

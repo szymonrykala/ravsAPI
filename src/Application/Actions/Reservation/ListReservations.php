@@ -63,7 +63,7 @@ class ListReservations extends ReservationAction
     {
         $searchString = $this->resolveQueryArg('search', FALSE);
         if ($searchString) {
-            $this->reservations->like($searchString);
+            $this->reservations->search($searchString);
         }
     }
 

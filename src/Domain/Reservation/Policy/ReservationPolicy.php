@@ -8,6 +8,12 @@ namespace App\Domain\Reservation\Policy;
 
 use App\Domain\Building\Building;
 use App\Domain\Building\IBuildingRepository;
+use App\Domain\Configuration\Configuration;
+use App\Domain\Configuration\IConfigurationRepository;
+use App\Domain\Reservation\Policy\Exception\BlockedRoomException;
+use App\Domain\Reservation\Policy\Exception\IncorrectTimeSlotException;
+use App\Domain\Reservation\Policy\Exception\RoomBuildingConflictException;
+use App\Domain\Reservation\Policy\Exception\TimeSlotConflictException;
 use App\Domain\Reservation\Reservation;
 use App\Domain\Room\Room;
 use App\Domain\Room\RoomRepositoryInterface;
@@ -31,6 +37,7 @@ abstract class ReservationPolicy
     protected User $user;
     protected Room $room;
     protected Building $building;
+    protected Configuration $configuration;
 
 
     /**
@@ -43,10 +50,13 @@ abstract class ReservationPolicy
         IBuildingRepository $buildingRepository,
         RoomRepositoryInterface $roomRepository,
         UserRepositoryInterface $userRepository,
+        IConfigurationRepository $configurationRepository,
         IDatabase $database
     ) {
         $this->database = $database;
         $this->database->connect();
+
+        $this->configuration = $configurationRepository->load();
 
         $this->buildingRepository = $buildingRepository;
         $this->roomRepository = $roomRepository;
@@ -112,25 +122,20 @@ abstract class ReservationPolicy
             throw new IncorrectTimeSlotException(
                 'Incorrect time slot: \'plannedStart\' have to be earlier then \'plannedEnd\''
             );
-
-
-        // 0 days, 0 months, 0 years, max time is 12:59:59
-        $timeSlotToLong = !($timeDiff->h <= 12
-            && $timeDiff->d === 0
-            && $timeDiff->m === 0
-            && $timeDiff->y === 0);
-
-        // at least 30 minutes
-        $timeSlotToShort = !($timeDiff->i >= 30 || $timeDiff->h > 0);
-
-        if ($timeSlotToLong)
+        
+        $localStart = clone $this->start;
+        // if planned end is bigger than planned start + max avaliable time
+        if( $this->end > $localStart->add($this->configuration->maxReservationTime) )
             throw new IncorrectTimeSlotException(
-                'Reservation time slot is too long - maximum time is 12 hours.'
+                "Reservation time slot is too long - maximum time is {$this->configuration->maxReservationTime->i} minutes."
             );
 
-        if ($timeSlotToShort)
+            // print_r($this->start);
+        $localStart = clone $this->start;
+        // if planned end is smaller then planned start + required min time
+        if($this->end < $localStart->add($this->configuration->minReservationTime))
             throw new IncorrectTimeSlotException(
-                'Reservation time is to short - at least 30 minutes is required.'
+                "Reservation time is to short - at least {$this->configuration->minReservationTime->i} minutes is required."
             );
     }
 
@@ -188,4 +193,6 @@ abstract class ReservationPolicy
 
         if (!empty($result)) throw new TimeSlotConflictException();
     }
+
+    // protected function 
 }

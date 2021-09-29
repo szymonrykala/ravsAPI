@@ -19,18 +19,19 @@ Class JsonDateTime extends DateTime implements JsonSerializable
 
     /**
      * formats datetime to format acceptable by database
-     * @return string
      */
     public function __toString():string
     {
-        return $this->format('Y-m-d H-i-s');
+        return $this->format('Y-m-d H:i:s');
     }
 
+    /** returns time in format H:i:s */
     public function getTime():string
     {
         return $this->format('H:i:s');
     }
 
+    /** returns date in format Y-m-d */
     public function getDate():string
     {
         return $this->format('Y-m-d');

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Middleware;
 
+use App\Application\Settings\SettingsInterface;
 use App\Domain\Access\Access;
 use App\Domain\Access\AccessRepositoryInterface;
 use App\Domain\Reservation\IReservationRepository;
@@ -19,6 +20,7 @@ use Psr\Http\Server\{
 };
 
 
+
 class AuthorizationMiddleware implements Middleware
 {
 
@@ -27,48 +29,63 @@ class AuthorizationMiddleware implements Middleware
     private IReservationRepository $reservationRepository;
 
     private Access $access;
-
     private Request $request;
 
+    /** List of endpoints that don't need to be authorized */
+    private array $whiteList;
 
-    /**
-     * @param AccessRepositoryInterface accessRepository
-     * @param UserRepositoryInterface userRepository
-     * @param IReservationRepository reservationRepository
-     */
+    /** subject of the request i.ex. 'rooms' */
+    private string $subject;
+
+    /** id of the request subject i.ex. '12' */
+    private int $subjectId;
+
+
     public function __construct(
         AccessRepositoryInterface $accessRepository,
         UserRepositoryInterface $userRepository,
-        IReservationRepository $reservationRepository
+        IReservationRepository $reservationRepository,
+        SettingsInterface $settings
     ) {
         $this->accessRepository = $accessRepository;
         $this->reservationRepository = $reservationRepository;
         $this->userRepository = $userRepository;
+        $this->whiteList = $settings->get('authWhiteList');
     }
 
+
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function process(Request $request, RequestHandler $handler): Response
     {
         $this->request = $request;
 
-        $session = $request->getAttribute('session');
-        $this->access = $access = $this->accessRepository->byId($session->accessId);
+        if (!in_array($this->request->getUri()->getPath(), $this->whiteList)) {
+            $session = $this->request->getAttribute('session');
+            $this->access = $access = $this->accessRepository->byId((int) $session->accessId);
 
-        if (!$access->owner) {
-            $resolve = $this->getResolverFunction();
+            if (!$access->owner) {
+                $this->setUpRequestSegments();
+                $resolve = $this->getResolver();
 
-            if ($resolve() === FALSE)
-                throw new AuthorizationMiddlewareException();
+                // resolving access of the user have to be true
+                if ($resolve() === FALSE)
+                    throw new AuthorizationMiddlewareException();
+            }
         }
-        return $handler->handle($request);
+
+        return $handler->handle($this->request);
     }
 
-    /**
-     * @return callable resolver function
-     */
-    private function getResolverFunction(): callable
+    /** splits request URI path to array of segments */
+    private function getRequestSegments(): array
+    {
+        return explode('/', $this->request->getUri()->getPath());
+    }
+
+    /** Sets the $subject and $subjectId properties */
+    private function setUpRequestSegments(): void
     {
         $segments = $this->getRequestSegments();
 
@@ -80,37 +97,36 @@ class AuthorizationMiddleware implements Middleware
             $id = $subject;
             $subject = array_pop($segments);
         }
-
-        /** @var callable $resolver */
-        $resolver = $this->getFilledResolversTable()[$subject];
-
-        $this->subjectId = $id;
-        return $resolver;
+        $this->subjectId = (int) $id;
+        $this->subject = $subject;
     }
 
     /**
-     * @return array
+     * returns user access resolver function for the user
      */
-    private function getFilledResolversTable(): array
+    private function getResolver(): callable
     {
         return [
+            'images' => fn () => TRUE,
             'requests' => fn () => $this->access->logsAdmin,
-            'access' => fn () => $this->access->accessAdmin,
-            'address' => $this->resolvePremisesAccess,
-            'buildings' => $this->resolvePremisesAccess,
-            'rooms' => $this->resolvePremisesAccess,
+            'accesses' => fn () => $this->access->accessAdmin,
+            'addresses' => fn () => $this->resolvePremisesAccess(),
+            'resources' => fn () => TRUE,
+            'buildings' => fn () => $this->resolvePremisesAccess(),
+            'rooms' => fn () => $this->resolvePremisesAccess(),
 
-            'users' => $this->resolveUserAccess,
-            'reservations' => $this->resolveReservationAccess,
+            'users' => fn () => $this->resolveUserAccess(),
+            'me' => fn () => TRUE,
+            'reservations' => fn () => $this->resolveReservationAccess(),
             'stats' => fn () => $this->access->statsViewer,
 
             'configurations' => fn () => $this->access->owner,
             'keys' => fn () => $this->access->keysAdmin
-        ];
+        ][$this->subject];
     }
 
     /**
-     * @return bool
+     * validates if user has access to 'premises resources'
      */
     private function resolvePremisesAccess(): bool
     {
@@ -123,7 +139,7 @@ class AuthorizationMiddleware implements Middleware
     }
 
     /**
-     * @return bool
+     * validates if user has access to reservations functionality
      */
     private function resolveReservationAccess(): bool
     {
@@ -143,7 +159,7 @@ class AuthorizationMiddleware implements Middleware
     }
 
     /**
-     * @return bool
+     * Validates if the user has access to edit user
      */
     private function resolveUserAccess(): bool
     {
@@ -156,14 +172,5 @@ class AuthorizationMiddleware implements Middleware
             return $sessionUserId === $modifiedUser;
         }
         return TRUE;
-    }
-
-
-    /**
-     * @return array
-     */
-    private function getRequestSegments(): array
-    {
-        return explode('/', $this->request->getUri()->getPath());
     }
 }

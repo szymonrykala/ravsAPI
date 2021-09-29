@@ -41,7 +41,7 @@ interface IReservationRepository extends RepositoryInterface
     /**
      * Search given phrase in title and description of reservations
      */
-    public function like(string $stringToSearch): void;
+    public function search(string $stringToSearch): void;
 
     /**
      * Read reservations from specific building

@@ -55,6 +55,8 @@ class MySQLDatabase implements IDatabase
      */
     public function query(string $sql, array $params = []): array
     {
+        // echo $sql."\n";
+        // print_r($params);
         $query = new Query($this->conn, $sql, $params);
         return $query->execute();
     }

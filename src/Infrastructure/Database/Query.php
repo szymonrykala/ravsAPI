@@ -41,7 +41,8 @@ class Query
                     break;
             }
         }
-
-        return $this->statement->fetchAll();
+        // $r = $this->statement->fetchAll(PDO::FETCH_ASSOC);
+        // print_r($r);
+        return $this->statement->fetchAll(PDO::FETCH_ASSOC);
     }
 }

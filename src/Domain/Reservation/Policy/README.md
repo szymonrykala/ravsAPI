@@ -9,16 +9,19 @@
 
 
 ## Update policy
-1. Values to update:
+1. If reservation is not over
+2. update one day before
+3. 
+4. Values to update:
     * title
     * description
     * plannedStart ( one day before )
     * plannedEnd ( one day before )
     * room
-2. Room can not be blocked
-3. Biggest time slot = 8h
-4. Time slot within building opening hours
-5. No other reservation can be done on the same time slot - while updating excluding currently updated
-6. Room belongs To buiding
+5. Room can not be blocked
+6. Biggest time slot = 8h
+7. Time slot within building opening hours
+8. No other reservation can be done on the same time slot - while updating excluding currently updated
+9. Room belongs To buiding
 
-8. 1 day before reservation time can not update
+10. 1 day before reservation time can not update

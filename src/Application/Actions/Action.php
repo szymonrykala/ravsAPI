@@ -20,12 +20,21 @@ use Slim\Exception\{
 };
 use stdClass;
 
-use Opis\JsonSchema\Validator;
 
 
 
 abstract class Action
 {
+    protected const ROOM_ID = 'room_id';
+    protected const BUILDING_ID = 'building_id';
+    protected const ADDRESS_ID = 'address_id';
+    protected const USER_ID = 'user_id';
+    protected const ACCESS_ID = 'access_id';
+    protected const IMAGE_ID = 'image_id';
+    protected const RESERVATION_ID = 'reservation_id';
+    protected const REQUEST_SUBJECT = 'request_subject';
+
+
     protected LoggerInterface $logger;
 
     protected Request $request;

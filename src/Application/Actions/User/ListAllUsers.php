@@ -16,11 +16,16 @@ class ListAllUsers extends UserAction
     protected function action(): Response
     {
         // if deleted=1 => include deleted users
-        $listDeleted = (int) $this->resolveQueryArg('deleted', FALSE);
-
+        $listDeleted = $this->resolveQueryArg('deleted', FALSE);
+        $searchPhrase = $this->resolveQueryArg('search', FALSE);
+        
         if(!$listDeleted) $this->userRepository->where([
-            'deleted' => $listDeleted
+            'deleted' => (int) $listDeleted
         ]);
+
+        if($searchPhrase)
+            $this->userRepository->search( (string) $searchPhrase);
+
 
         $users = $this->userRepository->all();
 

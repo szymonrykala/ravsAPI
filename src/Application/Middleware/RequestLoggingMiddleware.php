@@ -16,7 +16,6 @@ use Psr\Http\Server\{
 
 use App\Domain\Request\RequestRepositoryInterface;
 
-use stdClass;
 
 class RequestLoggingMiddleware implements Middleware
 {

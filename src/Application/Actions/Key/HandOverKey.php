@@ -14,7 +14,7 @@ use App\Domain\Reservation\Reservation;
 class HandOverKey extends KeyAction
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function action(): Response
     {

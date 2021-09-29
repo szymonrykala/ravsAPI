@@ -14,7 +14,7 @@ class ViewConfiguration extends ConfigurationAction
      */
     protected function action(): Response
     {
-        $configs = $this->request->getAttribute('configs');
+        $configs = $this->configurationRepository->load();
         return $this->respondWithData($configs);
     }
 }

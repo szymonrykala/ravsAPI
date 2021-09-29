@@ -8,6 +8,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 use App\Domain\Reservation\IReservationRepository;
 use App\Domain\User\UserRepositoryInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
 
@@ -15,18 +16,11 @@ class DeleteUser extends UserAction
 {
     private IReservationRepository $reservationRepository;
 
-    /**
-     * @param LoggerInterface $logger
-     * @param UserRepository $userRepository
-     */
-    public function __construct(
-        LoggerInterface $logger,
-        UserRepositoryInterface $userRepository,
-        IReservationRepository $reservationRepository
-    ) {
 
-        parent::__construct($logger, $userRepository);
-        $this->reservationRepository = $reservationRepository;
+    public function __construct(ContainerInterface $di)
+    {
+        parent::__construct($di);
+        $this->reservationRepository = $di->get(IReservationRepository::class);
     }
 
     /**

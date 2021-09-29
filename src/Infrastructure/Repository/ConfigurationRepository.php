@@ -46,10 +46,10 @@ final class ConfigurationRepository implements IConfigurationRepository
             'MAX_IMAGE_SIZE' => $configuration->maxImageSize,
             'MAX_RESERVATION_TIME' => $configuration->maxReservationTime->i,
             'MIN_RESERVATION_TIME' => $configuration->minReservationTime->i,
-            'OWNER_ACCESS' => $configuration->ownerAccess,
             'ROOM_IMAGE' => $configuration->roomImage,
             'USER_IMAGE' => $configuration->userImage,
             'RESERVATION_HISTORY' => $configuration->reservationHistory,
+            'REQUEST_HISTORY' => $configuration->requestHistory
         ];
 
         $sql = "";

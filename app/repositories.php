@@ -34,6 +34,8 @@ use App\Infrastructure\Repository\ReservationRepository;
 use App\Domain\Configuration\IConfigurationRepository;
 use App\Infrastructure\Repository\ConfigurationRepository;
 
+use App\Domain\Stats\IStatsRepository;
+use App\Infrastructure\Repository\StatsRepository;
 
 return function (ContainerBuilder $containerBuilder) {
     // mapping interfaces to implementations
@@ -47,5 +49,6 @@ return function (ContainerBuilder $containerBuilder) {
         RoomRepositoryInterface::class => \DI\autowire(RoomRepository::class),
         IReservationRepository::class => \DI\autowire(ReservationRepository::class),
         IConfigurationRepository::class => \DI\autowire(ConfigurationRepository::class),
+        IStatsRepository::class => \DI\autowire(StatsRepository::class),
     ]);
 };

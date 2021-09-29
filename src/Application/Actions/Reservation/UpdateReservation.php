@@ -12,20 +12,17 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use App\Domain\Reservation\Reservation;
 use App\Utils\JsonDateTime;
+use Psr\Container\ContainerInterface;
 
 class UpdateReservation extends ReservationAction
 {
 
     private ReservationUpdatePolicy $updatePolicy;
 
-    public function __construct(
-        LoggerInterface $logger,
-        IReservationRepository $reservations,
-        ReservationUpdatePolicy $updatePolicy
-
-    ) {
-        $this->reservations = $reservations;
-        $this->updatePolicy = $updatePolicy;
+    public function __construct(ContainerInterface $di)
+    {
+        parent::__construct($di);
+        $this->updatePolicy = $di->get(ReservationUpdatePolicy::class);
     }
 
     /**
@@ -38,7 +35,7 @@ class UpdateReservation extends ReservationAction
         $form = $this->getFormData();
         $reservationId = (int) $this->resolveArg('reservation_id');
 
-        
+
 
         foreach (['plannedStart', 'plannedEnd'] as $field)
             if (isset($form->$field))

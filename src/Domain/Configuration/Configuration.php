@@ -14,11 +14,11 @@ final class Configuration extends Model
     public int $roomImage;
     public int $userImage;
     public int $maxImageSize;
-    public int $ownerAccess;
     public int $defaultUserAccess;
-    public int $reservationHistory;
-    public DateInterval $maxReservationTime;
-    public DateInterval $minReservationTime;
+    public int $reservationHistory; //days
+    public int $requestHistory; // days
+    public DateInterval $maxReservationTime; //minutes
+    public DateInterval $minReservationTime; //minutes
 
 
     public function __construct(array $data)
@@ -38,9 +38,6 @@ final class Configuration extends Model
                 case 'MAX_IMAGE_SIZE':
                     $this->maxImageSize = (int) $var['value'];
                     break;
-                case 'OWNER_ACCESS':
-                    $this->ownerAccess = (int) $var['value'];
-                    break;
                 case 'DEFAULT_USER_ACCESS':
                     $this->defaultUserAccess = (int) $var['value'];
                     break;
@@ -52,6 +49,9 @@ final class Configuration extends Model
                     break;
                 case 'RESERVATION_HISTORY':
                     $this->reservationHistory = (int) $var['value'];
+                    break;                
+                case 'REQUEST_HISTORY':
+                    $this->requestHistory = (int) $var['value'];
                     break;
                 default:
                     //nothing
@@ -81,11 +81,11 @@ final class Configuration extends Model
             'roomImage' => $this->roomImage,
             'userImage' => $this->userImage,
             'maxImageSize' => $this->maxImageSize, //bytes
-            'ownerAccess' => $this->ownerAccess,
             'defaultUserAccess' => $this->defaultUserAccess,
             'maxReservationTime' => $this->maxReservationTime->i, // minutes
             'minReservationTime' => $this->minReservationTime->i, // minutes
             'reservationHistory' => $this->reservationHistory,
+            'requestHistory' => $this->requestHistory,
         ];
     }
 }

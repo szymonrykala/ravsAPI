@@ -9,15 +9,14 @@ use App\Application\Middleware\{
     BodyParsingMiddleware,
     RequestLoggingMiddleware,
     SessionMiddleware,
-    ConfigurationLoadingMiddleware,
     AuthorizationMiddleware
 };
 
 return function (App $app) {
     $app
-    ->add(SchemaValidationMiddleware::class)
-    ->add(ConfigurationLoadingMiddleware::class)
-    ->add(RequestLoggingMiddleware::class)
-    ->add(SessionMiddleware::class)
-    ->add(BodyParsingMiddleware::class);
+    ->add(SchemaValidationMiddleware::class) // in 5 validate data schema
+    ->add(RequestLoggingMiddleware::class) // in 4 log user request
+    ->add(AuthorizationMiddleware::class) // in 3 authorize user
+    ->add(SessionMiddleware::class)     // in 2 check user session
+    ->add(BodyParsingMiddleware::class); // in 1 parse send data
 };

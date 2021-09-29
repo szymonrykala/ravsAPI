@@ -30,8 +30,18 @@ return function (ContainerBuilder $containerBuilder) {
                 ],
 
                 'image' => [
-                    'directory' => '/resources' . DIRECTORY_SEPARATOR,
-                    'maxSize' => 500 * 1000 // 500kb
+                    'directory' => '/resources' . DIRECTORY_SEPARATOR
+                ],
+                'authWhiteList' => [
+                    '/users/auth', '/users/key', '/users/activate', '/users/password'
+                ],
+                'smtp' => [
+                    'host' => 'smtp.gmail.com',
+                    'port' => 587,
+                    'username' => 'szymonrykala@gmail.com',
+                    'password' => 'rolekskejt1214',
+                    'mailerName' => 'Ravs system',
+                    'debug' => 0
                 ]
             ]);
         }

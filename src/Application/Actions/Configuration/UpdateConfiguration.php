@@ -21,12 +21,14 @@ class UpdateConfiguration extends ConfigurationAction
     public function __construct(
         LoggerInterface $logger,
         IConfigurationRepository $configurationRepository,
-        ImageRepositoryInterface $imageRepository
+        ImageRepositoryInterface $imageRepository,
+        AccessRepositoryInterface $accessRepository
     ) {
         parent::__construct($logger, $configurationRepository);
 
         $this->configurationRepository = $configurationRepository;
         $this->imageRepository = $imageRepository;
+        $this->accessRepository = $accessRepository;
     }
 
     /**
@@ -35,14 +37,18 @@ class UpdateConfiguration extends ConfigurationAction
     protected function action(): Response
     {
         $form = $this->getFormData();
-        $configs = $this->request->getAttribute('configs');
+        $configs = $this->configurationRepository->load();
 
+        // check if specified images exists
         foreach (['userImage', 'roomImage', 'buildingImage'] as $field) {
-            if (isset($form->$field)) $this->imageRepository->byId($form->$field);
+            if (isset($form->$field))
+                $this->imageRepository->byId($form->$field);
         }
 
+        // check if the specified accesses exists
         foreach (['ownerAccess', 'defaultUserAccess'] as $field) {
-            if (isset($form->$field)) $this->accessRepository->byId($form->$field);
+            if (isset($form->$field))
+                $this->accessRepository->byId($form->$field);
         }
 
         $configs->update($form);

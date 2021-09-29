@@ -20,6 +20,7 @@ use App\Application\Actions\{
     Reservation,
     Configuration,
     Key,
+    Stats
 };
 
 
@@ -34,37 +35,29 @@ function addReservationGets(&$resourcePath)
     });
 }
 
-// function registerReservation(&$roomPath)
-// {
-//     $roomPath->group('/reservations', function (Group $reservations) {
-//         $reservations->get('', Reservation\ListReservations::class);
-//         $reservations->post('', Reservation\CreateReservation::class);
-
-//         $reservations->group('/{reservation_id}', function (Group $reservation) {
-//             $reservation->get('', Reservation\ViewReservationAction::class);
-//             $reservation->patch('', Reservation\UpdateReservationAction::class);
-
-//             $reservation->patch('/keys', Key\AssignKey::class);
-//         });
-//     });
-// }
 
 function registerRooms(&$buildingPath)
 {
 
     $buildingPath->group('/rooms', function (Group $rooms) {
-        $rooms->get('', Room\ListRoomsAction::class);
-        $rooms->post('', Room\CreateRoomAction::class);
+        $rooms->get('', Room\ListRooms::class);
+        $rooms->get('/stats', Stats\ViewRoomStats::class);
 
-        $rooms->group('/{room_id}', function (Group $one) {
-            $one->get('', Room\ViewRoomAction::class);
-            $one->patch('', Room\UpdateRoomAction::class);
+        $rooms->post('', Room\CreateRoom::class);
 
-            $one->patch('/keys', Key\AssignKey::class);
+        $rooms->group('/{room_id}', function (Group $room) {
+            $room->get('', Room\ViewRoom::class);
+            $room->patch('', Room\UpdateRoom::class);
+            
+            $room->get('/stats', Stats\ViewRoomStats::class);
+            
+            $room->get('/keys', Key\ViewKey::class);
+            $room->patch('/keys', Key\AssignKey::class);
 
-            // registerReservation($one);
-            $one->post('/reservations', Reservation\CreateReservation::class);
-            addReservationGets($one);
+            // registerReservation($room);
+            $room->post('/reservations', Reservation\CreateReservation::class);
+            addReservationGets($room);
+            registerImages($room);
         });
     });
 }
@@ -72,16 +65,21 @@ function registerRooms(&$buildingPath)
 function registerBuildings(&$addressPath)
 {
     $addressPath->group('/buildings', function (Group $buildings) {
-        $buildings->get('', Building\ListBuildingsAction::class);
-        $buildings->post('', Building\CreateBuildingAction::class);
+        $buildings->get('', Building\ListBuildings::class);
+        $buildings->get('/stats', Stats\ViewBuildingStats::class);
+
+        $buildings->post('', Building\CreateBuilding::class);
 
         $buildings->group('/{building_id}', function (Group $building) {
-            $building->get('', Building\ViewBuildingAction::class);
-            $building->patch('', Building\UpdateBuildingAction::class);
-            $building->delete('', Building\DeleteBuildingAction::class);
+            $building->get('', Building\ViewBuilding::class);
+            $building->get('/stats', Stats\ViewBuildingStats::class);
+
+            $building->patch('', Building\UpdateBuilding::class);
+            $building->delete('', Building\DeleteBuilding::class);
 
             addReservationGets($building);
             registerRooms($building);
+            registerImages($building);
         });
     });
 }
@@ -89,16 +87,30 @@ function registerBuildings(&$addressPath)
 function registerAddresses(&$authRoot)
 {
     $authRoot->group('/addresses', function (Group $addresses) {
-        $addresses->get('', Address\ListAllAddressesAction::class);
-        $addresses->post('', Address\CreateAddressAction::class);
+        $addresses->get('', Address\ListAllAddresses::class);
+        $addresses->get('/resources', Address\ViewResourcesMap::class);
+        $addresses->post('', Address\CreateAddress::class);
 
         $addresses->group('/{address_id}', function (Group $address) {
-            $address->get('', Address\ViewAddressAction::class);
-            $address->patch('', Address\UpdateAddressAction::class);
-            $address->delete('', Address\DeleteAddressAction::class);
+            $address->get('', Address\ViewAddress::class);
+            $address->patch('', Address\UpdateAddress::class);
+            $address->delete('', Address\DeleteAddress::class);
 
             addReservationGets($address);
             registerBuildings($address);
+        });
+    });
+}
+
+function registerImages($resource)
+{
+    $resource->group('/images', function (Group $images) {
+        $images->post('', Image\UploadImage::class);
+        $images->get('', Image\ListAllImages::class);
+
+        $images->group('/{image_id:[0-9]+}', function (Group $image) {
+            $image->get('', Image\ViewImage::class);
+            $image->delete('', Image\DeleteImage::class);
         });
     });
 }
@@ -123,49 +135,43 @@ return function (App $app) {
 
         $v1->group('', function (Group $auth) {
 
-            $auth->get('/{subject:.*}/requests', RequestActions\ListRequestsAction::class);
-            $auth->delete('/requests', RequestActions\DeleteRequestsAction::class);
+            $auth->get('/{request_subject:.*}/requests', RequestActions\ListRequests::class);
+            $auth->get('/requests/stats', Stats\ViewRequestStats::class);
+            $auth->delete('/requests', RequestActions\DeleteRequests::class);
 
             $auth->group('/configurations', function (Group $configs) {
                 $configs->get('', Configuration\ViewConfiguration::class);
                 $configs->patch('', Configuration\UpdateConfiguration::class);
             });
 
-            $auth->group('/images', function (Group $images) {
-                $images->post('', Image\UploadImageAction::class);
-                $images->get('', Image\ListAllImagesAction::class);
-
-                $images->group('/{id:[0-9]+}', function (Group $image) {
-                    $image->get('', Image\ViewImageAction::class);
-                    $image->delete('', Image\DeleteImageAction::class);
-                });
-            });
-
             $auth->group('/users', function (Group $users) {
                 $users->get('/me', User\ViewCurrentUser::class);
                 $users->get('', User\ListAllUsers::class);
+                $users->get('/stats', Stats\ViewUserStats::class);
+
                 $users->post('', User\RegisterUser::class);
 
                 $users->group('/{user_id:[0-9]+}', function (Group $user) {
                     $user->get('', User\ViewUser::class);
+                    $user->get('/stats', Stats\ViewUserStats::class);
                     $user->patch('', User\UpdateUser::class);
                     $user->patch('/access', User\UpdateUserAccess::class);
                     $user->delete('', User\DeleteUser::class);
 
                     addReservationGets($user);
-
+                    registerImages($user);
                     // $one->get('/report', User\GenerateUserReport::class);
                 });
             });
 
             $auth->group('/accesses', function (Group $accesses) {
-                $accesses->get('', Access\ListAllAccessesAction::class);
-                $accesses->post('', Access\CreateAccessAction::class);
+                $accesses->get('', Access\ListAllAccesses::class);
+                $accesses->post('', Access\CreateAccess::class);
 
-                $accesses->group('/{id:[0-9]+}', function (Group $user) {
-                    $user->get('', Access\ViewAccessAction::class);
-                    $user->patch('', Access\UpdateAccessAction::class);
-                    $user->delete('', Access\DeleteAccessAction::class);
+                $accesses->group('/{access_id:[0-9]+}', function (Group $user) {
+                    $user->get('', Access\ViewAccess::class);
+                    $user->patch('', Access\UpdateAccess::class);
+                    $user->delete('', Access\DeleteAccess::class);
                 });
             });
 
@@ -183,7 +189,6 @@ return function (App $app) {
 
 
             // appends /addresses; /buildings; /rooms; /reservations
-
             registerAddresses($auth);
         });
     });

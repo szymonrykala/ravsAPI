@@ -133,7 +133,7 @@ abstract class BaseRepository implements RepositoryInterface
             $this->params
         );
         $this->SQLwhere = ' WHERE 1=1';
-
+        $this->params = [];
         return $result;
     }
 

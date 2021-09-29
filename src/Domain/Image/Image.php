@@ -11,22 +11,19 @@ class Image extends Model
 {
 
     public string $path;
+    public int $size;
 
-    /**
-     * @param int       id,
-     * @param string    path,
-     * @param JsonDateTime    created,
-     * @param JsonDateTime    updated
-     */
     public function __construct(
         int $id,
         string $path,
+        int $size,
         JsonDateTime $created,
         JsonDateTime $updated
     ) {
         parent::__construct($id, $created, $updated);
 
         $this->path = $path;
+        $this->size = $size;
     }
 
     /**
@@ -36,7 +33,8 @@ class Image extends Model
     {
         return array_merge(
             [
-                "path" => $this->path,
+                'path' => $this->path,
+                'size' => $this->size
             ],
             parent::jsonSerialize()
         );
