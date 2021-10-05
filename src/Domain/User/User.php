@@ -7,12 +7,17 @@ namespace App\Domain\User;
 use App\Domain\Image\Image;
 use App\Domain\Access\Access;
 use App\Domain\Model\Model;
+use App\Domain\User\Exceptions\BadCredentialsException;
+use App\Domain\User\Exceptions\DeletedUserUpdateException;
+use App\Domain\User\Exceptions\InvalidUserCodeException;
+use App\Domain\User\Exceptions\UserBlockedException;
+use App\Domain\User\Exceptions\UserNotActivatedException;
 use App\Utils\JsonDateTime;
 use stdClass;
 
 
 
-class User extends Model
+final class User extends Model
 {
     public int $id;
     public string $name;
@@ -22,6 +27,7 @@ class User extends Model
     public bool $activated;
     public int $loginFails;
     public bool $blocked;
+    public bool $deleted;
     public string $uniqueKey;
     public JsonDateTime $lastGeneratedKeyDate;
     public ?stdClass $metadata;
@@ -37,25 +43,6 @@ class User extends Model
 
     private bool $metadataShouldBeLoaded = FALSE;
 
-    /**
-     * @param int       id
-     * @param string    name
-     * @param string    surame
-     * @param string    email
-     * @param string    password
-     * @param bool      activated
-     * @param int       loginFails
-     * @param bool      blocked
-     * @param string    uniqueKey
-     * @param JsonDateTime    lastGeneratedKeyDate,
-     * @param Access|NULL access
-     * @param Image       image
-     * @param stdClass    metadata
-     * @param JsonDateTime    created
-     * @param JsonDateTime    updated
-     * @param int       imageId
-     * @param int       accessId
-     */
     public function __construct(
         int $id,
         string $name,
@@ -65,6 +52,7 @@ class User extends Model
         bool $activated,
         int $loginFails,
         bool $blocked,
+        bool $deleted,
         string $uniqueKey,
         JsonDateTime $lastGeneratedKeyDate,
         ?Access $access,
@@ -84,6 +72,7 @@ class User extends Model
         $this->activated = $activated;
         $this->loginFails = $loginFails;
         $this->blocked = $blocked;
+        $this->deleted = $deleted;
         $this->uniqueKey = $uniqueKey;
         $this->lastGeneratedKeyDate = $lastGeneratedKeyDate;
 
@@ -97,39 +86,29 @@ class User extends Model
     }
 
     /** 
-     * @param int length of the key
-     * @return string unique key
+     * generates unique key
      */
-    public static function generateUniqueKey(int $length = 8): string
+    public static function generateUniqueKey(int $length): string
     {
         return strtoupper(substr(uniqid(), 0, $length));
     }
 
 
     /**
-     * @param string $userUniqueKey
+     * Asserts that the key provided by user is correct
      * @throws InvalidUserCodeException
      */
     private function assertUniqueKeyIsCorrect(string $userKey): void
     {
         if (empty($this->uniqueKey) || $userKey !== $this->uniqueKey) {
-            throw new Exceptions\InvalidUserCodeException();
+            throw new InvalidUserCodeException();
         }
     }
 
     /**
-     * @return JsonDateTime $lastGeneratedKeyDate
+     * Assigns unique key to the user
      */
-    public function getLastGeneratedKeyDate(): JsonDateTime
-    {
-        return $this->lastGeneratedKeyDate;
-    }
-
-
-    /**
-     * @return void
-     */
-    public function assignUniqueKey(int $length = 8): void
+    public function assignUniqueKey(int $length = 10): void
     {
         $this->lastGeneratedKeyDate = new JsonDateTime('now');
         $this->uniqueKey = User::generateUniqueKey($length);
@@ -137,7 +116,7 @@ class User extends Model
 
 
     /**
-     * @param string $userKey
+     * Activates the user if provided key is correct
      */
     public function activate(string $userKey): void
     {
@@ -148,7 +127,7 @@ class User extends Model
 
 
     /**
-     * @param string $useKey
+     * Unblock the user if provided key is correct
      */
     public function unblock(string $userKey): void
     {
@@ -159,14 +138,18 @@ class User extends Model
     }
 
     /**
-     * @param string $userPassword
-     * @return void
+     * Login the user.
+     * Checks if the user is activated.
+     * Authenticate the user and handle blocking in case of too many failed tries.
+     * @throws UserBlockedException
+     * @throws BadCredentialsException
+     * @throws UserNotActivatedException
      */
     public function login(string $userPassword): void
     {
 
         if ($this->blocked === TRUE) {
-            throw new Exceptions\UserBlockedException();
+            throw new UserBlockedException();
         }
 
         if (password_verify($userPassword, $this->password)) {
@@ -176,26 +159,55 @@ class User extends Model
             if ($this->loginFails > 3) {
                 $this->blocked = TRUE;
             }
-            throw new Exceptions\BadCredentialsException();
+            throw new BadCredentialsException();
         }
 
         if (!$this->activated) {
-            throw new Exceptions\UserNotActivatedException();
+            throw new UserNotActivatedException();
         }
     }
 
+    /** 
+     * Checks if user is the user who performing request
+     */
     public function isSessionUser(stdClass $session): bool
     {
         return $this->id === $session->userId;
     }
 
+    /**
+     * Triggers loading metadata to User JSON representation
+     */
     public function loadMetadata(): void
     {
         $this->metadataShouldBeLoaded = TRUE;
     }
 
     /**
-     * @return array
+     * Modify user object to deleted user state
+     */
+    public function setAsDeleted(): void
+    {
+        $num = (string) time();
+        $this->name = 'User' . substr($num, 0, 5);
+        $this->surname = 'Deleted' . substr($num, 6);
+        $this->deleted = TRUE;
+        $this->email = 'deleted' . $num;
+        $this->imageId = 1; //default user image
+    }
+
+    /**
+     * {@inheritDoc}
+     * @throws DeletedUserUpdateException
+     */
+    public function validate(): void
+    {
+        if ($this->deleted)
+            throw new DeletedUserUpdateException();
+    }
+
+    /**
+     * {@inheritDoc}
      */
     public function jsonSerialize(): array
     {
@@ -205,6 +217,7 @@ class User extends Model
                 'name' => $this->name,
                 'surname' => $this->surname,
                 'activated' => $this->activated,
+                'deleted' => $this->deleted,
                 'image' => $this->image,
                 'access' => $this->access ?? $this->accessId,
             ],

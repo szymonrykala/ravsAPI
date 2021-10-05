@@ -17,7 +17,7 @@ return function (ContainerBuilder $containerBuilder) {
                 'logError'            => false,
                 'logErrorDetails'     => false,
                 'logger' => [
-                    'name' => 'slim-app',
+                    'name' => 'ravs_api',
                     'path' => isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app.log',
                     'level' => Logger::DEBUG,
                 ],
@@ -30,8 +30,18 @@ return function (ContainerBuilder $containerBuilder) {
                 ],
 
                 'image' => [
-                    'directory' => '/resources' . DIRECTORY_SEPARATOR,
-                    'maxSize' => 500 * 1000
+                    'directory' => '/resources' . DIRECTORY_SEPARATOR
+                ],
+                'authWhiteList' => [
+                    '/users/auth', '/users/key', '/users/activate', '/users/password'
+                ],
+                'smtp' => [
+                    'host' => 'smtp.gmail.com',
+                    'port' => 587,
+                    'username' => 'szymonrykala@gmail.com',
+                    'password' => 'rolekskejt1214',
+                    'mailerName' => 'Ravs system',
+                    'debug' => 0
                 ]
             ]);
         }

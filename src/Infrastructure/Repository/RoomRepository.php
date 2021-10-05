@@ -13,7 +13,7 @@ use App\Domain\Room\{
 use App\Domain\Exception\DomainResourceNotFoundException;
 use App\Domain\Image\ImageRepositoryInterface;
 use App\Infrastructure\Database\IDatabase;
-use DateTime;
+use App\Utils\JsonDateTime;
 
 
 class RoomRepository extends BaseRepository implements RoomRepositoryInterface
@@ -24,7 +24,7 @@ class RoomRepository extends BaseRepository implements RoomRepositoryInterface
 
     private bool $buildingLoading = FALSE;
 
-    
+
     /**
      * @param IDatabase db database
      * @param ImageInterfaceRepository imagerRpository
@@ -34,16 +34,16 @@ class RoomRepository extends BaseRepository implements RoomRepositoryInterface
         IDatabase $db,
         ImageRepositoryInterface $imageRepository,
         IBuildingRepository $buildingRepository
-        ) {
-            parent::__construct($db);
-            $this->imageRepository = $imageRepository;
-            $this->buildingRepository = $buildingRepository;
-        }
-        
+    ) {
+        parent::__construct($db);
+        $this->imageRepository = $imageRepository;
+        $this->buildingRepository = $buildingRepository;
+    }
+
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function withAddress(): RoomRepositoryInterface
+    public function withBuilding(): RoomRepositoryInterface
     {
         $this->buildingLoading = TRUE;
         return $this;
@@ -69,8 +69,8 @@ class RoomRepository extends BaseRepository implements RoomRepositoryInterface
             (int)   $data['floor'],
             (bool)  $data['blocked'],
             (bool)  $data['occupied'],
-            new DateTime($data['created']),
-            new DateTime($data['updated']),
+            new JsonDateTime($data['created']),
+            new JsonDateTime($data['updated']),
             (int)   $data['image'],
             (int)   $data['building']
         );
@@ -88,16 +88,6 @@ class RoomRepository extends BaseRepository implements RoomRepositoryInterface
         }
 
         return $this->newItem($roomData);
-    }
-
-    /**
-     * @param int id
-     */
-    public function deleteById(int $id): void
-    {
-        $sql = "DELETE FROM `$this->table` WHERE `id` = :id";
-        $params = [':id' => $id];
-        $this->db->query($sql, $params);
     }
 
     /**

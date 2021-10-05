@@ -12,6 +12,7 @@ class Access extends Model
 {
 
     public string $name;
+    public bool $owner;
     public bool $accessAdmin;
     public bool $premisesAdmin;
     public bool $keysAdmin;
@@ -19,12 +20,12 @@ class Access extends Model
     public bool $reservationsAbility;
     public bool $logsAdmin;
     public bool $statsViewer;
-    public bool $reportsViewer;
 
 
     /**
      * @param int       id
      * @param string    name;
+     * @param bool      owner;
      * @param bool      accessAdmin
      * @param bool      premisesAdmin
      * @param bool      keysAdmin
@@ -32,13 +33,13 @@ class Access extends Model
      * @param bool      reservationsAbility
      * @param bool      logsAdmin
      * @param bool      statsViewer
-     * @param bool      reportsViewer;
      * @param string    created,
      * @param string    updated
      */
     public function __construct(
         int $id,
         string $name,
+        bool $owner,
         bool $accessAdmin,
         bool $premisesAdmin,
         bool $keysAdmin,
@@ -46,7 +47,6 @@ class Access extends Model
         bool $reservationsAbility,
         bool $logsAdmin,
         bool $statsViewer,
-        bool $reportsViewer,
         JsonDateTime $created,
         JsonDateTime $updated
     ) {
@@ -54,6 +54,7 @@ class Access extends Model
 
 
         $this->name = $name;
+        $this->owner = $owner;
         $this->accessAdmin = $accessAdmin;
         $this->premisesAdmin = $premisesAdmin;
         $this->keysAdmin = $keysAdmin;
@@ -61,7 +62,6 @@ class Access extends Model
         $this->reservationsAbility = $reservationsAbility;
         $this->logsAdmin = $logsAdmin;
         $this->statsViewer = $statsViewer;
-        $this->reportsViewer = $reportsViewer;
     }
 
     /**
@@ -82,6 +82,7 @@ class Access extends Model
         return array_merge(
             [
                 "name" => $this->name,
+                "owner" => $this->owner,
                 "accessAdmin" => $this->accessAdmin,
                 "premisesAdmin" => $this->premisesAdmin,
                 "keysAdmin" => $this->keysAdmin,
@@ -89,7 +90,6 @@ class Access extends Model
                 "reservationsAbility" => $this->reservationsAbility,
                 "logsAdmin" => $this->logsAdmin,
                 "statsViewer" => $this->statsViewer,
-                "reportsViewer" => $this->reportsViewer,
             ],
             parent::jsonSerialize()
         );

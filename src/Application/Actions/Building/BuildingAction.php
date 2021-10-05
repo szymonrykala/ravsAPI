@@ -15,8 +15,8 @@ abstract class BuildingAction extends Action
     protected IBuildingRepository $buildingRepository;      
 
     /**
-     * @param LoggerInterface $logger
-     * @param IBuildingRepository $buildingRepository
+     * @param LoggerInterface logger
+     * @param IBuildingRepository buildingRepository
      */
     public function __construct(
         LoggerInterface $logger,

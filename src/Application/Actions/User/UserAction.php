@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application\Actions\User;
@@ -8,43 +9,30 @@ use Slim\Exception\HttpNotFoundException;
 
 use App\Application\Actions\Action;
 use App\Domain\User\UserRepositoryInterface;
-
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
 
 abstract class UserAction extends Action
 {
-    protected UserRepositoryInterface $userRepository; 
+    protected UserRepositoryInterface $userRepository;
 
-    /**
-     * @param LoggerInterface $logger
-     * @param UserRepository $userRepository
-     */
-    public function __construct(
-        LoggerInterface $logger,
-        UserRepositoryInterface $userRepository
-    ) {
-        
-        parent::__construct($logger);
-        $this->userRepository = $userRepository;
+
+    public function __construct(ContainerInterface $di)
+    {
+        parent::__construct($di->get(LoggerInterface::class));
+        $this->userRepository = $di->get(UserRepositoryInterface::class);
     }
 
     /**
-     * @param string $email
-     * @return User
-     * 
-     * @throws HttpNotFoundException
+     * get user by email string 
      */
     protected function getUserByEmail(string $email): User
     {
-        $res = $this->userRepository->where(['email'=> $email])->all();
-        $user = array_pop($res);
+        $user = $this->userRepository
+            ->where(['email' => $email])
+            ->one();
 
-
-        if(empty($user)) throw new HttpNotFoundException(
-            $this->request,
-            "User '${email}' not exist."
-        );
 
         return $user;
     }

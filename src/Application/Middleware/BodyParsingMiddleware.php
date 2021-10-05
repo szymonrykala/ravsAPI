@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Application\Middleware;
 
-use phpDocumentor\Reflection\Types\Object_;
 use Psr\Http\Message\{
     ResponseInterface as Response,
     ServerRequestInterface as Request
@@ -28,7 +27,7 @@ class BodyParsingMiddleware implements Middleware
     public function process(Request $request, RequestHandler $handler): Response
     {
 
-        if(in_array($request->getMethod(), ['POST', 'PATCH'])){
+        if(in_array($request->getMethod(), ['POST', 'PATCH']) && !strpos($request->getUri()->getPath(), 'images')){
 
             $input = json_decode(file_get_contents('php://input'));
 

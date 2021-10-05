@@ -19,20 +19,10 @@ class ActionError implements JsonSerializable
     public const CONFLICT = 'CONFLICT';
     public const UNPROCESSABLE_ENTITY = 'UNPROCESSABLE_ENTITY';
 
-    /**
-     * @var string
-     */
-    private $type;
+    private string $type;
+    private string $description;
 
-    /**
-     * @var string
-     */
-    private $description;
 
-    /**
-     * @param string        $type
-     * @param string|null   $description
-     */
     public function __construct(string $type, ?string $description)
     {
         $this->type = $type;
@@ -40,7 +30,7 @@ class ActionError implements JsonSerializable
     }
 
     /**
-     * @return string
+     * get type of the error
      */
     public function getType(): string
     {
@@ -48,17 +38,16 @@ class ActionError implements JsonSerializable
     }
 
     /**
-     * @param string $type
-     * @return self
+     * set type of the error
      */
-    public function setType(string $type): self
+    public function setType(string $type): ActionError
     {
         $this->type = $type;
         return $this;
     }
 
     /**
-     * @return string
+     * get description of the error
      */
     public function getDescription(): string
     {
@@ -66,17 +55,16 @@ class ActionError implements JsonSerializable
     }
 
     /**
-     * @param string|null $description
-     * @return self
+     * set description of the error
      */
-    public function setDescription(?string $description = null): self
+    public function setDescription(?string $description = null): ActionError
     {
         $this->description = $description;
         return $this;
     }
 
     /**
-     * @return array
+     * {@inheritDoc}
      */
     public function jsonSerialize()
     {

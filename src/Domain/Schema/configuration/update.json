@@ -1,0 +1,35 @@
+{
+    "type": "object",
+    "properties": {
+        "buildingImage": {
+            "$ref": "api://schema/reuse/id.json"
+        },
+        "roomImage": {
+            "$ref": "api://schema/reuse/id.json"
+        },
+        "userImage": {
+            "$ref": "api://schema/reuse/id.json"
+        },
+        "ownerAccess": {
+            "$ref": "api://schema/reuse/id.json"
+        },
+        "maxImageSize": {
+            "type": "integer",
+            "minimum": 100,
+            "maximum": 5000000
+        },
+        "defaultUserAccess": {
+            "$ref": "api://schema/reuse/id.json"
+        },
+        "maxReservationTime": {
+            "type": "integer",
+            "minimum": 1
+        },
+        "minReservationTime": {
+            "type": "integer",
+            "minimum": 1
+        }
+    },
+    "required": [],
+    "additionalProperties": false
+}

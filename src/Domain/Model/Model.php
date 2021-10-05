@@ -12,9 +12,13 @@ use JsonSerializable;
 
 abstract class Model implements JsonSerializable
 {
-
+    /** Object identifier */
     public int $id;
+
+    /** Object creation time */
     public JsonDateTime $created;
+
+    /** Time of last update */
     public JsonDateTime $updated;
 
 
@@ -26,15 +30,16 @@ abstract class Model implements JsonSerializable
         $this->updated = $updated;
     }
 
+    /**
+     * @throws ModelPropertyNotExistException
+     */
     public function __set(string $name, $value)
     {
         throw new ModelPropertyNotExistException($name);
     }
 
     /**
-     * Updates model properties
-     * @param stdClass $form
-     * @throws TypeError
+     * Updates model properties with form data
      */
     public function update(stdClass $form): void
     {
@@ -42,22 +47,16 @@ abstract class Model implements JsonSerializable
     }
 
     /**
-     * optional model object validation rules bfore saving
-     * @return void
+     * Domain object save validation callback.
+     * Any rules checks on each update, can be implemented here.
      */
-    protected function validateCallback(): void
+    public function validate(): void
     {
     }
 
     /**
-     * validation trigger fo validateCallback
-     * @return void
+     * Specify data which should be serialized to JSON
      */
-    public function validate(): void
-    {
-        $this->validateCallback();
-    }
-
     public function jsonSerialize(): array
     {
         return [

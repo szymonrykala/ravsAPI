@@ -72,7 +72,41 @@ class Room extends Model
     }
 
     /**
-     * @return array
+     * Validates if provided rfid key is correct
+     * @throws RfidKeyNotValidException
+     */
+    public function valiadateRfidKey(string $key): void
+    {
+        if ($key !== $this->rfid)
+            throw new RfidKeyNotValidException();
+    }
+
+    /**
+     * Mark room as occupied - is under pending reservation
+     * @throws RoomAlreadyOccupiedException
+     */
+    public function occupy(): void
+    {
+        if ($this->occupied)
+            throw new RoomAlreadyOccupiedException();
+
+        $this->occupied = TRUE;
+    }
+
+    /**
+     * Marks room as free
+     * @throws RoomAlreadyEmptyException
+     */
+    public function release(): void
+    {
+        if ($this->occupied === FALSE)
+            throw new RoomAlreadyEmptyException();
+
+        $this->occupied = FALSE;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function jsonSerialize(): array
     {

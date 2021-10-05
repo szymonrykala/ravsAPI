@@ -14,13 +14,15 @@ interface RequestRepositoryInterface extends RepositoryInterface
      * @param string $uriPath
      * @param int $userId
      * @param stdClass $payload
+     * @param float time
      * @return void
      */
     public function create(
         string $method, 
         string $uriPath, 
         int $userId, 
-        stdClass $payload
+        stdClass $payload,
+        float $time
     ): void;
 
     /**

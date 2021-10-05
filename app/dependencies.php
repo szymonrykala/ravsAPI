@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use App\Application\Settings\SettingsInterface;
@@ -11,8 +12,11 @@ use Psr\Log\LoggerInterface;
 
 use App\Infrastructure\Database;
 
-use App\Application\Actions\IActionCache;
-use App\Application\Actions\ActionMemoryCache;
+use App\Domain\Reservation\Policy\ReservationCreatePolicy;
+use App\Infrastructure\Mailing\IMailingService;
+use App\Infrastructure\Mailing\MailingService;
+
+use function DI\autowire;
 
 return function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
@@ -31,11 +35,7 @@ return function (ContainerBuilder $containerBuilder) {
             return $logger;
         },
 
-        IActionCache::class=>function(ContainerInterface $c){
-            return new ActionMemoryCache([]);
-        },
-
-        Database\IDatabase::class => function(ContainerInterface $c) {
+        Database\IDatabase::class => function (ContainerInterface $c) {
             $dbSettings = $c->get(SettingsInterface::class)->get('database');
 
             $database = new Database\MySQLDatabase(
@@ -46,6 +46,9 @@ return function (ContainerBuilder $containerBuilder) {
             );
 
             return $database;
-        }
+        },
+        IMailingService::class => autowire(MailingService::class),
+
+        ReservationCreatePolicy::class => autowire(ReservationCreatePolicy::class)
     ]);
 };

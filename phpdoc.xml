@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdocumentor
+  configVersion="3"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="https://www.phpdoc.org"
+>
+    <title>RavsAPI docs</title>
+    <paths>
+        <output>docs/</output>
+    </paths>
+    <version number="0.8.1">
+        <api>
+            <source dsn=".">
+                <path>src/</path>
+                <path>app/</path>
+            </source>
+            <extensions>
+                <extension>php</extension>
+            </extensions>
+             <default-package-name>RavsAPI</default-package-name>
+            <markers>
+                <marker>TODO</marker>
+                <marker>FIXME</marker>
+            </markers>
+        </api>
+    </version>
+</phpdocumentor>

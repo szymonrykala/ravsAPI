@@ -14,13 +14,8 @@ interface RoomRepositoryInterface extends RepositoryInterface
      * enable building loading
      * @return RoomRepositoryInterfave
      */
-    public function withAddress(): RoomRepositoryInterface;
+    public function withBuilding(): RoomRepositoryInterface;
 
-    /**
-     * @param int id
-     */
-    public function deleteById(int $id): void;
-    
     /**
      * @param Room room
      */

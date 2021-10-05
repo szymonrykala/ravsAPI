@@ -1,13 +1,16 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Infrastructure\Repository;
+
 use App\Infrastructure\Repository\BaseRepository;
 
 use App\Domain\Address\IAddressRepository;
 use App\Domain\Address\Address;
 
-use DateTime;
+use App\Utils\JsonDateTime;
+
 
 
 class AddressRepository extends BaseRepository implements IAddressRepository
@@ -22,30 +25,19 @@ class AddressRepository extends BaseRepository implements IAddressRepository
     {
         return new Address(
             (int)   $data['id'],
-                    $data['country'],
-                    $data['town'],
-                    $data['postal_code'],
-                    $data['street'],
-                    $data['number'],
-                    new DateTime($data['created']),
-                    new DateTime($data['updated']),
+            $data['country'],
+            $data['town'],
+            $data['postal_code'],
+            $data['street'],
+            $data['number'],
+            new JsonDateTime($data['created']),
+            new JsonDateTime($data['updated']),
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function deleteById(int $id): void
-    {
-        $this->byId($id);
-        
-        $sql = "DELETE FROM `$this->table` WHERE `id` = :id";
-        $params = [':id' => $id];
-        $this->db->query($sql, $params);
-    }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function save(Address $address): void
     {
@@ -72,7 +64,7 @@ class AddressRepository extends BaseRepository implements IAddressRepository
 
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function create(
         string $country,
@@ -80,12 +72,11 @@ class AddressRepository extends BaseRepository implements IAddressRepository
         string $postalCode,
         string $street,
         string $number
-    ): int
-    {
+    ): int {
         $sql = "INSERT INTO `$this->table`
                     (`country`,`town`,`postal_code`,`street`,`number`)
                 VALUES(:country, :town, :postalCode, :street, :number)";
-        
+
         $params = [
             ':country' => ucfirst($country),
             ':town' => ucfirst($town),
@@ -98,4 +89,4 @@ class AddressRepository extends BaseRepository implements IAddressRepository
 
         return $this->db->lastInsertId();
     }
-};
+}

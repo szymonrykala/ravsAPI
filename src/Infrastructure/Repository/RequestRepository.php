@@ -1,18 +1,19 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Infrastructure\Repository;
 
-use Psr\Container\ContainerInterface;
 
-use App\Application\Settings\SettingsInterface;
 use App\Domain\Request\RequestRepositoryInterface;
 use App\Domain\Request\Request;
+use App\Utils\JsonDateTime;
 use stdClass;
-use DateTime;
 
 
-class RequestRepository extends BaseRepository implements RequestRepositoryInterface{
+
+class RequestRepository extends BaseRepository implements RequestRepositoryInterface
+{
 
     protected string $table = 'request';
 
@@ -24,42 +25,43 @@ class RequestRepository extends BaseRepository implements RequestRepositoryInter
     {
         return new Request(
             (int)   $data['id'],
-                    $data['method'],
-                    $data['endpoint'],
+            $data['method'],
+            $data['endpoint'],
             (int)   $data['user_id'],
-                    $data['payload'],
-                    new DateTime($data['created']),
-                    new DateTime($data['updated'])
+            $data['payload'],
+            (float) $data['time'],
+            new JsonDateTime($data['created']),
+            new JsonDateTime($data['updated'])
         );
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function create(string $method, string $uriPath, int $userId, stdClass $payload): void
+    public function create(string $method, string $uriPath, int $userId, stdClass $payload, float $time): void
     {
-        $sql = "INSERT INTO `$this->table`(`method`,`endpoint`,`user_id`,`payload`)
-            VALUES(:method,:endpoint,:userId,:payload)";
+        $sql = "INSERT INTO `$this->table`(`method`,`endpoint`,`user_id`,`payload`, `time`)
+            VALUES(:method,:endpoint,:userId,:payload, :time)";
 
         $params = [
             ':method' => $method,
             ':endpoint' => $uriPath,
             ':userId' => $userId,
-            ':payload' => json_encode($payload)
+            ':payload' => json_encode($payload),
+            ':time' => $time,
         ];
         $this->db->query($sql, $params);
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function deleteList(array $ids): void
     {
         $sql = "DELETE FROM `$this->table` WHERE `id` IN (:ids)";
-        
-        $str_list = '';
-        foreach($ids as $id) $str_list .= $id.',';
-        
+
+        $str_list = implode(',', $ids);
+
         $params = [':ids' => $str_list];
 
         $this->db->query($sql, $params);

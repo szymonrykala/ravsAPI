@@ -8,13 +8,16 @@ use App\Infrastructure\Repository\BaseRepository;
 
 use App\Domain\Access\AccessRepositoryInterface;
 use App\Domain\Image\ImageRepositoryInterface;
+use App\Domain\Model\Model;
+use App\Domain\User\Exceptions\DefaultUserDeleteException;
 use App\Domain\User\UserRepositoryInterface;
 use App\Domain\User\User;
 use App\Infrastructure\Database\IDatabase;
-use DateTime;
+use App\Utils\JsonDateTime;
 
 
-class UserRepository extends BaseRepository implements UserRepositoryInterface
+
+final class UserRepository extends BaseRepository implements UserRepositoryInterface
 {
     protected string $table = 'user';
 
@@ -39,7 +42,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function withAccess(): UserRepositoryInterface
     {
@@ -48,14 +51,14 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     }
 
     /**
-     * @param array $data from database
+     * {@inheritDoc}
      * @return User
      */
     protected function newItem(array $data): User
     {
         $image = $this->imageRepository->byId((int)$data['image']);
         $access = $this->accessLoading ? $this->accessRepository->byId((int) $data['access']) : NULL;
-        
+
         return new User(
             (int)   $data['id'],
             $data['name'],
@@ -65,13 +68,14 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             (bool)  $data['activated'],
             (int)   $data['login_fails'],
             (bool)  $data['blocked'],
+            (bool)  $data['deleted'],
             $data['unique_key'],
-            new DateTime($data['last_generated_key_date']),
+            new JsonDateTime($data['last_generated_key_date']),
             $access,
             $image,
             json_decode($data['metadata']),
-            new DateTime($data['created']),
-            new DateTime($data['updated']),
+            new JsonDateTime($data['created']),
+            new JsonDateTime($data['updated']),
             (int)   $data['image'],
             (int)   $data['access']
         );
@@ -79,7 +83,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
 
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function save(User $user): void
     {
@@ -117,7 +121,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
 
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function register(
         string $name,
@@ -126,10 +130,12 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         string $password
     ): int {
 
-
         $sql = "INSERT `$this->table`
-                        (`name`, `surname`, `email`, `password`,`unique_key`) 
-                VALUES (:name, :surname, :email, :password, :uniqueKey)";
+                        (`name`, `surname`, `email`, `password`,`unique_key`, `image`, `access`) 
+                VALUES (:name, :surname, :email, :password, :uniqueKey, 
+                    (SELECT value FROM $this->configTable WHERE `key`='USER_IMAGE'),
+                    (SELECT value FROM $this->configTable WHERE `key`='DEFAULT_USER_ACCESS')
+                )";
 
         $params = [
             ':name' => ucfirst($name),
@@ -141,5 +147,63 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
 
         $this->db->query($sql, $params);
         return $this->db->lastInsertId();
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    public function search(string $phrase): UserRepository
+    {
+        $this->SQLwhere = " WHERE 
+                        email LIKE :phrase
+                        OR name LIKE :phrase
+                        OR surname LIKE :phrase ";
+        $this->params[':phrase'] = '%' . str_replace(' ', '%', $phrase) . '%';
+
+        return $this;
+    }
+
+    /**
+     * If used twice on same user, will casuse permanently deletion of the user and all resources related to it.
+     * Sets default iamge to the user and deletes used previously
+     * {@inheritDoc}
+     * @param User $user
+     * @throws DefaultUserDeleteException
+     */
+    public function delete(Model $user): void
+    {
+        // cannot delete user with predefined access class
+        if ($user->accessId === 1) throw new DefaultUserDeleteException();
+
+        if ($user->deleted) {
+            //permanently deleting
+            parent::delete($user);
+            return;
+        }
+
+        $user->setAsDeleted();
+
+
+        $sql = "UPDATE `$this->table` SET
+                    `name` = :name,
+                    `surname` = :surname,
+                    `deleted` = :deleted,
+                    `email` = :email,
+                    `image` = (SELECT `value` FROM $this->configTable WHERE `key`='USER_IMAGE')
+                WHERE `id` = :id";
+
+        $params = [
+            ':id' => $user->id,
+            ':name' => $user->name,
+            ':surname' => $user->surname,
+            ':deleted' => (int) $user->deleted,
+            ':email' => $user->email
+        ];
+
+        $this->db->query($sql, $params);
+
+        // deleting image
+        $this->imageRepository->delete($user->image);
     }
 }

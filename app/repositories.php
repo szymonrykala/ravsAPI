@@ -28,9 +28,17 @@ use App\Infrastructure\Repository\BuildingRepository;
 use App\Domain\Room\RoomRepositoryInterface;
 use App\Infrastructure\Repository\RoomRepository;
 
+use App\Domain\Reservation\IReservationRepository;
+use App\Infrastructure\Repository\ReservationRepository;
+
+use App\Domain\Configuration\IConfigurationRepository;
+use App\Infrastructure\Repository\ConfigurationRepository;
+
+use App\Domain\Stats\IStatsRepository;
+use App\Infrastructure\Repository\StatsRepository;
 
 return function (ContainerBuilder $containerBuilder) {
-    // Here we map our UserRepository interface to its in memory implementation
+    // mapping interfaces to implementations
     $containerBuilder->addDefinitions([
         ImageRepositoryInterface::class => \DI\autowire(ImageRepository::class),
         AccessRepositoryInterface::class => \DI\autowire(AccessRepository::class),
@@ -39,5 +47,8 @@ return function (ContainerBuilder $containerBuilder) {
         IAddressRepository::class => \DI\autowire(AddressRepository::class),
         IBuildingRepository::class => \DI\autowire(BuildingRepository::class),
         RoomRepositoryInterface::class => \DI\autowire(RoomRepository::class),
+        IReservationRepository::class => \DI\autowire(ReservationRepository::class),
+        IConfigurationRepository::class => \DI\autowire(ConfigurationRepository::class),
+        IStatsRepository::class => \DI\autowire(StatsRepository::class),
     ]);
 };

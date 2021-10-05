@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Middleware;
 
+use App\Application\Settings\SettingsInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\MiddlewareInterface as Middleware;
@@ -14,27 +15,31 @@ use Slim\Exception\HttpUnauthorizedException;
 use App\Utils\JWTFactory;
 use App\Domain\Exception\DomainUnauthorizedOperationException;
 
+
+
 class SessionMiddleware implements Middleware
 {
-    /** @var Request $request */
     private Request $request;
+    private array $whiteList;
 
-    /** @var array white list endpoints  */
-    private array $whiteList = [
-        '/users/auth', '/users/key', '/users/activate', '/users/password'
-    ];
+
+
+    public function __construct(SettingsInterface $settings)
+    {
+        $this->whiteList = $settings->get('authWhiteList');
+    }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function process(Request $request, RequestHandler $handler): Response
     {
         $this->request = $request;
 
         if (!in_array($this->request->getUri()->getPath(), $this->whiteList)) {
-
             try {
                 $tokenData = JWTFactory::decode($this->getToken());
+
             } catch (DomainUnauthorizedOperationException $e) {
                 throw new HttpUnauthorizedException($request, $e->getMessage());
             }

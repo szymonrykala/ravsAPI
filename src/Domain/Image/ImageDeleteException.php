@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Domain\Image;
 
-use App\Domain\Exception\DomainException;
+use App\Domain\Exception\DomainForbiddenOperationException;
 
-class ImageDeleteException extends DomainException
+class ImageDeleteException extends DomainForbiddenOperationException
 {
     public function __construct($file){
         parent::__construct(
