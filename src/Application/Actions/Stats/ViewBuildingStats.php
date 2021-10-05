@@ -9,24 +9,20 @@ use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\Stats\Stats;
 use App\Utils\JsonDateTime;
 
-class ViewBuildingStats extends StatsAction
+
+final class ViewBuildingStats extends StatsAction
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function action(): Response
     {
-        $buildingId =  $this->resolveArg('building_id', FALSE);
+        $buildingId =  $this->resolveArg($this::BUILDING_ID, FALSE);
 
-        $from = $this->resolveQueryArg('from', FALSE);
-        $to = $this->resolveQueryArg('to', 'now');
+        $date = new JsonDateTime('3 month ago');
+        $time=$this->getTimeSpanParans($date->getDate());
 
-        if (!$from) {
-            $date = new JsonDateTime('3 month ago');
-            $from = $date->getDate();
-        }
-
-        $this->statsRepository->setTimeSpan($from, $to);
+        $this->statsRepository->setTimeSpan($time->from, $time->to);
 
         /** @var Stats $stats */
         $stats = ($buildingId !== FALSE) ?

@@ -7,24 +7,18 @@ namespace App\Application\Actions\Stats;
 use Psr\Http\Message\ResponseInterface as Response;
 
 use App\Domain\Stats\Stats;
-use App\Utils\JsonDateTime;
 
-class ViewRequestStats extends StatsAction
+
+final class ViewRequestStats extends StatsAction
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function action(): Response
     {
-        $from = $this->resolveQueryArg('from', FALSE);
-        $to = $this->resolveQueryArg('to', 'now');
+        $time = $this->getTimeSpanParans();
 
-        if (!$from) {
-            $date = new JsonDateTime('1 month ago');
-            $from = $date->getDate();
-        }
-
-        $this->statsRepository->setTimeSpan($from, $to);
+        $this->statsRepository->setTimeSpan($time->from, $time->to);
 
         /** @var Stats $stats */
         $stats = $this->statsRepository->getRequestsStats();

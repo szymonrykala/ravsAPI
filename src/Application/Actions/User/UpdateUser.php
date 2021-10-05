@@ -12,20 +12,20 @@ use Slim\Exception\HttpUnauthorizedException;
 class UpdateUser extends UserAction
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function action(): Response
     {
         $session = $this->request->getAttribute('session');
 
-        $userId = (int) $this->resolveArg('user_id');
+        $userId = (int) $this->resolveArg($this::USER_ID);
 
         $form = $this->getFormData();
 
         /** @var User $user */
         $user = $this->userRepository->byId($userId);
 
-        if (!$user->isSessionUser($session)) {
+        if ($user->isSessionUser($session) === FALSE) {
             throw new HttpUnauthorizedException(
                 $this->request,
                 'You cannot update this user.'

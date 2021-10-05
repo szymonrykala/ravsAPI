@@ -24,15 +24,11 @@ class DeleteUser extends UserAction
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function action(): Response
     {
-        // Get user from token and check is it the same user or 
-        // he has privilages to do this
-        // $access = $this->accessRepository->byId(); // access of user who perform deleting
-
-        $userId = (int) $this->resolveArg('user_id');
+        $userId = (int) $this->resolveArg($this::USER_ID);
         $deletedUser = $this->userRepository->byId($userId);
 
         $this->userRepository->delete($deletedUser);

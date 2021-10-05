@@ -5,14 +5,11 @@ declare(strict_types=1);
 namespace App\Application\Actions\User;
 
 use App\Domain\User\Exceptions\BadCredentialsException;
-use App\Domain\User\Exceptions\UserBlockedException;
-use App\Domain\User\User;
 use App\Infrastructure\Mailing\IMailingService;
 use App\Infrastructure\Mailing\MailingService;
 use Psr\Http\Message\ResponseInterface as Response;
 
 use App\Utils\JWTFactory;
-use DateInterval;
 use Psr\Container\ContainerInterface;
 
 class AuthenticateUser extends UserAction
@@ -28,12 +25,11 @@ class AuthenticateUser extends UserAction
 
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function action(): Response
     {
         $form = $this->getFormData();
-
         $user = $this->getUserByEmail($form->email);
 
         try {
@@ -43,7 +39,7 @@ class AuthenticateUser extends UserAction
             $user->login($form->password);
         } catch (BadCredentialsException $ex) {
 
-            // if user could not authenticate to activate account
+            // if user could not authenticate to activate account, block the user
             if ($previousBlockedState === FALSE && $user->blocked) {
                 $this->mailer->setReciever($user);
                 $this->mailer->setMessageType(

@@ -33,8 +33,7 @@ class UpdateReservation extends ReservationAction
     protected function action(): Response
     {
         $form = $this->getFormData();
-        $reservationId = (int) $this->resolveArg('reservation_id');
-
+        $reservationId = (int) $this->resolveArg($this::RESERVATION_ID);
 
 
         foreach (['plannedStart', 'plannedEnd'] as $field)
@@ -51,8 +50,6 @@ class UpdateReservation extends ReservationAction
 
         $this->reservations->save($reservation);
 
-
-        // send email that reservation was created
 
         return $this->respondWithData();
     }

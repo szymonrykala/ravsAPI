@@ -5,23 +5,20 @@ namespace App\Application\Actions\User;
 
 use Psr\Http\Message\ResponseInterface as Response;
 
-use App\Domain\User\User;
 
 
 class UpdateUserAccess extends UserAction
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function action(): Response
     {
 
-        $userId = (int) $this->resolveArg('user_id');
+        $userId = (int) $this->resolveArg($this::USER_ID);
         $form = $this->getFormData();
 
-        /** @var User $user */
         $user = $this->userRepository->byId($userId);
-
 
         $user->accessId = $form->accessId;
 

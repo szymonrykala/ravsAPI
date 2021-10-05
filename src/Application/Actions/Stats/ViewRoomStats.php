@@ -7,26 +7,19 @@ namespace App\Application\Actions\Stats;
 use Psr\Http\Message\ResponseInterface as Response;
 
 use App\Domain\Stats\Stats;
-use App\Utils\JsonDateTime;
 
-class ViewRoomStats extends StatsAction
+
+final class ViewRoomStats extends StatsAction
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function action(): Response
     {
-        $roomId =  $this->resolveArg('room_id', FALSE);
+        $roomId =  $this->resolveArg($this::ROOM_ID, FALSE);
+        $time = $this->getTimeSpanParans();
 
-        $from = $this->resolveQueryArg('from', FALSE);
-        $to = $this->resolveQueryArg('to', 'now');
-
-        if (!$from) {
-            $date = new JsonDateTime('1 month ago');
-            $from = $date->getDate();
-        }
-
-        $this->statsRepository->setTimeSpan($from, $to);
+        $this->statsRepository->setTimeSpan($time->from, $time->to);
 
         /** @var Stats $stats */
         $stats = ($roomId !== FALSE) ?

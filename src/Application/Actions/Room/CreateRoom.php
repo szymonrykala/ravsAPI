@@ -5,22 +5,21 @@ namespace App\Application\Actions\Room;
 
 use Psr\Http\Message\ResponseInterface as Response;
 
-use App\Domain\Room\Room;
 
 
 class CreateRoom extends RoomAction
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function action(): Response
     {
-        $buildingId = (int) $this->resolveArg('building_id');
-        $addressId = (int) $this->resolveArg('address_id');
-
-        $this->buildingRepository->byIdAndAddressId($buildingId, $addressId);
-
+        $buildingId = (int) $this->resolveArg($this::BUILDING_ID);
+        $addressId = (int) $this->resolveArg($this::ADDRESS_ID);
+        
         $form = $this->getformData();
+        
+        $this->buildingRepository->byIdAndAddressId($buildingId, $addressId);
 
         $newRoomId = $this->roomRepository->create(
             $form->name,

@@ -20,7 +20,7 @@ class RegisterUser extends UserAction
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function action(): Response
     {   

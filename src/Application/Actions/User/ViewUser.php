@@ -12,7 +12,7 @@ class ViewUser extends UserAction
      */
     protected function action(): Response
     {
-        $userId = (int) $this->resolveArg('user_id');
+        $userId = (int) $this->resolveArg($this::USER_ID);
 
         $user = $this->userRepository
                     ->withAccess()

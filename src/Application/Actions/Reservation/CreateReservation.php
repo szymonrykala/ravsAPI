@@ -5,11 +5,7 @@ declare(strict_types=1);
 namespace App\Application\Actions\Reservation;
 
 use App\Domain\Exception\DomainBadRequestException;
-use App\Domain\Reservation\IReservationRepository;
 use App\Domain\Reservation\Policy\ReservationCreatePolicy;
-use App\Domain\User\UserRepositoryInterface;
-use App\Infrastructure\Mailing\IMailingService;
-use App\Infrastructure\Mailing\MailingService;
 use App\Utils\JsonDateTime;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -18,29 +14,24 @@ use Slim\Exception\HttpBadRequestException;
 
 class CreateReservation extends ReservationAction
 {
-
-    private UserRepositoryInterface $userRepository;
     private ReservationCreatePolicy $createPolicy;
-    private IMailingService $mailer;
 
 
     public function __construct(ContainerInterface $di)
     {
         parent::__construct($di);
         $this->createPolicy = $di->get(ReservationCreatePolicy::class);
-        $this->mailer = $di->get(IMailingService::class);
-        $this->userRepository = $di->get(UserRepositoryInterface::class);
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      * @throws DomainBadRequestException
      */
     protected function action(): Response
     {
         $form = $this->getFormData();
-        $roomId = (int) $this->resolveArg('room_id', FALSE);
-        $buildingId = (int) $this->resolveArg('building_id', FALSE);
+        $roomId = (int) $this->resolveArg($this::ROOM_ID, FALSE);
+        $buildingId = (int) $this->resolveArg($this::BUILDING_ID, FALSE);
 
         if (!$roomId) {
             if (isset($form->roomId)) $roomId = $form->roomId;

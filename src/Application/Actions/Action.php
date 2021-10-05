@@ -34,6 +34,9 @@ abstract class Action
     protected const RESERVATION_ID = 'reservation_id';
     protected const REQUEST_SUBJECT = 'request_subject';
 
+    protected const SEARCH_STRING = 'search';
+    protected const FROM_DATE = 'from';
+    protected const TO_DATE = 'to';
 
     protected LoggerInterface $logger;
 
@@ -54,10 +57,7 @@ abstract class Action
     }
 
     /**
-     * @param Request $request
-     * @param Response $response
-     * @param array $args
-     * @return Response
+     * Called to handle request
      * @throws HttpNotFoundException
      * @throws HttpBadRequestException
      * @throws HttpForbiddenException
@@ -90,15 +90,12 @@ abstract class Action
     }
 
     /**
-     * @return Response
-     * @throws DomainResourceNotFoundException
-     * @throws HttpBadRequestException
+     * controller action handling endpoint request
      */
     abstract protected function action(): Response;
 
     /**
-     * @return stdClass
-     * @throws HttpBadRequestException
+     * get form data of the request
      */
     protected function getFormData(): stdClass
     {
@@ -107,7 +104,7 @@ abstract class Action
 
 
     /**
-     * Resolves argument from URI.
+     * Resolves argument from URI string
      * @param mixed $default
      * @throws HttpBadRequestException
      */
@@ -141,12 +138,11 @@ abstract class Action
 
 
     /**
-     * @return Pagination
+     * prepares pagination feature object
      */
     public function preparePagination(): Pagination
     {
         $currentPage = (int) $this->resolveQueryArg(Pagination::CURRENT_PAGE, 1);
-
         $onPage = (int) $this->resolveQueryArg(Pagination::ITEMS_ON_PAGE, 15);
 
         $this->pagination = new Pagination($currentPage, $onPage);
@@ -155,9 +151,8 @@ abstract class Action
 
 
     /**
-     * @param array|object|null $data
-     * @param int $statusCode
-     * @return Response
+     * responds with given data
+     * @param mixed $data
      */
     protected function respondWithData($data = null, int $statusCode = 200): Response
     {
@@ -167,8 +162,7 @@ abstract class Action
     }
 
     /**
-     * @param ActionPayload $payload
-     * @return Response
+     * sends response from the API with provided $payload
      */
     protected function respond(ActionPayload $payload): Response
     {

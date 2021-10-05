@@ -6,12 +6,12 @@ namespace App\Application\Actions\Reservation;
 
 use App\Utils\JsonDateTime;
 use Psr\Http\Message\ResponseInterface as Response;
-use Slim\Exception\HttpBadRequestException;
 
-class ListReservations extends ReservationAction
+
+final class ListReservations extends ReservationAction
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function action(): Response
     {
@@ -19,10 +19,12 @@ class ListReservations extends ReservationAction
 
         $this->resolveURIParams();
 
-        // $this->reservations->where($params);
+        $searchString = $this->resolveQueryArg($this::SEARCH_STRING, FALSE);
+        $dateString = $this->resolveQueryArg($this::FROM_DATE, FALSE);
 
-        $this->resolveFromDateParam();
-        $this->resolveSearchParam();
+
+        $searchString && $this->reservations->search($searchString);
+        $dateString && $this->reservations->fromDate(new JsonDateTime($dateString));
 
 
         $list = $this->reservations
@@ -33,13 +35,14 @@ class ListReservations extends ReservationAction
         return $this->respondWithData($list);
     }
 
+
     /**
      * Resolves defined URI arguments to read reservations for specific resource
      */
     private function resolveURIParams(): void
     {
-        $buildingId = $this->resolveArg('building_id', FALSE);
-        $addressId = $this->resolveArg('address_id', FALSE);
+        $buildingId = $this->resolveArg($this::BUILDING_ID, FALSE);
+        $addressId = $this->resolveArg($this::ADDRESS_ID, FALSE);
 
         if ($buildingId && $addressId) {
             $this->reservations
@@ -49,55 +52,10 @@ class ListReservations extends ReservationAction
             $buildingId && $this->reservations->whereBuildingId((int)$buildingId);
         }
 
-        $roomId = $this->resolveArg('room_id', FALSE);
-        $userId = $this->resolveArg('user_id', FALSE);
+        $roomId = $this->resolveArg($this::ROOM_ID, FALSE);
+        $userId = $this->resolveArg($this::USER_ID, FALSE);
 
         $roomId && $this->reservations->forRoom((int)$roomId);
         $userId && $this->reservations->forUser((int)$userId);
-    }
-
-    /**
-     * @return void
-     */
-    private function resolveSearchParam(): void
-    {
-        $searchString = $this->resolveQueryArg('search', FALSE);
-        if ($searchString) {
-            $this->reservations->search($searchString);
-        }
-    }
-
-    /**
-     * @return void
-     */
-    private function resolveRoomIdParam(): void
-    {
-        if (isset($this->args['room_id']))
-            $this->reservations->forRoom((int)$this->resolveArg('room_id'));
-    }
-
-    /**
-     * @return void
-     */
-    private function resolveUserIdParam(): void
-    {
-        if (isset($this->args['user_id']))
-            $this->reservations->forUser((int) $this->resolveArg('user_id'));
-    }
-
-    /**
-     * @return void
-     */
-    private function resolveFromDateParam(): void
-    {
-        $dateString = $this->resolveQueryArg('fromDate', FALSE);
-        if ($dateString) {
-            try {
-                $date = new JsonDateTime($dateString);
-            } catch (\Exception $e) {
-                throw new HttpBadRequestException($this->request, $e->getMessage());
-            }
-            $this->reservations->fromDate($date);
-        }
     }
 }

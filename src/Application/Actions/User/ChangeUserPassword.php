@@ -11,13 +11,12 @@ use App\Domain\User\User;
 class ChangeUserPassword extends UserAction
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function action(): Response
     {
         $form = $this->getFormData();
 
-        /** @var User $user */
         $user = $this->getUserByEmail($form->email);
 
         $user->unblock($form->code);

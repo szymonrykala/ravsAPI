@@ -1,14 +1,16 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application\Actions\User;
 
 use Psr\Http\Message\ResponseInterface as Response;
 
+
 class ViewCurrentUser extends UserAction
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function action(): Response
     {
@@ -16,8 +18,8 @@ class ViewCurrentUser extends UserAction
 
         /** @var User $user */
         $user = $this->userRepository
-                    ->withAccess()
-                    ->byId($userId);
+            ->withAccess()
+            ->byId($userId);
 
         $user->loadMetadata();
 

@@ -6,14 +6,14 @@ namespace App\Application\Actions\User;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Exception\HttpForbiddenException;
-
+use Psr\Container\ContainerInterface;
 
 use App\Domain\User\User;
 use App\Infrastructure\Mailing\IMailingService;
 use App\Infrastructure\Mailing\MailingService;
-use DateInterval;
-use DateTime;
-use Psr\Container\ContainerInterface;
+use App\Utils\JsonDateTime;
+
+
 
 class GenerateUserKey extends UserAction
 {
@@ -28,7 +28,7 @@ class GenerateUserKey extends UserAction
 
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function action(): Response
     {
@@ -36,18 +36,16 @@ class GenerateUserKey extends UserAction
 
         $user = $this->getUserByEmail($form->email);
 
-        $_5minutes = new DateInterval('PT5M');
+        $_timePassed = $user->lastGeneratedKeyDate > new JsonDateTime('5 minutes ago');
 
-        $_timePassed = $user->lastGeneratedKeyDate
-            ->add($_5minutes) < new DateTime('now');
 
-        if ($_timePassed === FALSE) throw new HttpForbiddenException(
+        if ($_timePassed) throw new HttpForbiddenException(
             $this->request,
             "Code can be generated each 5 minutes."
         );
 
 
-        $this->assignUniqueKeyToUser($user);
+        $user->assignUniqueKey();
 
         $this->userRepository->save($user);
         $this->logger->info("User with id {$user->id} has generated key");
@@ -57,18 +55,5 @@ class GenerateUserKey extends UserAction
         $this->mailer->send();
 
         return $this->respondWithData("Code has been send to Your mailbox.", 201);
-    }
-
-    /**
-     * @param User &$user
-     * @return void
-     */
-    private function assignUniqueKeyToUser(User $user): void
-    {
-        do {
-            $user->assignUniqueKey();
-        } while (!empty($this->userRepository
-            ->where(['unique_key' => $user->uniqueKey])
-            ->all()));
     }
 }

@@ -25,21 +25,14 @@ abstract class UserAction extends Action
     }
 
     /**
-     * @param string $email
-     * @return User
-     * 
-     * @throws HttpNotFoundException
+     * get user by email string 
      */
     protected function getUserByEmail(string $email): User
     {
-        $res = $this->userRepository->where(['email' => $email])->all();
-        $user = array_pop($res);
+        $user = $this->userRepository
+            ->where(['email' => $email])
+            ->one();
 
-
-        if (empty($user)) throw new HttpNotFoundException(
-            $this->request,
-            "User '${email}' not exist."
-        );
 
         return $user;
     }

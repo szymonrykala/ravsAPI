@@ -5,13 +5,11 @@ declare(strict_types=1);
 namespace App\Application\Actions\User;
 
 use App\Domain\User\Exceptions\BadCredentialsException;
-use App\Domain\User\Exceptions\UserBlockedException;
 use Psr\Http\Message\ResponseInterface as Response;
 
 use App\Domain\User\Exceptions\UserNotActivatedException;
 use App\Infrastructure\Mailing\IMailingService;
 use App\Infrastructure\Mailing\MailingService;
-use phpDocumentor\Reflection\Types\Boolean;
 use Psr\Container\ContainerInterface;
 
 
@@ -28,7 +26,7 @@ class ActivateUser extends UserAction
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function action(): Response
     {

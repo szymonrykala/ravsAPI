@@ -11,11 +11,11 @@ class ListAllUsers extends UserAction
 {
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function action(): Response
     {
-        // if deleted=1 => include deleted users
+        // if deleted=1 - include deleted users
         $listDeleted = $this->resolveQueryArg('deleted', FALSE);
         $searchPhrase = $this->resolveQueryArg('search', FALSE);
         
