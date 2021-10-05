@@ -7,6 +7,5 @@
 .phpunit.result.cache
 
 /docs
-/phpdoc.xml
 .phpdoc
 .editorconfig

@@ -149,10 +149,9 @@ class AuthorizationMiddleware implements Middleware
 
         if ($method === 'POST' && $this->access->reservationsAbility)
             return TRUE;
-        else return FALSE;
 
         // DELETE and PATCH
-        $sessionUserId = $this->request->getAttribute('session')->userId;
+        $sessionUserId = (int) $this->request->getAttribute('session')->userId;
         $reservation = $this->reservationRepository->byId($this->subjectId);
 
         return $sessionUserId === $reservation->userId;

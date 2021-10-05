@@ -4,11 +4,23 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
+use App\Domain\Exception\DomainBadRequestException;
 use DateTime;
 use JsonSerializable;
 
-Class JsonDateTime extends DateTime implements JsonSerializable
+
+final Class JsonDateTime extends DateTime implements JsonSerializable
 {
+
+    public function __construct($dateString)
+    {
+        try{
+            parent::__construct($dateString);
+        }catch(\Exception $ex){
+            throw new DomainBadRequestException("Failed to parse date. Value '$dateString' is not correct.");
+        }
+    }
+
     /**
      * {@inheritdoc}
      */
