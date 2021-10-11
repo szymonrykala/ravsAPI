@@ -6,20 +6,20 @@ namespace App\Application\Actions\Image;
 use Psr\Http\Message\ResponseInterface as Response;
 
 
-class ListAllImages extends ImageAction
-{
-    /**
-     * {@inheritdoc}
-     */
-    protected function action(): Response
-    {
-        $identifier = $this->getIdentifier();
-        $images = $this->imageRepository->allLike($identifier);
+// class ListAllImages extends ImageAction
+// {
+//     /**
+//      * {@inheritdoc}
+//      */
+//     protected function action(): Response
+//     {
+//         $identifier = $this->getIdentifier();
+//         $images = $this->imageRepository->allLike($identifier);
 
-        $this->logger->info("All Images has been viewed.");
+//         $this->logger->info("All Images has been viewed.");
 
-        return $this->respondWithData($images);
-    }
-}
+//         return $this->respondWithData($images);
+//     }
+// }
 
 

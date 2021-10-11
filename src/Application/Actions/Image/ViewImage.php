@@ -1,23 +1,28 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application\Actions\Image;
 
 use Psr\Http\Message\ResponseInterface as Response;
+use Slim\Psr7\Factory\StreamFactory;
 
-class ViewImage extends ImageAction
+
+final class ViewImage extends ImageAction
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function action(): Response
     {
         $imageId = (int) $this->resolveArg($this::IMAGE_ID);
-
-        $image = $this->imageRepository->byId($imageId);
-
+        
+        $fileStream = $this->imageRepository->viewImageFile($imageId);
+        
         $this->logger->info("Image of id `${imageId}` was viewed.");
 
-        return $this->respondWithData($image);
+        return $this->response
+            ->withBody($fileStream)
+            ->withHeader('Content-type', 'image/png');
     }
 }

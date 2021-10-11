@@ -28,12 +28,8 @@ return function (ContainerBuilder $containerBuilder) {
                     'host' => '127.0.0.1',
                     'name' => 'ravs'
                 ],
-
-                'image' => [
-                    'directory' => '/resources' . DIRECTORY_SEPARATOR
-                ],
                 'authWhiteList' => [
-                    '/users/auth', '/users/key', '/users/activate', '/users/password'
+                    '/v1/users/auth', '/v1/users/key', '/v1/users/activate', '/v1/users/password'
                 ],
                 'smtp' => [
                     'host' => 'smtp.gmail.com',

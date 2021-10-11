@@ -10,30 +10,29 @@ use App\Utils\JsonDateTime;
 class Image extends Model
 {
 
-    public string $path;
+    public string $name;
     public int $size;
 
     public function __construct(
         int $id,
-        string $path,
+        string $name,
         int $size,
         JsonDateTime $created,
         JsonDateTime $updated
     ) {
         parent::__construct($id, $created, $updated);
 
-        $this->path = $path;
+        $this->name = $name;
         $this->size = $size;
     }
 
     /**
-     * @return array
+     * {@inheritDoc}
      */
     public function jsonSerialize(): array
     {
         return array_merge(
             [
-                'path' => $this->path,
                 'size' => $this->size
             ],
             parent::jsonSerialize()

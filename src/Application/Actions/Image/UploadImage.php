@@ -15,10 +15,6 @@ class UploadImage extends ImageAction
     protected function action(): Response
     {
 
-        $resourceId = $this->getIdentifier();
-
-        print_r($resourceId);
-
         $files = $this->request->getUploadedFiles();
 
         if (empty($files)) {
@@ -30,7 +26,7 @@ class UploadImage extends ImageAction
             throw new HttpBadRequestException($this->request, 'Error has occured while uploading Image.');
         }
 
-        $imageId = $this->imageRepository->save($file, $resourceId);
+        $imageId = $this->imageRepository->save($file);
 
         $this->logger->info("Image of id `${imageId}` was uploaded.");
 
