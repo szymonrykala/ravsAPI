@@ -7,5 +7,5 @@ use App\Domain\Exception\DomainForbiddenOperationException;
 
 class AccessUpdateException extends DomainForbiddenOperationException
 {
-    public $message = 'Can not update predefined access class.';
+    public $message = 'Nie udało się zaktualizować klasy dostępu.';
 }

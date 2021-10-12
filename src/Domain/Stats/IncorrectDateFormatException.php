@@ -9,5 +9,5 @@ use App\Domain\Exception\DomainBadRequestException;
 
 class IncorrectDateFormatException extends DomainBadRequestException
 {
-    public $message = 'Provided date has uncorrecct format.';
+    public $message = 'Podana data ma niepoprawny format.';
 }

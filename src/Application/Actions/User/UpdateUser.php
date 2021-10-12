@@ -28,7 +28,7 @@ class UpdateUser extends UserAction
         if ($user->isSessionUser($session) === FALSE) {
             throw new HttpUnauthorizedException(
                 $this->request,
-                'You cannot update this user.'
+                'Nie możesz aktualizować tego użytkownika'
             );
         }
 

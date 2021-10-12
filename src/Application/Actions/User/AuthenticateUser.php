@@ -44,7 +44,7 @@ class AuthenticateUser extends UserAction
                 $this->mailer->setReciever($user);
                 $this->mailer->setMessageType(
                     MailingService::ACCOUNT_BLOCKED,
-                    ['reason' => "zbyt duża ilość nieudanych prób logowania ({$user->loginFails})"]
+                    ['reason' => "Zbyt duża ilość nieudanych prób logowania ({$user->loginFails})"]
                 );
                 $this->mailer->send();
             }

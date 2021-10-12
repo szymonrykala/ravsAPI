@@ -17,10 +17,7 @@ class Pagination implements JsonSerializable
     private int $currentPage;
     private int $itemsOnPage;
 
-    /**
-     * @param int currentPage =1
-     * @param int itemsCount = 30
-     */
+
     public function __construct(
         int $currentPage,
         int $itemsOnPage

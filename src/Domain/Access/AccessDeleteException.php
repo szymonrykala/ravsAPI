@@ -7,5 +7,5 @@ use App\Domain\Exception\DomainForbiddenOperationException;
 
 class AccessDeleteException extends DomainForbiddenOperationException
 {
-    public $message = 'Can not delete predefined access class.';
+    public $message = 'Nie udało się usunąć klasy dostępu.';
 }

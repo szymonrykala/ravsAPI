@@ -10,5 +10,5 @@ use App\Domain\Exception\DomainConflictException;
 
 class RfidKeyNotValidException extends DomainConflictException
 {
-    public $message = 'Provided RFID key is not valid for this room.';
+    public $message = 'Podany klucz nie pasuje do tego pokoju.';
 }

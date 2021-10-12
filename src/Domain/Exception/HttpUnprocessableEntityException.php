@@ -8,6 +8,6 @@ use Slim\Exception\HttpException;
 
 class HttpUnprocessableEntityException extends HttpException
 {
-    public $message = "Unprocessable payload";
+    public $message = "Nie można przetworzyć zapytania.";
     public $code = 422;
 }

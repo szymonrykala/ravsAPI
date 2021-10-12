@@ -11,6 +11,6 @@ class TimeSlotConflictException extends DomainConflictException
 {
     public function __construct(?string $message = NULL)
     {
-        $this->message = $message ?? 'Reservation time slot conflict. Another reservation was created with similar time slot.';
+        $this->message = $message ?? 'Zarezerwowany czas jest już zajęty przez kogoś innego.';
     }
 }

@@ -41,7 +41,7 @@ class ActivateUser extends UserAction
 
         try {
             $user->login($form->password);
-            $message = "User is already activated";
+            $message = "Użytkownik jest już aktywowany.";
         } catch (BadCredentialsException $ex) {
 
             // if user could not authenticate to activate account
@@ -57,7 +57,7 @@ class ActivateUser extends UserAction
         } catch (UserNotActivatedException $ex) {
             $user->activate($form->code);
             $this->logger->info("user with id {$user->id} was activated");
-            $message = "User activation completed. Please login.";
+            $message = "Aktywacja przebiegła pomyślnie. Zaloguj się!";
 
             $this->mailer->setMessageType(MailingService::ACCOUNT_ACTIVATED);
             $this->mailer->send();

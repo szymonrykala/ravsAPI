@@ -7,5 +7,5 @@ use App\Domain\Exception\DomainConflictException;
 
 class ReservationAlreadyStartedException extends DomainConflictException
 {
-    public $message = 'Reservation has already started. You can not pick up the key.';
+    public $message = 'Rezerwacja już się rozpoczęła. Klucz został już odebrany.';
 }

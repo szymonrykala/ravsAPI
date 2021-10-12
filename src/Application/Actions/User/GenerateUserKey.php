@@ -41,7 +41,7 @@ class GenerateUserKey extends UserAction
 
         if ($_timePassed) throw new HttpForbiddenException(
             $this->request,
-            "Code can be generated each 5 minutes."
+            "Kod może być generowany w odstępie 5 minut."
         );
 
 

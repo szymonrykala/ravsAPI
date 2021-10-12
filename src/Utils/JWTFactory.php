@@ -75,15 +75,15 @@ class JWTFactory
 
 class JWTGeneratorException extends RuntimeException
 {
-    public $message = "Could not generate an auth token. Please try again";
+    public $message = "Nie udało się wygenerować tokenu. Spróbuj jeszcze raz.";
 }
 
 class TokenExpiredException extends DomainUnauthorizedOperationException
 {
-    public $message = "Token has expired. Login to get new one.";
+    public $message = "Token wygasł. Zaloguj się ponownie.";
 }
 
 class TokenNotValidException extends DomainUnauthorizedOperationException
 {
-    public $message = "Token is invalid.";
+    public $message = "Token jest nieprawidłowy.";
 }

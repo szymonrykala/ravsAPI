@@ -6,5 +6,5 @@ namespace App\Domain\Exception;
 
 class DomainUnauthorizedOperationException extends DomainException
 {
-    public $message = "You have unsufficient privilages to perform this operation.";
+    public $message = "Nie masz wystarczających uprawnień by wykonać tą operację.";
 }

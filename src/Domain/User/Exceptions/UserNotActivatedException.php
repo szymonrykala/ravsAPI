@@ -8,5 +8,5 @@ use App\Domain\Exception\DomainForbiddenOperationException;
 
 class UserNotActivatedException extends DomainForbiddenOperationException
 {
-    public $message = "User is not activated - can not perform this action.";
+    public $message = "Użytkownik nie jest aktywowany. Nie można wykonać żądania.";
 }

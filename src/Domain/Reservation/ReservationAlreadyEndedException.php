@@ -7,5 +7,5 @@ use App\Domain\Exception\DomainConflictException;
 
 class ReservationAlreadyEndedException extends DomainConflictException
 {
-    public $message = 'Reservation has already ended. You can not give back the key.';
+    public $message = 'Rezerwacja już się zakończyła. Klucz został już oddany.';
 }

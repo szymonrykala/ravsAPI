@@ -26,9 +26,7 @@ class UpdateReservation extends ReservationAction
     }
 
     /**
-     * {@inheritDoc}
-     * @throws DomainBadRequestException
-     * 
+     * {@inheritDoc} 
      */
     protected function action(): Response
     {

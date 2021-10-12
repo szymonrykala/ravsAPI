@@ -10,5 +10,5 @@ use App\Domain\Exception\DomainConflictException;
 
 class RoomAlreadyOccupiedException extends DomainConflictException
 {
-    public $message = 'Room already occupied. Do not issue the keys.';
+    public $message = 'Klucz do pokoju został już wydany.';
 }

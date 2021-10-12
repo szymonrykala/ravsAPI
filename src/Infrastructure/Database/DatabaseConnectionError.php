@@ -12,6 +12,6 @@ class DatabaseConnectionError extends DomainException
 {
     function __construct()
     {
-        $this->message = "Could not connect to database.";
+        $this->message = "Nie udało sie połączyć z bazą danych.";
     }
 }

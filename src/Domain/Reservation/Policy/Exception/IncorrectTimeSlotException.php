@@ -12,6 +12,6 @@ class IncorrectTimeSlotException extends DomainConflictException
 {
     public function __construct(?string $message = NULL)
     {
-        $this->message = $message ?? 'Reservation time slot is not correct.';
+        $this->message = $message ?? 'Niepoprawny zakres czasu dla rezerwacji.';
     }
 }

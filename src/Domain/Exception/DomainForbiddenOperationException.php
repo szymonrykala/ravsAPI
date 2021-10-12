@@ -6,5 +6,5 @@ namespace App\Domain\Exception;
 
 class DomainForbiddenOperationException extends DomainException
 {
-    public $message = "Operation You want to perform is not permitted.";
+    public $message = "Operacja którą chcesz wykonać jest niedozwolona.";
 }

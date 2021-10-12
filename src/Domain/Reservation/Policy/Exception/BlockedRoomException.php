@@ -12,6 +12,6 @@ class BlockedRoomException extends DomainBadRequestException
 {
     public function __construct(?string $message = NULL)
     {
-        $this->message = $message ?? 'Room is blocked, You can not reserve it';
+        $this->message = $message ?? 'Pokój jest zablokowany. Nie można go zarezerwować.';
     }
 }

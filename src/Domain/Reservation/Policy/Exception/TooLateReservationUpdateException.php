@@ -10,5 +10,5 @@ use App\Domain\Exception\DomainConflictException;
 
 class TooLateReservationUpdateException extends DomainConflictException
 {
-    public $message = 'You can not update reservation in 24 hours before start.';
+    public $message = 'Nie można aktualizować rezerwacji 24 godziny przed planowanym rozpoczęciem.';
 }

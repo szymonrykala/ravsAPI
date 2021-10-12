@@ -113,7 +113,7 @@ abstract class Action
         if (!isset($this->args[$name])) {
             if ($default !== NULL) return $default;
 
-            throw new HttpBadRequestException($this->request, "Could not resolve URI argument `{$name}`.");
+            throw new HttpBadRequestException($this->request, "Nie udało się pobrać parametru `{$name}`.");
         }
 
         return $this->args[$name];
@@ -130,7 +130,7 @@ abstract class Action
         if (!isset($_GET[$name])) {
             if ($default !== NULL) return $default;
 
-            throw new HttpBadRequestException($this->request, "Could not resolve query argument `${name}`.");
+            throw new HttpBadRequestException($this->request, "Nie udało się pobrać parametru `${name}` z zapytania.");
         }
 
         return $_GET[$name];

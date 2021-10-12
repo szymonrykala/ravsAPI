@@ -8,5 +8,5 @@ use App\Domain\Exception\DomainBadRequestException;
 
 class DefaultUserDeleteException extends DomainBadRequestException
 {
-    public $message = "Cannot delete user with predefined owner access class";
+    public $message = "Nie można usunąć użytkownika z predefiniowaną klasą dostępu.";
 }

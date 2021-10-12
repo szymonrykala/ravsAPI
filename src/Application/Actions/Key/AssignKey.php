@@ -27,7 +27,7 @@ class AssignKey extends KeyAction
         if($buildingId !== $room->building->id || $room->building->address !== $addressId)
             throw new HttpBadRequestException(
                 $this->request, 
-                "Provided data (room id and|or address id) are incorrect."
+                "Podane dane (id pokoju i/lub id adresu) są nieprawidłowe."
             );
 
         $room->rfid = $form->NFCTag;

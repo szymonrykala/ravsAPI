@@ -8,5 +8,5 @@ use App\Domain\Exception\DomainBadRequestException;
 
 class BadCredentialsException extends DomainBadRequestException
 {
-    public $message = "Provided credentials are incorrect";
+    public $message = "Podane hasło jest nieprawidłowe.";
 }

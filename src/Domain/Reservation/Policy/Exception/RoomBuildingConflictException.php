@@ -11,6 +11,6 @@ class RoomBuildingConflictException extends DomainConflictException
 {
     public function __construct(int $roomId, int $buildingId)
     {
-        $this->message = "Given room (id='${roomId}') does not contain in building (id='${buildingId}').";
+        $this->message = "Pokój (id='${roomId}') nie znajduje się w budynku (id='${buildingId}').";
     }
 }

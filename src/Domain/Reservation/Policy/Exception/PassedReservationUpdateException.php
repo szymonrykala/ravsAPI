@@ -10,5 +10,5 @@ use App\Domain\Exception\DomainConflictException;
 
 class PassedReservationUpdateException extends DomainConflictException
 {
-    public $message = 'Reservation has already passed.';
+    public $message = 'Rezerwacja już się zakończyła. Nie można jej zaktualizować.';
 }

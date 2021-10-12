@@ -18,7 +18,7 @@ class DeleteRequests extends RequestAction
         $form = $this->getFormData();
 
         if (!isset($form->ids) || gettype($form->ids) !== 'array')
-            throw new HttpBadRequestException($this->request, 'You have to specify `ids` (type array) parameter');
+            throw new HttpBadRequestException($this->request, 'Body wiadomości musi zawierać parametr `ids` (typ array)');
                
         $this->requestRepository->deleteList($form->ids);
 

@@ -29,6 +29,6 @@ class ChangeUserPassword extends UserAction
 
         $this->logger->info("User id {$user->id} changed password");
 
-        return $this->respondWithData("New password was set.");
+        return $this->respondWithData("Hasło zostało zmienione.");
     }
 }

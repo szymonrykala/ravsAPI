@@ -37,7 +37,7 @@ class CreateReservation extends ReservationAction
             if (isset($form->roomId)) $roomId = $form->roomId;
             else throw new HttpBadRequestException(
                 $this->request,
-                'If using `/reservations` endpoint, you must specify `roomId` in request body'
+                'Jeżeli używasz `/reservations`, musisz podać `roomId` w ładuknu wiadomości.'
             );
         }
 

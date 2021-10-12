@@ -11,7 +11,7 @@ class DataIntegrityException extends DomainBadRequestException
 {
     public function __construct(string $message)
     {
-        $this->message = "Data integrity exception founded:" . $this->processMessage($message);
+        $this->message = "Błąd bazy danych:" . $this->processMessage($message);
     }
 
     private function processMessage(string $message): string

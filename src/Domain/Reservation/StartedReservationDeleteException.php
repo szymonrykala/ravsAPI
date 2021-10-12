@@ -9,5 +9,5 @@ use App\Domain\Exception\DomainConflictException;
 
 class StartedReservationDeleteException extends DomainConflictException
 {
-    public $message = 'Reservation is or was active in past. You can not delete it.';
+    public $message = 'Nie mozna usunąć trwającej rezerwacji.';
 }

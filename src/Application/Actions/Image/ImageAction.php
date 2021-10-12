@@ -23,11 +23,5 @@ abstract class ImageAction extends Action
         parent::__construct($logger);
         $this->imageRepository = $imageRepository;
     }
-
-    protected function getIdentifier(): string
-    {
-        $path = $this->request->getUri()->getPath();
-        return str_replace('/','',$path);
-    }
 }
 

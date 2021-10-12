@@ -32,7 +32,7 @@ class BodyParsingMiddleware implements Middleware
             $input = json_decode(file_get_contents('php://input'));
 
             if (json_last_error() !== JSON_ERROR_NONE) {
-                throw new HttpBadRequestException($request, 'Malformed JSON input.');
+                throw new HttpBadRequestException($request, 'Nieprawidłowy format JSON we wiadomości.');
             }
         }
 

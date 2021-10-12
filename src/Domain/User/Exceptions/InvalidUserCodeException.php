@@ -8,5 +8,5 @@ use App\Domain\Exception\DomainBadRequestException;
 
 class InvalidUserCodeException extends DomainBadRequestException
 {
-    public $message = "Provided code is not correct.";
+    public $message = "Podany kod jest nieprawidłowy.";
 }

@@ -6,5 +6,5 @@ use App\Domain\Exception\DomainForbiddenOperationException;
 
 class DeletedUserUpdateException extends DomainForbiddenOperationException
 {
-    public $message = "Can not update deleted user.";
+    public $message = "Nie można aktualizować usuniętego użytkownika.";
 }
