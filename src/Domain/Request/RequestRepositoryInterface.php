@@ -10,24 +10,18 @@ use stdClass;
 interface RequestRepositoryInterface extends RepositoryInterface
 {
     /**
-     * @param string $method
-     * @param string $uriPath
-     * @param int $userId
-     * @param stdClass $payload
-     * @param float time
-     * @return void
+     * {@inheritDoc}
      */
     public function create(
         string $method, 
         string $uriPath, 
-        int $userId, 
+        ?int $userId, 
         stdClass $payload,
         float $time
     ): void;
 
     /**
-     * @param array $id's
-     * @return void
+     * Deletes list of requests specified in $ids param
      */
     public function deleteList(array $ids): void;
 

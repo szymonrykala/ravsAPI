@@ -38,8 +38,13 @@ class RequestRepository extends BaseRepository implements RequestRepositoryInter
     /**
      * {@inheritDoc}
      */
-    public function create(string $method, string $uriPath, int $userId, stdClass $payload, float $time): void
-    {
+    public function create(
+        string $method,
+        string $uriPath,
+        ?int $userId,
+        stdClass $payload,
+        float $time
+    ): void {
         $sql = "INSERT INTO `$this->table`(`method`,`endpoint`,`user_id`,`payload`, `time`)
             VALUES(:method,:endpoint,:userId,:payload, :time)";
 

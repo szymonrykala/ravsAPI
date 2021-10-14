@@ -19,6 +19,7 @@ use App\Domain\Request\RequestRepositoryInterface;
 
 class RequestLoggingMiddleware implements Middleware
 {
+    private RequestRepositoryInterface $requestRepository;
 
     public function __construct(RequestRepositoryInterface $requestRepository)
     {
@@ -27,24 +28,20 @@ class RequestLoggingMiddleware implements Middleware
 
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function process(Request $request, RequestHandler $handler): Response
     {
         $timeStart = microtime(true);
 
-        /** @var Response $response */
         $response = $handler->handle($request);
-
-        /** @var stdClass $session */
-        $session = $request->getAttribute('session');
-        
+                
         $processingTime = microtime(true) - $timeStart;
 
-        $session && $this->requestRepository->create(
+        $this->requestRepository->create(
             $request->getMethod(),
             $request->getUri()->getPath(),
-            $request->getAttribute('session')->userId,
+            $request->getAttribute('session')->userId ?? NULL,
             $request->getParsedBody(),
             $processingTime
         );
