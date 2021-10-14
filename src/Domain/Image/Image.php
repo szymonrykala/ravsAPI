@@ -33,7 +33,8 @@ class Image extends Model
     {
         return array_merge(
             [
-                'size' => $this->size
+                'size' => $this->size,
+                'href' => '/v1/images/'.$this->id
             ],
             parent::jsonSerialize()
         );
