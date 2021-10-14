@@ -29,7 +29,7 @@ function addReservationGets(&$resourcePath)
     $resourcePath->group('/reservations', function (Group $reservations) {
         $reservations->get('', Reservation\ListReservations::class);
 
-        $reservations->group('/{reservation_id}', function (Group $reservation) {
+        $reservations->group('/{reservation_id:[0-9]+}', function (Group $reservation) {
             $reservation->get('', Reservation\ViewReservation::class);
         });
     });
@@ -45,7 +45,7 @@ function registerRooms(&$buildingPath)
 
         $rooms->post('', Room\CreateRoom::class);
 
-        $rooms->group('/{room_id}', function (Group $room) {
+        $rooms->group('/{room_id:[0-9]+}', function (Group $room) {
             $room->get('', Room\ViewRoom::class);
             $room->patch('', Room\UpdateRoom::class);
             
@@ -69,7 +69,7 @@ function registerBuildings(&$addressPath)
 
         $buildings->post('', Building\CreateBuilding::class);
 
-        $buildings->group('/{building_id}', function (Group $building) {
+        $buildings->group('/{building_id:[0-9]+}', function (Group $building) {
             $building->get('', Building\ViewBuilding::class);
             $building->get('/stats', Stats\ViewBuildingStats::class);
 
@@ -89,7 +89,7 @@ function registerAddresses(&$authRoot)
         $addresses->get('/resources', Address\ViewResourcesMap::class);
         $addresses->post('', Address\CreateAddress::class);
 
-        $addresses->group('/{address_id}', function (Group $address) {
+        $addresses->group('/{address_id:[0-9]+}', function (Group $address) {
             $address->get('', Address\ViewAddress::class);
             $address->patch('', Address\UpdateAddress::class);
             $address->delete('', Address\DeleteAddress::class);
@@ -164,7 +164,7 @@ return function (App $app) {
             $auth->group('/reservations', function (Group $reservations) {
                 $reservations->post('', Reservation\CreateReservation::class);
 
-                $reservations->group('/{reservation_id}', function (Group $reservation) {
+                $reservations->group('/{reservation_id:[0-9]+}', function (Group $reservation) {
                     $reservation->patch('', Reservation\UpdateReservation::class);
                     $reservation->delete('', Reservation\DeleteReservation::class);
 
