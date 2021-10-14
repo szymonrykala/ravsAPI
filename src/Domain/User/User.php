@@ -91,7 +91,7 @@ final class User extends Model
     /** 
      * generates unique key
      */
-    public static function generateUniqueKey(int $length): string
+    public static function generateUniqueKey(int $length = 10): string
     {
         return strtoupper(substr(uniqid(), 0, $length));
     }
@@ -111,10 +111,10 @@ final class User extends Model
     /**
      * Assigns unique key to the user
      */
-    public function assignUniqueKey(int $length = 10): void
+    public function assignUniqueKey(): void
     {
         $this->lastGeneratedKeyDate = new JsonDateTime('now');
-        $this->uniqueKey = User::generateUniqueKey($length);
+        $this->uniqueKey = User::generateUniqueKey();
     }
 
 
