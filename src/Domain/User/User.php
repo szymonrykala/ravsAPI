@@ -31,6 +31,7 @@ final class User extends Model
     public string $uniqueKey;
     public JsonDateTime $lastGeneratedKeyDate;
     public ?stdClass $metadata;
+    public JsonDateTime $lastActivity;
 
     public ?Access $access;
     public Image $image;
@@ -58,6 +59,7 @@ final class User extends Model
         ?Access $access,
         Image $image,
         stdClass $metadata,
+        JsonDateTime $lastActivity,
         JsonDateTime $created,
         JsonDateTime $updated,
         int $imageId,
@@ -80,6 +82,7 @@ final class User extends Model
         $this->access = $access;
 
         $this->metadata = $metadata;
+        $this->lastActivity = $lastActivity;
 
         $this->imageId = $imageId;
         $this->accessId = $accessId;
@@ -220,6 +223,7 @@ final class User extends Model
                 'deleted' => $this->deleted,
                 'image' => $this->image,
                 'access' => $this->access ?? $this->accessId,
+                'lastActivity' => $this->lastActivity,
             ],
             parent::jsonSerialize()
         );

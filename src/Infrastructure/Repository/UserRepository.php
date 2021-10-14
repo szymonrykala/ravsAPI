@@ -74,6 +74,7 @@ final class UserRepository extends BaseRepository implements UserRepositoryInter
             $access,
             $image,
             json_decode($data['metadata']),
+            new JsonDateTime($data['last_activity']),
             new JsonDateTime($data['created']),
             new JsonDateTime($data['updated']),
             (int)   $data['image'],
@@ -81,6 +82,16 @@ final class UserRepository extends BaseRepository implements UserRepositoryInter
         );
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public function registerActivity(int $userId): void
+    {
+        $this->db->query(
+            "UPDATE `$this->table` SET `last_activity` = NOW() WHERE `id` = :userId",
+            [ ':userId' => $userId ]
+        );
+    }
 
     /**
      * {@inheritDoc}

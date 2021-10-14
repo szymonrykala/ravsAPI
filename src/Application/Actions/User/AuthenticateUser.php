@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Application\Actions\User;
 
 use App\Domain\User\Exceptions\BadCredentialsException;
+use App\Domain\User\Exceptions\UserBlockedException;
+use App\Domain\User\User;
 use App\Infrastructure\Mailing\IMailingService;
 use App\Infrastructure\Mailing\MailingService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -41,17 +43,8 @@ class AuthenticateUser extends UserAction
 
             // if user could not authenticate to activate account, block the user
             if ($previousBlockedState === FALSE && $user->blocked) {
-                $this->mailer->setReciever($user);
-                $this->mailer->setMessageType(
-                    MailingService::ACCOUNT_BLOCKED,
-                    ['reason' => "Zbyt duża ilość nieudanych prób logowania ({$user->loginFails})"]
-                );
-                $this->mailer->send();
+                $this->sendBlockNotification($user);
             }
-            $this->userRepository->save($user);
-            throw $ex;
-            
-        }catch(BadCredentialsException $ex){
             $this->userRepository->save($user);
             throw $ex;
         }
@@ -61,6 +54,22 @@ class AuthenticateUser extends UserAction
         $this->logger->info("User id {$user->id} was authenticated");
         $this->userRepository->save($user);
 
+        // hide user password because of security and logging middleware
+        $form->password = '************';
+
+        $this->request->withParsedBody($form);
         return $this->respondWithData($userToken);
+    }
+
+    /**
+     * Sends email notification to user about blockade
+     */
+    private function sendBlockNotification(User $user){
+        $this->mailer->setReciever($user);
+        $this->mailer->setMessageType(
+            MailingService::ACCOUNT_BLOCKED,
+            ['reason' => "Zbyt duża ilość nieudanych prób logowania ({$user->loginFails})"]
+        );
+        $this->mailer->send();
     }
 }

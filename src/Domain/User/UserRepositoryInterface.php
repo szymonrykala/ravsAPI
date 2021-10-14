@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Domain\User;
@@ -34,10 +35,13 @@ interface UserRepositoryInterface extends RepositoryInterface
         string $password
     ): int;
 
+    /**
+     * Register activity for user with specified userId
+     */
+    public function registerActivity(int $userId): void;
 
     /**
      * search for a users with given phrase by name, surname, and email
      */
     public function search(string $phrase): UserRepositoryInterface;
-
 }
