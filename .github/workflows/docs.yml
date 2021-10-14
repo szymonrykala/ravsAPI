@@ -28,7 +28,7 @@ jobs:
         mv phpDocumentor.phar /usr/local/bin/phpDocumentor
 
     - name: generate_docs
-      run: phpdoc --config ./phpdoc.xml
+      run: phpDocumentor --config ./phpdoc.xml
 
     - name: Deploy to GitHub Pages
       uses: crazy-max/ghaction-github-pages@v2
