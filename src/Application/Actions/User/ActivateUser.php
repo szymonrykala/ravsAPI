@@ -65,6 +65,10 @@ class ActivateUser extends UserAction
             $this->userRepository->save($user);
         }
 
+        // hide user password because of security and logging middleware
+        $form->password = '************';
+
+        $this->request->withParsedBody($form);
         return $this->respondWithData($message);
     }
 }
