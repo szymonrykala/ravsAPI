@@ -57,7 +57,6 @@ function registerRooms(&$buildingPath)
             // registerReservation($room);
             $room->post('/reservations', Reservation\CreateReservation::class);
             addReservationGets($room);
-            registerImages($room);
         });
     });
 }
@@ -79,7 +78,6 @@ function registerBuildings(&$addressPath)
 
             addReservationGets($building);
             registerRooms($building);
-            registerImages($building);
         });
     });
 }
@@ -102,19 +100,6 @@ function registerAddresses(&$authRoot)
     });
 }
 
-function registerImages($resource)
-{
-    $resource->group('/images', function (Group $images) {
-        $images->post('', Image\UploadImage::class);
-        $images->get('', Image\ListAllImages::class);
-
-        $images->group('/{image_id:[0-9]+}', function (Group $image) {
-            $image->get('', Image\ViewImage::class);
-            $image->delete('', Image\DeleteImage::class);
-        });
-    });
-}
-
 
 return function (App $app) {
     $app->options('/{routes:.*}', function (Request $request, Response $response) {
@@ -122,7 +107,7 @@ return function (App $app) {
         return $response;
     });
 
-    $app->group('', function (Group $v1) {
+    $app->group('/v1', function (Group $v1) {
 
         // ------ WHITE LIST ENDPOINTS --------
         $v1->group('/users', function (Group $unAuth) {
@@ -159,7 +144,7 @@ return function (App $app) {
                     $user->delete('', User\DeleteUser::class);
 
                     addReservationGets($user);
-                    registerImages($user);
+                    
                     // $one->get('/report', User\GenerateUserReport::class);
                 });
             });
@@ -190,6 +175,15 @@ return function (App $app) {
 
             // appends /addresses; /buildings; /rooms; /reservations
             registerAddresses($auth);
+
+            $auth->group('/images', function (Group $images) {
+                $images->post('', Image\UploadImage::class);
+        
+                $images->group('/{image_id:[0-9]+}', function (Group $image) {
+                    $image->get('', Image\ViewImage::class);
+                    $image->delete('', Image\DeleteImage::class);
+                });
+            });
         });
     });
 };
