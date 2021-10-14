@@ -7,6 +7,7 @@ namespace App\Application\Middleware;
 use App\Application\Settings\SettingsInterface;
 use App\Domain\Access\Access;
 use App\Domain\Access\AccessRepositoryInterface;
+use App\Domain\Exception\DomainUnauthorizedOperationException;
 use App\Domain\Reservation\IReservationRepository;
 use App\Domain\User\UserRepositoryInterface;
 use Psr\Http\Message\{
@@ -61,7 +62,7 @@ class AuthorizationMiddleware implements Middleware
     {
         $this->request = $request;
 
-        if (!in_array($this->request->getUri()->getPath(), $this->whiteList)) {
+        if (!in_array($this->request->getUri()->getPath(), $this->whiteList) && $this->request->getMethod()!=='OPTIONS' ) {
             $session = $this->request->getAttribute('session');
             $this->access = $access = $this->accessRepository->byId((int) $session->accessId);
 
@@ -71,7 +72,7 @@ class AuthorizationMiddleware implements Middleware
 
                 // resolving access of the user have to be true
                 if ($resolve() === FALSE)
-                    throw new AuthorizationMiddlewareException();
+                    throw new DomainUnauthorizedOperationException();
             }
         }
 

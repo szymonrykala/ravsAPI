@@ -16,7 +16,10 @@ use App\Utils\JWTFactory;
 use App\Domain\Exception\DomainUnauthorizedOperationException;
 
 
-
+/**
+ * Reads data from token provided from user
+ * and passes it as a session to the request context
+ */
 class SessionMiddleware implements Middleware
 {
     private Request $request;
@@ -36,7 +39,7 @@ class SessionMiddleware implements Middleware
     {
         $this->request = $request;
 
-        if (!in_array($this->request->getUri()->getPath(), $this->whiteList)) {
+        if (!in_array($this->request->getUri()->getPath(), $this->whiteList) && $this->request->getMethod()!=='OPTIONS') {
             try {
                 $tokenData = JWTFactory::decode($this->getToken());
 
@@ -55,7 +58,7 @@ class SessionMiddleware implements Middleware
         $auth = $this->request->getHeader('Authorization');
 
         if (!isset($auth[0])) {
-            throw new HttpUnauthorizedException($this->request, "Authorization header is missing.");
+            throw new HttpUnauthorizedException($this->request, "Brak nagłówka autoryzacji.");
         }
 
         return explode(' ', array_pop($auth))[1] ?? '';

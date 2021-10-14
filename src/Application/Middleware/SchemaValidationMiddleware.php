@@ -23,7 +23,7 @@ use App\Utils\JsonSchemaValidator;
 
 class SchemaValidationMiddleware implements Middleware
 {
-
+    /** map of json schemas for each endpoint */
     private array $loadMap = [
         'POST' => [
             '/users/auth' => '/user/login.json',
@@ -48,21 +48,19 @@ class SchemaValidationMiddleware implements Middleware
             '/configurations' => '/configuration/update.json',
             '/addresses/id/buildings/id/rooms/id/reservations/id/keys' => '/key/update.json',
             '/addresses/id/buildings/id/rooms/id/keys' => '/key/update.json',
-
         ]
     ];
 
-    /** @var Request request  */
     private Request $request;
 
-    /** @var string request method */
+    /** request method */
     private string $method;
 
-    /** @var string modified request URI */
+    /** request URI */
     private string $path;
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function process(Request $request, RequestHandler $handler): Response
     {
@@ -94,7 +92,6 @@ class SchemaValidationMiddleware implements Middleware
 
     /**
      * decide wether request body be validated or not
-     * @return bool
      */
     private function shouldBeValidated(): bool
     {
@@ -102,8 +99,8 @@ class SchemaValidationMiddleware implements Middleware
     }
 
     /**
-     * returns modified ( /d => 'id') path string
-     * @return string
+     * returns parsed request path string
+     * ie.: /user/2 => /user/id
      */
     private function getProcessURI(): string
     {
@@ -114,7 +111,9 @@ class SchemaValidationMiddleware implements Middleware
         );
     }
 
-
+    /**
+     * Combines error results from validation
+     */
     private function combineResult(): void
     {
         $error = (new ErrorFormatter())->format($this->result->error());
