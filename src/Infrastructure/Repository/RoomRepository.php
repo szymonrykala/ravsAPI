@@ -14,30 +14,19 @@ use App\Domain\Exception\DomainResourceNotFoundException;
 use App\Domain\Image\ImageRepositoryInterface;
 use App\Infrastructure\Database\IDatabase;
 use App\Utils\JsonDateTime;
+use Psr\Container\ContainerInterface;
 
-
-class RoomRepository extends BaseRepository implements RoomRepositoryInterface
+final class RoomRepository extends BaseRepository implements RoomRepositoryInterface
 {
     protected string $table = 'room';
-    private ImageRepositoryInterface $imageRepository;
-    private IBuildingRepository $buildingRepository;
-
     private bool $buildingLoading = FALSE;
 
-
-    /**
-     * @param IDatabase db database
-     * @param ImageInterfaceRepository imagerRpository
-     * @param IBuildingRepository buildingRepository
-     */
     public function __construct(
-        IDatabase $db,
-        ImageRepositoryInterface $imageRepository,
-        IBuildingRepository $buildingRepository
+        ContainerInterface $di,
+        private ImageRepositoryInterface $imageRepository,
+        private IBuildingRepository $buildingRepository
     ) {
-        parent::__construct($db);
-        $this->imageRepository = $imageRepository;
-        $this->buildingRepository = $buildingRepository;
+        parent::__construct($di);
     }
 
     /**

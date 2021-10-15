@@ -9,8 +9,6 @@ use App\Domain\Configuration\IConfigurationRepository;
 use Psr\Http\Message\UploadedFileInterface;
 use App\Infrastructure\Repository\BaseRepository;
 
-use App\Infrastructure\Database\IDatabase;
-
 use App\Domain\Image\{
     FileTypeException,
     Image,
@@ -23,17 +21,22 @@ use Psr\Container\ContainerInterface;
 use Slim\Psr7\Factory\StreamFactory;
 use Slim\Psr7\Stream;
 
-class ImageRepository extends BaseRepository implements ImageRepositoryInterface
-{
 
+
+final class ImageRepository extends BaseRepository implements ImageRepositoryInterface
+{
     private const DIRECTORY = __DIR__ . '/../../../public/images/';
 
     protected string $table = 'image';
     protected Configuration $configuration;
 
-    public function __construct(ContainerInterface $di ) {
-        parent::__construct($di->get(IDatabase::class));
-        $this->configuration = $di->get(IConfigurationRepository::class)->load();
+
+    public function __construct(
+        ContainerInterface $di,
+        IConfigurationRepository $configuration
+    ) {
+        parent::__construct($di);
+        $this->configuration = $configuration->load();
     }
 
     /**
@@ -79,7 +82,7 @@ class ImageRepository extends BaseRepository implements ImageRepositoryInterface
     /**
      * {@inheritDoc}
      */
-    public function viewImageFile(int $id):Stream
+    public function viewImageFile(int $id): Stream
     {
         $image = $this->byId($id);
         $file = file_get_contents($this::DIRECTORY . $image->name);
@@ -93,7 +96,7 @@ class ImageRepository extends BaseRepository implements ImageRepositoryInterface
     public function save(UploadedFileInterface $file): int
     {
         if (!str_contains($file->getClientMediaType(), 'image')) throw new FileTypeException();
-        
+
         if ($file->getSize() > $this->configuration->maxImageSize) {
             throw new ImageSizeExceededException($this->configuration->maxImageSize);
         }

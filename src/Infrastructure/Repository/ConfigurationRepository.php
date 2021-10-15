@@ -15,12 +15,10 @@ final class ConfigurationRepository implements IConfigurationRepository
     private string $table = 'configuration';
 
 
-    /**
-     * @param IDatabase db database
-     */
-    public function __construct(IDatabase $db)
+    public function __construct(
+        private IDatabase $db
+    )
     {
-        $this->db = $db;
         $this->db->connect();
     }
 

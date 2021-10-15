@@ -12,12 +12,13 @@ use App\Domain\Model\Model;
 use App\Domain\Exception\DomainResourceNotFoundException;
 use App\Utils\Pagination;
 use App\Utils\RepositoryCache;
+use Psr\Container\ContainerInterface;
 
 
 abstract class BaseRepository implements RepositoryInterface
 {
+    protected IDatabase $db;
     private Pagination $pagination;
-
     protected RepositoryCache $cache;
     protected string $configTable = 'configuration';
 
@@ -32,17 +33,14 @@ abstract class BaseRepository implements RepositoryInterface
     protected string $table;
     protected string $sql = ' ';
 
-    /**
-     * @param IDatabase db database
-     */
-    public function __construct(IDatabase $db)
-    {
-        $this->db = $db;
+
+    public function __construct(
+        ContainerInterface $di
+    ) {
+        $this->db = $di->get(IDatabase::class);
         $this->db->connect();
 
         $this->SQL = 'SELECT * FROM ' . $this->table;
-
-
         $this->cache = new RepositoryCache();
     }
 

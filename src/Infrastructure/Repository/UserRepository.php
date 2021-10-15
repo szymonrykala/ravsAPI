@@ -12,33 +12,21 @@ use App\Domain\Model\Model;
 use App\Domain\User\Exceptions\DefaultUserDeleteException;
 use App\Domain\User\UserRepositoryInterface;
 use App\Domain\User\User;
-use App\Infrastructure\Database\IDatabase;
 use App\Utils\JsonDateTime;
-
+use Psr\Container\ContainerInterface;
 
 
 final class UserRepository extends BaseRepository implements UserRepositoryInterface
 {
     protected string $table = 'user';
-
-    private ImageRepositoryInterface $imageRepository;
-    private AccessRepositoryInterface $accessRepository;
-
     private bool $accessLoading = FALSE;
 
-
-    /**
-     * @param IDatabase db database
-     * @param ImageInterfaceRepository imagerRpository
-     */
     public function __construct(
-        IDatabase $db,
-        ImageRepositoryInterface $imageRepository,
-        AccessRepositoryInterface $accessRepository
+        ContainerInterface $di,
+        private ImageRepositoryInterface $imageRepository,
+        private AccessRepositoryInterface $accessRepository
     ) {
-        parent::__construct($db);
-        $this->imageRepository = $imageRepository;
-        $this->accessRepository = $accessRepository;
+        parent::__construct($di);
     }
 
     /**
@@ -89,7 +77,7 @@ final class UserRepository extends BaseRepository implements UserRepositoryInter
     {
         $this->db->query(
             "UPDATE `$this->table` SET `last_activity` = NOW() WHERE `id` = :userId",
-            [ ':userId' => $userId ]
+            [':userId' => $userId]
         );
     }
 

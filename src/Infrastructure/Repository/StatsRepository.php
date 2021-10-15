@@ -17,9 +17,8 @@ use DateInterval;
 
 
 
-class StatsRepository implements IStatsRepository
+final class StatsRepository implements IStatsRepository
 {
-    private IDatabase $db;
     private Stats $stats;
     private string $between;
     private array $params;
@@ -36,9 +35,8 @@ class StatsRepository implements IStatsRepository
 
 
     public function __construct(
-        IDatabase $db
+        private IDatabase $db
     ) {
-        $this->db = $db;
         $this->db->connect();
 
         $this->stats = new Stats();

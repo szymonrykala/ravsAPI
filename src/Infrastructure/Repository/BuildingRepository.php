@@ -14,27 +14,22 @@ use App\Domain\Building\{
 
 use App\Domain\Image\ImageRepositoryInterface;
 use App\Domain\Model\Model;
-use App\Infrastructure\Database\IDatabase;
 use App\Utils\JsonDateTime;
+use Psr\Container\ContainerInterface;
+
 
 
 final class BuildingRepository extends BaseRepository implements IBuildingRepository
 {
     protected string $table = 'building';
-    private ImageRepositoryInterface $imageRepository;
-    private IAddressRepository $addressRepository;
-
     private bool $addressLoading = FALSE;
 
-
     public function __construct(
-        IDatabase $db,
-        ImageRepositoryInterface $imageRepository,
-        IAddressRepository $addressRepository
+        ContainerInterface $di,
+        private ImageRepositoryInterface $imageRepository,
+        private IAddressRepository $addressRepository
     ) {
-        parent::__construct($db);
-        $this->imageRepository = $imageRepository;
-        $this->addressRepository = $addressRepository;
+        parent::__construct($di);
     }
 
     /**

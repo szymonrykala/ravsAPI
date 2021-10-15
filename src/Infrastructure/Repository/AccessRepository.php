@@ -14,12 +14,12 @@ use App\Domain\Model\Model;
 use App\Utils\JsonDateTime;
 
 
-class AccessRepository extends BaseRepository implements AccessRepositoryInterface
+final class AccessRepository extends BaseRepository implements AccessRepositoryInterface
 {
     protected string $table = 'access';
 
     /**
-     * @param array $data from database
+     * {@inheritDoc}
      * @return Access
      */
     protected function newItem(array $data): Access

@@ -12,13 +12,13 @@ use stdClass;
 
 
 
-class RequestRepository extends BaseRepository implements RequestRepositoryInterface
+final class RequestRepository extends BaseRepository implements RequestRepositoryInterface
 {
 
     protected string $table = 'request';
 
     /**
-     * @param array $data from database
+     * {@inheritDoc}
      * @return Request
      */
     protected function newItem(array $data): Request

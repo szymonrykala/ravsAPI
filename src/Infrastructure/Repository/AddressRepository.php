@@ -13,12 +13,12 @@ use App\Utils\JsonDateTime;
 
 
 
-class AddressRepository extends BaseRepository implements IAddressRepository
+final class AddressRepository extends BaseRepository implements IAddressRepository
 {
     protected string $table = 'address';
 
     /**
-     * @param array $data from database
+     * {@inheritDoc}
      * @return Address
      */
     protected function newItem(array $data): Address

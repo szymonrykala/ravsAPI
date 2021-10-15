@@ -10,9 +10,9 @@ use App\Domain\Reservation\Reservation;
 use App\Domain\Reservation\StartedReservationDeleteException;
 use App\Domain\Room\RoomRepositoryInterface;
 use App\Domain\User\UserRepositoryInterface;
-use App\Infrastructure\Database\IDatabase;
 
 use App\Utils\JsonDateTime;
+use Psr\Container\ContainerInterface;
 
 final class ReservationRepository extends BaseRepository implements IReservationRepository
 {
@@ -20,19 +20,12 @@ final class ReservationRepository extends BaseRepository implements IReservation
     /** {@inheritDoc} */
     protected string $table = 'reservation';
 
-    private UserRepositoryInterface $userRepository;
-    private RoomRepositoryInterface $roomRepository;
-
-
     public function __construct(
-        IDatabase $db,
-        RoomRepositoryInterface $roomRepository,
-        UserRepositoryInterface $userRepository
+        ContainerInterface $di,
+        private RoomRepositoryInterface $roomRepository,
+        private UserRepositoryInterface $userRepository
     ) {
-        parent::__construct($db);
-
-        $this->userRepository = $userRepository;
-        $this->roomRepository = $roomRepository;
+        parent::__construct($di);
     }
 
 
@@ -217,13 +210,12 @@ final class ReservationRepository extends BaseRepository implements IReservation
      * {@inheritDoc}
      * @param Reservation $reservation
      */
-    public function delete(Model $reservation):void
+    public function delete(Model $reservation): void
     {
-        if($reservation->notStarted()){
+        if ($reservation->notStarted()) {
             parent::delete($reservation);
         }
 
         throw new StartedReservationDeleteException();
-
     }
 }
