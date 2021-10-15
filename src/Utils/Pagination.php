@@ -27,8 +27,7 @@ class Pagination implements JsonSerializable
     }
 
     /**
-     * @param int pagesCount
-     * @return void
+     * calculates number of pages
      */
     public function calculatePagesCount(int $itemsCount): void
     {
@@ -40,6 +39,9 @@ class Pagination implements JsonSerializable
             $this->currentPage = $this->pagesCount;
     }
 
+    /**
+     * generates pagination SQL code
+     */
     public function generateSQL(): string
     {
         $sql = ' LIMIT ' . ($this->itemsOnPage * ($this->currentPage - 1))
@@ -49,7 +51,7 @@ class Pagination implements JsonSerializable
 
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function jsonSerialize(): array
     {

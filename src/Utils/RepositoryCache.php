@@ -7,9 +7,6 @@ use App\Domain\Model\Model;
 
 class RepositoryCache
 {
-    /**
-     * @var array memory
-     */
     private array $memory;
 
 
@@ -19,9 +16,7 @@ class RepositoryCache
     }
 
     /**
-     * @param string key,
-     * @param Model item
-     * @return Model item
+     * adds element to cache
      */
     public function add(string $key ,Model $item)
     {
@@ -29,8 +24,7 @@ class RepositoryCache
     }
 
     /**
-     * @param string key
-     * @return Model|NULL
+     * gets element from cache
      */
     public function get(string $key): ?Model
     {
