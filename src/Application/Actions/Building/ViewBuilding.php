@@ -14,8 +14,8 @@ class ViewBuilding extends BuildingAction
      */
     protected function action(): Response
     {
-        $buildingId = $this->resolveArg('building_id');
-        $addressId = $this->resolveArg('address_id', FALSE);
+        $buildingId = $this->resolveArg($this::BUILDING_ID);
+        $addressId = $this->resolveArg($this::ADDRESS_ID, FALSE);
 
         $params = ['id' => (int) $buildingId];
 

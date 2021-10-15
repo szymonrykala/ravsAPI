@@ -14,7 +14,7 @@ class CreateBuilding extends BuildingAction
      */
     protected function action(): Response
     {
-        $addressId = (int) $this->resolveArg('address_id');
+        $addressId = (int) $this->resolveArg($this::ADDRESS_ID);
 
         $form = $this->getFormData();
 

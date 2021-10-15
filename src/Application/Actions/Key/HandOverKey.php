@@ -18,7 +18,7 @@ class HandOverKey extends KeyAction
      */
     protected function action(): Response
     {
-        $reservationId = (int) $this->resolveArg('reservation_id');
+        $reservationId = (int) $this->resolveArg($this::RESERVATION_ID);
 
         $form = $this->getFormData();
 

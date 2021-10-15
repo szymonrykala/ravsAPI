@@ -13,7 +13,7 @@ class ViewAddress extends AddressAction
      */
     protected function action(): Response
     {
-        $id = $this->resolveArg('address_id');
+        $id = $this->resolveArg($this::ADDRESS_ID);
         $address = $this->addressRepository->byId( (int) $id);
 
         $this->logger->info("Address id {$id} has been viewed.");

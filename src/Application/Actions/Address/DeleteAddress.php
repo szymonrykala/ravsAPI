@@ -14,7 +14,7 @@ class DeleteAddress extends AddressAction
      */
     protected function action(): Response
     {
-        $id = (int) $this->resolveArg('address_id');
+        $id = (int) $this->resolveArg($this::ADDRESS_ID);
 
         $address = $this->addressRepository->byId($id);
         $this->addressRepository->delete($address);

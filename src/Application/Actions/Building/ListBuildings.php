@@ -14,7 +14,7 @@ class ListBuildings extends BuildingAction
      */
     protected function action(): Response
     {
-        $addressId = $this->resolveArg('address_id');
+        $addressId = $this->resolveArg($this::ADDRESS_ID);
 
         $buildings = $this->buildingRepository
                             ->where(['address' => $addressId])

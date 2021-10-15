@@ -14,8 +14,8 @@ class DeleteBuilding extends BuildingAction
      */
     protected function action(): Response
     {
-        $buildingId = (int) $this->resolveArg('building_id');
-        $addressId = (int) $this->resolveArg('address_id');
+        $buildingId = (int) $this->resolveArg($this::BUILDING_ID);
+        $addressId = (int) $this->resolveArg($this::ADDRESS_ID);
 
         $building = $this->buildingRepository->where([
             ':id' => $buildingId,

@@ -18,12 +18,11 @@ class ListRequests extends RequestAction
         $searchParams = [];
 
         $subject = $this->resolveArg($this::REQUEST_SUBJECT);
+        $subjectId = $this->resolveArg($this::REQUEST_SUBJECT_ID, FALSE);
 
         $searchParams['endpoint'] = '/' . $subject;
 
-        if (isset($this->args['subject_id'])) {
-            $searchParams['endpoint'] .= '/' . $this->resolveArg('subject_id');
-        }
+        $subjectId && $searchParams['endpoint'] .= '/' . $subjectId;
 
 
         $fields = [

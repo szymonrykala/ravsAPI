@@ -8,7 +8,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 class ViewUser extends UserAction
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function action(): Response
     {

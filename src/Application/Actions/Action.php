@@ -33,6 +33,7 @@ abstract class Action
     protected const IMAGE_ID = 'image_id';
     protected const RESERVATION_ID = 'reservation_id';
     protected const REQUEST_SUBJECT = 'request_subject';
+    protected const REQUEST_SUBJECT_ID = 'subject_id';
 
     protected const SEARCH_STRING = 'search';
     protected const FROM_DATE = 'from';

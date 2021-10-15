@@ -15,8 +15,8 @@ class ViewKey extends KeyAction
      */
     protected function action(): Response
     {
-        $roomId = $this->resolveArg('room_id');
-        $buildingId = $this->resolveArg('building_id', FALSE);
+        $roomId = $this->resolveArg($this::ROOM_ID);
+        $buildingId = $this->resolveArg($this::BUILDING_ID, FALSE);
 
         $params = ['id' => (int)  $roomId];
         $buildingId && $params['building'] = (int) $buildingId;

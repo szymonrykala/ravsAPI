@@ -15,9 +15,9 @@ class AssignKey extends KeyAction
      */
     protected function action(): Response
     {
-        $roomId = (int) $this->resolveArg('room_id');
-        $buildingId = (int) $this->resolveArg('building_id');
-        $addressId = (int) $this->resolveArg('address_id');
+        $roomId = (int) $this->resolveArg($this::ROOM_ID);
+        $buildingId = (int) $this->resolveArg($this::BUILDING_ID);
+        $addressId = (int) $this->resolveArg($this::ADDRESS_ID);
 
         $form = $this->getFormData();
 

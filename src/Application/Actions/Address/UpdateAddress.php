@@ -16,7 +16,7 @@ class UpdateAddress extends AddressAction
     {
         $form = $this->getFormData();
 
-        $id = (int) $this->resolveArg('address_id');
+        $id = (int) $this->resolveArg($this::ADDRESS_ID);
 
         /** @var Address $address */
         $address = $this->addressRepository->byId($id);

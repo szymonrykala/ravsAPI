@@ -15,8 +15,8 @@ class UpdateBuilding extends BuildingAction
      */
     protected function action(): Response
     {
-        $addressId = (int) $this->resolveArg('address_id');
-        $buildingId = (int) $this->resolveArg('building_id');
+        $addressId = (int) $this->resolveArg($this::ADDRESS_ID);
+        $buildingId = (int) $this->resolveArg($this::BUILDING_ID);
 
         $buildingParam = ['id' => $buildingId ];
 

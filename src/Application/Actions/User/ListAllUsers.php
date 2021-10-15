@@ -17,7 +17,7 @@ class ListAllUsers extends UserAction
     {
         // if deleted=1 - include deleted users
         $listDeleted = $this->resolveQueryArg('deleted', FALSE);
-        $searchPhrase = $this->resolveQueryArg('search', FALSE);
+        $searchPhrase = $this->resolveQueryArg($this::SEARCH_STRING, FALSE);
         
         if(!$listDeleted) $this->userRepository->where([
             'deleted' => (int) $listDeleted
