@@ -17,12 +17,12 @@ final Class JsonDateTime extends DateTime implements JsonSerializable
         try{
             parent::__construct($dateString);
         }catch(\Exception $ex){
-            throw new DomainBadRequestException("Failed to parse date. Value '$dateString' is not correct.");
+            throw new DomainBadRequestException("Nieprawidłowa wartość daty '$dateString'.");
         }
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function jsonSerialize():string
     {
