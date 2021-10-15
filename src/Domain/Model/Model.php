@@ -12,22 +12,11 @@ use JsonSerializable;
 
 abstract class Model implements JsonSerializable
 {
-    /** Object identifier */
-    public int $id;
-
-    /** Object creation time */
-    public JsonDateTime $created;
-
-    /** Time of last update */
-    public JsonDateTime $updated;
-
-
-    public function __construct(int $id, JsonDateTime $created, JsonDateTime $updated)
-    {
-        $this->id = $id;
-
-        $this->created = $created;
-        $this->updated = $updated;
+    public function __construct(
+        public int $id,
+        public JsonDateTime $created,
+        public JsonDateTime $updated
+    ) {
     }
 
     /**

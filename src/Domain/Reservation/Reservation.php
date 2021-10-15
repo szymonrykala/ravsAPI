@@ -8,46 +8,27 @@ use App\Domain\Model\Model;
 use App\Domain\Room\Room;
 use App\Domain\User\User;
 use App\Utils\JsonDateTime;
-use stdClass;
 
-class Reservation extends Model
+
+final class Reservation extends Model
 {
-    public string      $title;
-    public string      $description;
-    public Room        $room;
-    public User        $user;
-    public JsonDateTime    $plannedStart;
-    public JsonDateTime    $plannedEnd;
-    public ?JsonDateTime    $actualStart;
-    public ?JsonDateTime    $actualEnd;
-
     public int $userId;
     public int $roomId;
 
-
     public function __construct(
-        int         $id,
-        string      $title,
-        string      $description,
-        Room         $room,
-        User         $user,
-        JsonDateTime    $planned_start,
-        JsonDateTime    $planned_end,
-        ?JsonDateTime    $actual_start,
-        ?JsonDateTime    $actual_end,
-        JsonDateTime    $created,
-        JsonDateTime    $updated
+        public int         $id,
+        public string      $title,
+        public string      $description,
+        public Room         $room,
+        public User         $user,
+        public JsonDateTime    $plannedStart,
+        public JsonDateTime    $plannedEnd,
+        public ?JsonDateTime    $actualStart,
+        public ?JsonDateTime    $actualEnd,
+        public JsonDateTime    $created,
+        public JsonDateTime    $updated
     ) {
         parent::__construct($id, $created, $updated);
-
-        $this->title = $title;
-        $this->description = $description;
-        $this->room = $room;
-        $this->user = $user;
-        $this->plannedStart = $planned_start;
-        $this->plannedEnd = $planned_end;
-        $this->actualStart = $actual_start;
-        $this->actualEnd = $actual_end;
 
         $this->roomId = $room->id;
         $this->userId = $user->id;
@@ -84,7 +65,7 @@ class Reservation extends Model
     public function start(): void
     {
         if (!$this->actualStart && !$this->actualEnd) {
-            $this->actualStart = new JsonDateTime();
+            $this->actualStart = new JsonDateTime('now');
         } else
             throw new ReservationAlreadyStartedException();
     }
@@ -96,14 +77,14 @@ class Reservation extends Model
     public function end(): void
     {
         if ($this->actualStart && !$this->actualEnd) {
-            $this->actualEnd = new JsonDateTime();
+            $this->actualEnd = new JsonDateTime('now');
         } else
             throw new ReservationAlreadyEndedException();
     }
 
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function validateCallback(): void
     {

@@ -12,56 +12,29 @@ use App\Utils\JsonDateTime;
 
 
 
-class Room extends Model
+final class Room extends Model
 {
-    public string $name;
-    public Image $image;
-    public ?Building $building;
-    public string $rfid;
-    public string $roomType;
-    public int $seatsCount;
-    public int $floor;
-    public bool $blocked;
-    public bool $occupied;
-
-    public int $imageId;
-    public int $buildingId;
-
-
     public function __construct(
-        int     $id,
-        string  $name,
-        Image   $image,
-        ?Building $building,
-        string  $rfid,
-        string  $roomType,
-        int     $seatsCount,
-        int     $floor,
-        bool    $blocked,
-        bool    $occupied,
-        JsonDateTime  $created,
-        JsonDateTime  $updated,
-        int     $imageId,
-        int     $buildingId
+        public int     $id,
+        public string  $name,
+        public Image   $image,
+        public ?Building $building,
+        public string  $rfid,
+        public string  $roomType,
+        public int     $seatsCount,
+        public int     $floor,
+        public bool    $blocked,
+        public bool    $occupied,
+        public JsonDateTime  $created,
+        public JsonDateTime  $updated,
+        public int     $imageId,
+        public int     $buildingId
     ) {
         parent::__construct($id, $created, $updated);
-
-        $this->name = $name;
-        $this->image = $image;
-        $this->building = $building;
-        $this->rfid = $rfid;
-        $this->roomType = $roomType;
-        $this->seatsCount = $seatsCount;
-        $this->floor = $floor;
-        $this->blocked = $blocked;
-        $this->occupied = $occupied;
-
-        $this->buildingId = $buildingId;
-        $this->imageId = $imageId;
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      * @throws DomainConflictException
      */
     protected function validateCallback(): void
@@ -106,7 +79,7 @@ class Room extends Model
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function jsonSerialize(): array
     {

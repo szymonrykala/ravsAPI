@@ -11,43 +11,17 @@ use App\Utils\JsonDateTime;
 
 final class Request extends Model
 {
-
-    public string $method;
-    public string $endpoint;
-    public User $user;
-    public array $payload;
-    public float $time;
-
-    public int $userId;
-
-    /**
-     * @param int       id
-     * @param string    path
-     * @param string    method
-     * @param string    endpoint
-     * @param int       userId
-     * @param string    payload
-     * @param float     time
-     * @param string    created
-     * @param string    updated
-     */
     public function __construct(
-        int $id,
-        string $method,
-        string $endpoint,
-        int $userId,
-        string $payload,
-        float $time,
-        JsonDateTime $created,
-        JsonDateTime $updated
+        public int $id,
+        public string $method,
+        public string $endpoint,
+        public int $userId,
+        public string $payload,
+        public float $time,
+        public JsonDateTime $created,
+        public JsonDateTime $updated
     ) {
         parent::__construct($id, $created, $updated);
-
-        $this->method = $method;
-        $this->endpoint = $endpoint;
-        $this->userId = $userId;
-        $this->payload = json_decode($payload, TRUE);
-        $this->time = $time;
     }
 
     /**

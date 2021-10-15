@@ -19,73 +19,30 @@ use stdClass;
 
 final class User extends Model
 {
-    public int $id;
-    public string $name;
-    public string $surname;
-    public string $password;
-    public string $email;
-    public bool $activated;
-    public int $loginFails;
-    public bool $blocked;
-    public bool $deleted;
-    public string $uniqueKey;
-    public JsonDateTime $lastGeneratedKeyDate;
-    public ?stdClass $metadata;
-    public JsonDateTime $lastActivity;
-
-    public ?Access $access;
-    public Image $image;
-
-    public int $imageId;
-    public int $accessId;
-
-    public JsonDateTime $created;
-    public JsonDateTime $updated;
-
     private bool $metadataShouldBeLoaded = FALSE;
 
     public function __construct(
-        int $id,
-        string $name,
-        string $surname,
-        string $email,
-        string $password,
-        bool $activated,
-        int $loginFails,
-        bool $blocked,
-        bool $deleted,
-        string $uniqueKey,
-        JsonDateTime $lastGeneratedKeyDate,
-        ?Access $access,
-        Image $image,
-        stdClass $metadata,
-        JsonDateTime $lastActivity,
-        JsonDateTime $created,
-        JsonDateTime $updated,
-        int $imageId,
-        int $accessId
+        public int $id,
+        public string $name,
+        public string $surname,
+        public string $email,
+        public string $password,
+        public bool $activated,
+        public int $loginFails,
+        public bool $blocked,
+        public bool $deleted,
+        public string $uniqueKey,
+        public JsonDateTime $lastGeneratedKeyDate,
+        public ?Access $access,
+        public Image $image,
+        public stdClass $metadata,
+        public JsonDateTime $lastActivity,
+        public JsonDateTime $created,
+        public JsonDateTime $updated,
+        public int $imageId,
+        public int $accessId
     ) {
         parent::__construct($id, $created, $updated);
-
-        $this->name = ucfirst($name);
-        $this->surname = ucfirst($surname);
-        $this->email = strtolower($email);
-        $this->password = $password;
-        $this->activated = $activated;
-        $this->loginFails = $loginFails;
-        $this->blocked = $blocked;
-        $this->deleted = $deleted;
-        $this->uniqueKey = $uniqueKey;
-        $this->lastGeneratedKeyDate = $lastGeneratedKeyDate;
-
-        $this->image = $image;
-        $this->access = $access;
-
-        $this->metadata = $metadata;
-        $this->lastActivity = $lastActivity;
-
-        $this->imageId = $imageId;
-        $this->accessId = $accessId;
     }
 
     /** 

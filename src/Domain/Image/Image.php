@@ -7,23 +7,16 @@ namespace App\Domain\Image;
 use App\Domain\Model\Model;
 use App\Utils\JsonDateTime;
 
-class Image extends Model
+final class Image extends Model
 {
-
-    public string $name;
-    public int $size;
-
     public function __construct(
-        int $id,
-        string $name,
-        int $size,
-        JsonDateTime $created,
-        JsonDateTime $updated
+        public int $id,
+        public string $name,
+        public int $size,
+        public JsonDateTime $created,
+        public JsonDateTime $updated
     ) {
         parent::__construct($id, $created, $updated);
-
-        $this->name = $name;
-        $this->size = $size;
     }
 
     /**
