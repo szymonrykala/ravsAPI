@@ -6,11 +6,9 @@ namespace App\Application\Middleware;
 
 use Psr\Http\Message\{
     ResponseInterface as Response,
-    ServerRequestInterface as Request
 };
 
 use Psr\Http\Server\{
-    MiddlewareInterface as Middleware,
     RequestHandlerInterface as RequestHandler
 };
 
@@ -18,24 +16,23 @@ use Slim\Exception\HttpBadRequestException;
 use stdClass;
 
 
-class BodyParsingMiddleware implements Middleware
+final class BodyParsingMiddleware extends BaseMiddleware
 {
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function process(Request $request, RequestHandler $handler): Response
+    public function processRequest(RequestHandler $handler): Response
     {
-
-        if(in_array($request->getMethod(), ['POST', 'PATCH']) && !strpos($request->getUri()->getPath(), 'images')){
-
-            $input = json_decode(file_get_contents('php://input'));
+        $content = file_get_contents('php://input');
+        if(!empty($content)){
+            $input = json_decode($content);
 
             if (json_last_error() !== JSON_ERROR_NONE) {
-                throw new HttpBadRequestException($request, 'Nieprawidłowy format JSON we wiadomości.');
+                throw new HttpBadRequestException($this->request, 'Nieprawidłowy format wiadomości. Użyj formatu JSON.');
             }
         }
 
-        return $handler->handle($request->withParsedBody($input ?? new stdClass()));
+        return $handler->handle($this->request->withParsedBody($input ?? new stdClass()));
     }
 }

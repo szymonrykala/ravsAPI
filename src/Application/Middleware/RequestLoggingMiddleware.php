@@ -15,36 +15,26 @@ use Psr\Http\Server\{
 };
 
 use App\Domain\Request\RequestRepositoryInterface;
+use Psr\Log\LoggerInterface;
 
 
-class RequestLoggingMiddleware implements Middleware
+class RequestLoggingMiddleware extends BaseMiddleware
 {
-    private RequestRepositoryInterface $requestRepository;
-
-    public function __construct(RequestRepositoryInterface $requestRepository)
-    {
-        $this->requestRepository = $requestRepository;
+    public function __construct(
+        private RequestRepositoryInterface $requestRepository,
+        LoggerInterface $logger
+    ) {
+        parent::__construct($logger);
     }
-
 
     /**
      * {@inheritDoc}
      */
-    public function process(Request $request, RequestHandler $handler): Response
+    public function processRequest(RequestHandler $handler): Response
     {
-        $timeStart = microtime(true);
+        $response = $handler->handle($this->request);
 
-        $response = $handler->handle($request);
-                
-        $processingTime = microtime(true) - $timeStart;
-
-        $this->requestRepository->create(
-            $request->getMethod(),
-            $request->getUri()->getPath(),
-            $request->getAttribute('session')->userId ?? NULL,
-            $request->getParsedBody(),
-            $processingTime
-        );
+        $this->requestRepository->create($this->request);
 
         return $response;
     }

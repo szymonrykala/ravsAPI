@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Middleware;
 
+use App\Application\Exception\HttpUnprocessableEntityException;
 use Psr\Http\Message\{
     ResponseInterface as Response,
     ServerRequestInterface as Request
@@ -18,54 +19,45 @@ use Opis\JsonSchema\{
     Errors\ErrorFormatter
 };
 
-use App\Domain\Exception\HttpUnprocessableEntityException;
 use App\Utils\JsonSchemaValidator;
 
-class SchemaValidationMiddleware implements Middleware
+
+
+class SchemaValidationMiddleware extends BaseMiddleware
 {
     /** map of json schemas for each endpoint */
     private array $loadMap = [
         'POST' => [
-            '/users/auth' => '/user/login.json',
-            '/users/key' => '/user/generateKey.json',
-            '/users' => '/user/create.json',
-            '/accesses' => '/access/create.json',
-            '/addresses' => '/address/create.json',
-            '/addresses/id/buildings' => '/building/create.json',
-            '/addresses/id/buildings/id/rooms' => '/room/create.json',
-            '/addresses/id/buildings/id/rooms/id/reservations' => '/reservation/create.json',
+            '/v1/users/auth' => '/user/login.json',
+            '/v1/users/key' => '/user/generateKey.json',
+            '/v1/users' => '/user/create.json',
+            '/v1/accesses' => '/access/create.json',
+            '/v1/addresses' => '/address/create.json',
+            '/v1/addresses/id/buildings' => '/building/create.json',
+            '/v1/addresses/id/buildings/id/rooms' => '/room/create.json',
+            '/v1/addresses/id/buildings/id/rooms/id/reservations' => '/reservation/create.json',
         ],
         'PATCH' => [
-            '/users/activate' => '/user/activate.json',
-            '/users/password' => '/user/changePassword.json',
-            '/users/id' => '/user/update.json',
-            '/users/id/access' => '/user/updateAccess.json',
-            '/accesses/id' => '/access/update.json',
-            '/addresses/id' => '/address/update.json',
-            '/addresses/id/buildings/id' => '/building/update.json',
-            '/addresses/id/buildings/id/rooms/id' => '/room/update.json',
-            '/addresses/id/buildings/id/rooms/id/reservations/id' => '/reservation/update.json',
-            '/configurations' => '/configuration/update.json',
-            '/addresses/id/buildings/id/rooms/id/reservations/id/keys' => '/key/update.json',
-            '/addresses/id/buildings/id/rooms/id/keys' => '/key/update.json',
+            '/v1/users/activate' => '/user/activate.json',
+            '/v1/users/password' => '/user/changePassword.json',
+            '/v1/users/id' => '/user/update.json',
+            '/v1/users/id/access' => '/user/updateAccess.json',
+            '/v1/accesses/id' => '/access/update.json',
+            '/v1/addresses/id' => '/address/update.json',
+            '/v1/addresses/id/buildings/id' => '/building/update.json',
+            '/v1/addresses/id/buildings/id/rooms/id' => '/room/update.json',
+            '/v1/addresses/id/buildings/id/rooms/id/reservations/id' => '/reservation/update.json',
+            '/v1/configurations' => '/configuration/update.json',
+            '/v1/addresses/id/buildings/id/rooms/id/reservations/id/keys' => '/key/update.json',
+            '/v1/addresses/id/buildings/id/rooms/id/keys' => '/key/update.json',
         ]
     ];
-
-    private Request $request;
-
-    /** request method */
-    private string $method;
-
-    /** request URI */
-    private string $path;
 
     /**
      * {@inheritDoc}
      */
-    public function process(Request $request, RequestHandler $handler): Response
+    public function processRequest(RequestHandler $handler): Response
     {
-        $this->request = $request;
-        $this->method = $request->getMethod();
         $this->path = $this->getProcessURI();
 
         if ($this->shouldBeValidated()) {
@@ -75,17 +67,15 @@ class SchemaValidationMiddleware implements Middleware
 
             $data = $this->request->getParsedBody();
 
-            $this->result = $validator->validate(
+            $result = $validator->validate(
                 $data,
-                JsonSchemaValidator::BASE_URI . $this->loadMap[$this->method][$this->path]
+                JsonSchemaValidator::BASE_URI . $this->loadMap[$this->getMethod()][$this->path]
             );
 
-
-            if (!$this->result->isValid()) {
-                $this->combineResult();
+            if (!$result->isValid()) {
+                $this->combineResult($result);
             }
         }
-
 
         return $handler->handle($this->request);
     }
@@ -95,7 +85,7 @@ class SchemaValidationMiddleware implements Middleware
      */
     private function shouldBeValidated(): bool
     {
-        return isset($this->loadMap[$this->method][$this->path]);
+        return isset($this->loadMap[$this->getMethod()][$this->getPath()]);
     }
 
     /**
@@ -107,16 +97,16 @@ class SchemaValidationMiddleware implements Middleware
         return preg_replace(
             '/([a-z]+)\/(\d+)/',
             '$1/id',
-            $this->request->getUri()->getPath()
+            $this->getPath()
         );
     }
 
     /**
      * Combines error results from validation
      */
-    private function combineResult(): void
+    private function combineResult($result): void
     {
-        $error = (new ErrorFormatter())->format($this->result->error());
+        $error = (new ErrorFormatter())->format($result->error());
 
         $errorMessage = '';
         foreach ($error as $root => $message) {

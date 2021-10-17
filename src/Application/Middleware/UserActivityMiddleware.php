@@ -15,25 +15,28 @@ use Psr\Http\Server\{
 };
 
 use App\Domain\User\UserRepositoryInterface;
+use Psr\Log\LoggerInterface;
+use RuntimeException;
 
 
-class UserActivityMiddleware implements Middleware
+
+class UserActivityMiddleware extends BaseMiddleware
 {
-    private UserRepositoryInterface $userRepository;
-
-    public function __construct(UserRepositoryInterface $userRepository)
-    {
-        $this->userRepository = $userRepository;
+    public function __construct(
+        private UserRepositoryInterface $userRepository,
+        LoggerInterface $logger
+    ) {
+        parent::__construct($logger);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function process(Request $request, RequestHandler $handler): Response
+    public function processRequest(RequestHandler $handler): Response
     {
-        $userId = $request->getAttribute('session')->userId;
-        $this->userRepository->registerActivity((int) $userId);
+        $session = $this->request->getAttribute('session');
+        $session && $this->userRepository->registerActivity((int) $session->userId);
 
-        return $handler->handle($request);
+        return $handler->handle($this->request);
     }
 }
