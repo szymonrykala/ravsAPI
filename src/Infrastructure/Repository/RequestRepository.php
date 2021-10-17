@@ -8,6 +8,7 @@ namespace App\Infrastructure\Repository;
 use App\Domain\Request\RequestRepositoryInterface;
 use App\Domain\Request\Request;
 use App\Utils\JsonDateTime;
+use Psr\Http\Message\ServerRequestInterface;
 use stdClass;
 
 
@@ -38,22 +39,16 @@ final class RequestRepository extends BaseRepository implements RequestRepositor
     /**
      * {@inheritDoc}
      */
-    public function create(
-        string $method,
-        string $uriPath,
-        ?int $userId,
-        stdClass $payload,
-        float $time
-    ): void {
+    public function create(ServerRequestInterface $request): void {
         $sql = "INSERT INTO `$this->table`(`method`,`endpoint`,`user_id`,`payload`, `time`)
             VALUES(:method,:endpoint,:userId,:payload, :time)";
 
         $params = [
-            ':method' => $method,
-            ':endpoint' => $uriPath,
-            ':userId' => $userId,
-            ':payload' => json_encode($payload),
-            ':time' => $time,
+            ':method' => $request->getMethod(),
+            ':endpoint' => $request->getUri()->getPath(),
+            ':userId' => $request->getAttribute('session')->userId ?? NULL,
+            ':payload' => json_encode($request->getParsedBody()),
+            ':time' => microtime(true) - $request->getServerParams()['REQUEST_TIME_FLOAT'],
         ];
         $this->db->query($sql, $params);
     }
