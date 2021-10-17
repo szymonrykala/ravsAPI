@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application\Handlers;
@@ -19,12 +20,26 @@ use Slim\Handlers\ErrorHandler as SlimErrorHandler;
 use Throwable;
 
 use App\Domain\Exception\{
+    DomainUnauthenticatedException,
     HttpConflictException,
     HttpUnprocessableEntityException
 };
+use App\Domain\Request\RequestRepositoryInterface;
+use DomainException;
+use Psr\Http\Message\ResponseFactoryInterface;
+use Slim\Interfaces\CallableResolverInterface;
 
 class HttpErrorHandler extends SlimErrorHandler
 {
+
+    public function __construct(
+        CallableResolverInterface $callableResolver,
+        ResponseFactoryInterface $responseFactory,
+        private RequestRepositoryInterface $requestRepository
+    ) {
+        parent::__construct($callableResolver, $responseFactory);
+    }
+
     /**
      * @inheritdoc
      */
@@ -67,6 +82,8 @@ class HttpErrorHandler extends SlimErrorHandler
         ) {
             $error->setDescription($exception->getMessage());
         }
+
+        $this->requestRepository->create($this->request);
 
         $payload = new ActionPayload($statusCode, null, $error);
         $encodedPayload = json_encode($payload, JSON_PRETTY_PRINT);
