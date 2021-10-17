@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Actions;
 
-
+use App\Application\Exception\HttpConflictException;
 use App\Domain\Exception as Ex;
 use App\Utils\Pagination;
 use Psr\Log\LoggerInterface;
@@ -79,14 +79,18 @@ abstract class Action
             return $resp;
         } catch (Ex\DomainResourceNotFoundException $e) {
             throw new HttpNotFoundException($this->request, $e->getMessage());
-        } catch (Ex\DomainUnauthorizedOperationException $e) {
-            throw new HttpUnauthorizedException($this->request, $e->getMessage());
+
         } catch (Ex\DomainConflictException $e) {
-            throw new Ex\HttpConflictException($this->request, $e->getMessage(), 409);
+            throw new HttpConflictException($this->request, $e->getMessage());
+
         } catch (Ex\DomainForbiddenOperationException $e) {
             throw new HttpForbiddenException($this->request, $e->getMessage());
+
         } catch (Ex\DomainBadRequestException $e) {
             throw new HttpBadRequestException($this->request, $e->getMessage());
+
+        } catch (Ex\DomainUnauthenticatedException $e) {
+            throw new HttpUnauthorizedException($this->request, $e->getMessage());
         }
     }
 
@@ -100,7 +104,7 @@ abstract class Action
      */
     protected function getFormData(): stdClass
     {
-        return $this->request->getParsedBody();
+        return (object) $this->request->getParsedBody();
     }
 
 

@@ -19,13 +19,10 @@ use Slim\Handlers\ErrorHandler as SlimErrorHandler;
 
 use Throwable;
 
-use App\Domain\Exception\{
-    DomainUnauthenticatedException,
-    HttpConflictException,
-    HttpUnprocessableEntityException
-};
+use App\Application\Exception\HttpConflictException;
+use App\Application\Exception\HttpUnprocessableEntityException;
 use App\Domain\Request\RequestRepositoryInterface;
-use DomainException;
+
 use Psr\Http\Message\ResponseFactoryInterface;
 use Slim\Interfaces\CallableResolverInterface;
 
