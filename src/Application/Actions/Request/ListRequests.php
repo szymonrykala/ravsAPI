@@ -17,13 +17,7 @@ class ListRequests extends RequestAction
 
         $searchParams = [];
 
-        $subject = $this->resolveArg($this::REQUEST_SUBJECT);
-        $subjectId = $this->resolveArg($this::REQUEST_SUBJECT_ID, FALSE);
-
-        $searchParams['endpoint'] = '/' . $subject;
-
-        $subjectId && $searchParams['endpoint'] .= '/' . $subjectId;
-
+        $searchParams['endpoint'] = str_replace('/requests', '', $this->request->getUri()->getPath());
 
         $fields = [
             'user_id' => 'userId',
