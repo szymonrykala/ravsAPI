@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Repository;
 
 use App\Infrastructure\Database\IDatabase;
-use App\Domain\Model\RepositoryInterface;
+use App\Domain\Model\IRepository;
 use App\Domain\Model\Model;
 
 
@@ -15,7 +15,7 @@ use App\Utils\RepositoryCache;
 use Psr\Container\ContainerInterface;
 
 
-abstract class BaseRepository implements RepositoryInterface
+abstract class BaseRepository implements IRepository
 {
     protected IDatabase $db;
     private Pagination $pagination;
@@ -54,7 +54,7 @@ abstract class BaseRepository implements RepositoryInterface
     /**
      * {@inheritDoc}
      */
-    public function where(array $searchParams): RepositoryInterface
+    public function where(array $searchParams): IRepository
     {
         foreach ($searchParams as $key => $value) {
             $this->SQLwhere .= " AND `$this->table`.`$key`=:$key";
@@ -67,7 +67,7 @@ abstract class BaseRepository implements RepositoryInterface
     /**
      * {@inheritDoc}
      */
-    public function orderBy(string $name, string $direction = 'DESC'): RepositoryInterface
+    public function orderBy(string $name, string $direction = 'DESC'): IRepository
     {
         $this->SQLorder = " ORDER BY `${name}` ${direction}";
 
@@ -78,7 +78,7 @@ abstract class BaseRepository implements RepositoryInterface
     /**
      * {@inheritDoc}
      */
-    public function setPagination(Pagination &$pagination): RepositoryInterface
+    public function setPagination(Pagination &$pagination): IRepository
     {
         $this->pagination = $pagination;
         /** @var string localSQL */

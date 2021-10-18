@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Domain\Image;
 
 use Psr\Http\Message\UploadedFileInterface;
-use App\Domain\Model\RepositoryInterface;
+use App\Domain\Model\IRepository;
 use Slim\Psr7\Stream;
 
-interface ImageRepositoryInterface extends RepositoryInterface
+interface IImageRepository extends IRepository
 {
 
     /**
@@ -16,12 +16,6 @@ interface ImageRepositoryInterface extends RepositoryInterface
      * @throws ImageSizeExceededException
      */
     public function save(UploadedFileInterface $file): int;
-
-    // /**
-    //  * Read all images containing given prefix
-    //  */
-    // public function allLike(string $prefix): array;
-
 
     /**
      * returns stream content of the image file

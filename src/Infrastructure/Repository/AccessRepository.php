@@ -6,7 +6,7 @@ namespace App\Infrastructure\Repository;
 
 
 use App\Domain\Access\{
-    AccessRepositoryInterface,
+    IAccessRepository,
     Access,
     AccessDeleteException
 };
@@ -14,7 +14,7 @@ use App\Domain\Model\Model;
 use App\Utils\JsonDateTime;
 
 
-final class AccessRepository extends BaseRepository implements AccessRepositoryInterface
+final class AccessRepository extends BaseRepository implements IAccessRepository
 {
     protected string $table = 'access';
 

@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace App\Domain\User;
 
-use App\Domain\Model\RepositoryInterface;
+use App\Domain\Model\IRepository;
 
 
 
-interface UserRepositoryInterface extends RepositoryInterface
+interface IUserRepository extends IRepository
 {
 
     /**
      * enables loading of user access properties
-     * @return UserRepositoryInterface
+     * @return IUserRepository
      */
-    public function withAccess(): UserRepositoryInterface;
+    public function withAccess(): IUserRepository;
 
     /**
      * saves state of the user
@@ -43,5 +43,5 @@ interface UserRepositoryInterface extends RepositoryInterface
     /**
      * search for a users with given phrase by name, surname, and email
      */
-    public function search(string $phrase): UserRepositoryInterface;
+    public function search(string $phrase): IUserRepository;
 }

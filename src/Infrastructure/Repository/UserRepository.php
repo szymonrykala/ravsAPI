@@ -6,25 +6,25 @@ namespace App\Infrastructure\Repository;
 
 use App\Infrastructure\Repository\BaseRepository;
 
-use App\Domain\Access\AccessRepositoryInterface;
-use App\Domain\Image\ImageRepositoryInterface;
+use App\Domain\Access\IAccessRepository;
+use App\Domain\Image\IImageRepository;
 use App\Domain\Model\Model;
 use App\Domain\User\Exceptions\DefaultUserDeleteException;
-use App\Domain\User\UserRepositoryInterface;
+use App\Domain\User\IUserRepository;
 use App\Domain\User\User;
 use App\Utils\JsonDateTime;
 use Psr\Container\ContainerInterface;
 
 
-final class UserRepository extends BaseRepository implements UserRepositoryInterface
+final class UserRepository extends BaseRepository implements IUserRepository
 {
     protected string $table = 'user';
     private bool $accessLoading = FALSE;
 
     public function __construct(
         ContainerInterface $di,
-        private ImageRepositoryInterface $imageRepository,
-        private AccessRepositoryInterface $accessRepository
+        private IImageRepository $imageRepository,
+        private IAccessRepository $accessRepository
     ) {
         parent::__construct($di);
     }
@@ -32,7 +32,7 @@ final class UserRepository extends BaseRepository implements UserRepositoryInter
     /**
      * {@inheritDoc}
      */
-    public function withAccess(): UserRepositoryInterface
+    public function withAccess(): IUserRepository
     {
         $this->accessLoading = TRUE;
         return $this;

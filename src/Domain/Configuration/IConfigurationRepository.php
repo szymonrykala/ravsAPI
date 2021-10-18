@@ -8,13 +8,12 @@ interface IConfigurationRepository
 {
 
     /**
-     * @return Configuration object
+     * loads configuration from database
      */
     public function load(): Configuration;
 
     /**
-     * @param Configuration object
-     * @return void
+     * saves state of configuration object
      */
     public function save(Configuration $configuration): void;
 }

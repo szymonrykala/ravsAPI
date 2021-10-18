@@ -4,24 +4,18 @@ declare(strict_types=1);
 
 namespace App\Application\Middleware;
 
-use Psr\Http\Message\{
-    ResponseInterface as Response,
-    ServerRequestInterface as Request
-};
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 
-use Psr\Http\Server\{
-    MiddlewareInterface as Middleware,
-    RequestHandlerInterface as RequestHandler
-};
-
-use App\Domain\Request\RequestRepositoryInterface;
+use App\Domain\Request\IRequestRepository;
 use Psr\Log\LoggerInterface;
+
 
 
 class RequestLoggingMiddleware extends BaseMiddleware
 {
     public function __construct(
-        private RequestRepositoryInterface $requestRepository,
+        private IRequestRepository $requestRepository,
         LoggerInterface $logger
     ) {
         parent::__construct($logger);

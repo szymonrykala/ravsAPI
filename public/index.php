@@ -7,7 +7,7 @@ use App\Application\Handlers\HttpErrorHandler;
 use App\Application\Handlers\ShutdownHandler;
 use App\Application\ResponseEmitter\ResponseEmitter;
 use App\Application\Settings\SettingsInterface;
-use App\Domain\Request\RequestRepositoryInterface;
+use App\Domain\Request\IRequestRepository;
 use DI\ContainerBuilder;
 use Slim\Factory\AppFactory;
 use Slim\Factory\ServerRequestCreatorFactory;
@@ -62,7 +62,7 @@ $responseFactory = $app->getResponseFactory();
 $errorHandler = new HttpErrorHandler(
 	$callableResolver,
 	$responseFactory,
-	$container->get(RequestRepositoryInterface::class)
+	$container->get(IRequestRepository::class)
 );
 
 // Create Shutdown Handler

@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace App\Domain\Address;
 
-use App\Domain\Model\RepositoryInterface;
+use App\Domain\Model\IRepository;
 
 
 
-interface IAddressRepository extends RepositoryInterface
+interface IAddressRepository extends IRepository
 {
 
     /**

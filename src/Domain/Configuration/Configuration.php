@@ -13,7 +13,7 @@ final class Configuration extends Model
     public int $buildingImage;
     public int $roomImage;
     public int $userImage;
-    public int $maxImageSize;
+    public int $maxImageSize; // Bytes
     public int $defaultUserAccess;
     public int $reservationHistory; //days
     public int $requestHistory; // days
@@ -25,43 +25,28 @@ final class Configuration extends Model
     {
         foreach ($data as $var) {
 
-            switch ($var['key']) {
-                case 'BUILDING_IMAGE':
-                    $this->buildingImage = (int) $var['value'];
-                    break;
-                case 'ROOM_IMAGE':
-                    $this->roomImage = (int) $var['value'];
-                    break;
-                case 'USER_IMAGE':
-                    $this->userImage = (int) $var['value'];
-                    break;
-                case 'MAX_IMAGE_SIZE':
-                    $this->maxImageSize = (int) $var['value'];
-                    break;
-                case 'DEFAULT_USER_ACCESS':
-                    $this->defaultUserAccess = (int) $var['value'];
-                    break;
-                case 'MAX_RESERVATION_TIME':
-                    $this->maxReservationTime = new DateInterval('PT' . $var['value'] . 'M');
-                    break;
-                case 'MIN_RESERVATION_TIME':
-                    $this->minReservationTime = new DateInterval('PT' . $var['value'] . 'M');
-                    break;
-                case 'RESERVATION_HISTORY':
-                    $this->reservationHistory = (int) $var['value'];
-                    break;                
-                case 'REQUEST_HISTORY':
-                    $this->requestHistory = (int) $var['value'];
-                    break;
-                default:
-                    //nothing
-                    break;
+            $field = match($var['key']){
+                'BUILDING_IMAGE' => 'buildingImage',
+                'ROOM_IMAGE' => 'roomImage',
+                'USER_IMAGE' => 'userImage',
+                'MAX_IMAGE_SIZE' => 'maxImageSize',
+                'DEFAULT_USER_ACCESS' => 'defaultUserAccess',
+                'MAX_RESERVATION_TIME' => 'maxReservationTime',
+                'MIN_RESERVATION_TIME' => 'minReservationTime',
+                'RESERVATION_HISTORY' => 'reservationHistory',
+                'REQUEST_HISTORY' => 'requestHistory'
+            };
+
+            if(str_contains($var['key'],'RESERVATION_TIME')){
+                $this->$field = new DateInterval('PT' . $var['value'] . 'M');
+            }else{
+                $this->$field = (int) $var['value'];
             }
         }
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function update(stdClass $form): void
     {
@@ -73,7 +58,9 @@ final class Configuration extends Model
         parent::update($form);
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
     public function jsonSerialize(): array
     {
         return [

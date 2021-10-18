@@ -4,15 +4,11 @@ declare(strict_types=1);
 
 namespace App\Application\Middleware;
 
-use Psr\Http\Message\{
-    ResponseInterface as Response,
-};
+use App\Application\Exception\HttpUnprocessableEntityException;
+use Psr\Http\Message\ResponseInterface as Response;
 
-use Psr\Http\Server\{
-    RequestHandlerInterface as RequestHandler
-};
+use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 
-use Slim\Exception\HttpBadRequestException;
 use stdClass;
 
 
@@ -29,7 +25,7 @@ final class BodyParsingMiddleware extends BaseMiddleware
             $input = json_decode($content);
 
             if (json_last_error() !== JSON_ERROR_NONE) {
-                throw new HttpBadRequestException($this->request, 'Nieprawidłowy format wiadomości. Użyj formatu JSON.');
+                throw new HttpUnprocessableEntityException($this->request, 'Nieprawidłowy format wiadomości. Użyj formatu JSON.');
             }
         }
 

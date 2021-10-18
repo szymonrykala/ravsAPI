@@ -5,20 +5,20 @@ declare(strict_types=1);
 namespace App\Application\Middleware\Auth;
 
 
-use App\Domain\Access\AccessRepositoryInterface;
+use App\Domain\Access\IAccessRepository;
 use App\Domain\Reservation\IReservationRepository;
 use App\Domain\Reservation\Reservation;
 use App\Domain\User\User;
-use App\Domain\User\UserRepositoryInterface;
+use App\Domain\User\IUserRepository;
 use Psr\Log\LoggerInterface;
 
 
 class AuthorizationMiddleware extends BaseAuthorizationMiddleware
 {
     public function __construct(
-        private UserRepositoryInterface $userRepository,
+        private IUserRepository $userRepository,
         private IReservationRepository $reservationRepository,
-        AccessRepositoryInterface $accessRepository,
+        IAccessRepository $accessRepository,
         LoggerInterface $logger
     ) {
         parent::__construct($accessRepository, $logger);

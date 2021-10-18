@@ -7,7 +7,6 @@ namespace App\Application\Actions\User;
 use Psr\Http\Message\ResponseInterface as Response;
 
 use App\Domain\Reservation\IReservationRepository;
-use App\Domain\User\UserRepositoryInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 

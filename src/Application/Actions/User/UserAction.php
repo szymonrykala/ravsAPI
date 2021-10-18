@@ -8,20 +8,20 @@ use App\Domain\User\User as User;
 use Slim\Exception\HttpNotFoundException;
 
 use App\Application\Actions\Action;
-use App\Domain\User\UserRepositoryInterface;
+use App\Domain\User\IUserRepository;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
 
 abstract class UserAction extends Action
 {
-    protected UserRepositoryInterface $userRepository;
+    protected IUserRepository $userRepository;
 
 
     public function __construct(ContainerInterface $di)
     {
         parent::__construct($di->get(LoggerInterface::class));
-        $this->userRepository = $di->get(UserRepositoryInterface::class);
+        $this->userRepository = $di->get(IUserRepository::class);
     }
 
     /**

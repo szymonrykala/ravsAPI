@@ -16,9 +16,9 @@ use App\Domain\Reservation\Policy\Exception\RoomBuildingConflictException;
 use App\Domain\Reservation\Policy\Exception\TimeSlotConflictException;
 use App\Domain\Reservation\Reservation;
 use App\Domain\Room\Room;
-use App\Domain\Room\RoomRepositoryInterface;
+use App\Domain\Room\IRoomRepository;
 use App\Domain\User\User;
-use App\Domain\User\UserRepositoryInterface;
+use App\Domain\User\IUserRepository;
 use App\Infrastructure\Database\IDatabase;
 use App\Utils\JsonDateTime;
 use DateInterval;
@@ -31,8 +31,8 @@ abstract class ReservationPolicy
     protected IDatabase $database;
 
     protected IBuildingRepository $buildingRepository;
-    protected RoomRepositoryInterface $roomRepository;
-    protected UserRepositoryInterface $userRepository;
+    protected IRoomRepository $roomRepository;
+    protected IUserRepository $userRepository;
 
     protected User $user;
     protected Room $room;
@@ -42,14 +42,14 @@ abstract class ReservationPolicy
 
     /**
      * @param IBuildingRepository buildingRepository
-     * @param RoomRepositoryInterface roomRepository
-     * @param UserRepositoryInterface userRepository
+     * @param IRoomRepository roomRepository
+     * @param IUserRepository userRepository
      * @param IDatabase database
      */
     public function __construct(
         IBuildingRepository $buildingRepository,
-        RoomRepositoryInterface $roomRepository,
-        UserRepositoryInterface $userRepository,
+        IRoomRepository $roomRepository,
+        IUserRepository $userRepository,
         IConfigurationRepository $configurationRepository,
         IDatabase $database
     ) {

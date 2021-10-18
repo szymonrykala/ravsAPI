@@ -8,8 +8,8 @@ use App\Domain\Model\Model;
 use App\Domain\Reservation\IReservationRepository;
 use App\Domain\Reservation\Reservation;
 use App\Domain\Reservation\StartedReservationDeleteException;
-use App\Domain\Room\RoomRepositoryInterface;
-use App\Domain\User\UserRepositoryInterface;
+use App\Domain\Room\IRoomRepository;
+use App\Domain\User\IUserRepository;
 
 use App\Utils\JsonDateTime;
 use Psr\Container\ContainerInterface;
@@ -22,8 +22,8 @@ final class ReservationRepository extends BaseRepository implements IReservation
 
     public function __construct(
         ContainerInterface $di,
-        private RoomRepositoryInterface $roomRepository,
-        private UserRepositoryInterface $userRepository
+        private IRoomRepository $roomRepository,
+        private IUserRepository $userRepository
     ) {
         parent::__construct($di);
     }

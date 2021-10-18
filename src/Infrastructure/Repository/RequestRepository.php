@@ -5,22 +5,20 @@ declare(strict_types=1);
 namespace App\Infrastructure\Repository;
 
 
-use App\Domain\Request\RequestRepositoryInterface;
+use App\Domain\Request\IRequestRepository;
 use App\Domain\Request\Request;
 use App\Utils\JsonDateTime;
 use Psr\Http\Message\ServerRequestInterface;
-use stdClass;
 
 
 
-final class RequestRepository extends BaseRepository implements RequestRepositoryInterface
+final class RequestRepository extends BaseRepository implements IRequestRepository
 {
 
     protected string $table = 'request';
 
     /**
      * {@inheritDoc}
-     * @return Request
      */
     protected function newItem(array $data): Request
     {
@@ -50,20 +48,6 @@ final class RequestRepository extends BaseRepository implements RequestRepositor
             ':payload' => json_encode($request->getParsedBody()),
             ':time' => microtime(true) - $request->getServerParams()['REQUEST_TIME_FLOAT'],
         ];
-        $this->db->query($sql, $params);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function deleteList(array $ids): void
-    {
-        $sql = "DELETE FROM `$this->table` WHERE `id` IN (:ids)";
-
-        $str_list = implode(',', $ids);
-
-        $params = [':ids' => $str_list];
-
         $this->db->query($sql, $params);
     }
 }

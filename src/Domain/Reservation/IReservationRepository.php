@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Domain\Reservation;
 
-use App\Domain\Model\RepositoryInterface;
+use App\Domain\Model\IRepository;
 use App\Utils\Pagination;
 use App\Utils\JsonDateTime;
 
 
-interface IReservationRepository extends RepositoryInterface
+interface IReservationRepository extends IRepository
 {
     /**
      * Saves reservation object state

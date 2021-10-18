@@ -13,7 +13,7 @@ use App\Domain\Image\{
     FileTypeException,
     Image,
     ImageSizeExceededException,
-    ImageRepositoryInterface,
+    IImageRepository,
 };
 use App\Domain\Model\Model;
 use App\Utils\JsonDateTime;
@@ -23,7 +23,7 @@ use Slim\Psr7\Stream;
 
 
 
-final class ImageRepository extends BaseRepository implements ImageRepositoryInterface
+final class ImageRepository extends BaseRepository implements IImageRepository
 {
     private const DIRECTORY = __DIR__ . '/../../../public/images/';
 

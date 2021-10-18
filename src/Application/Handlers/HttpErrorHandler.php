@@ -21,7 +21,7 @@ use Throwable;
 
 use App\Application\Exception\HttpConflictException;
 use App\Application\Exception\HttpUnprocessableEntityException;
-use App\Domain\Request\RequestRepositoryInterface;
+use App\Domain\Request\IRequestRepository;
 
 use Psr\Http\Message\ResponseFactoryInterface;
 use Slim\Interfaces\CallableResolverInterface;
@@ -32,7 +32,7 @@ class HttpErrorHandler extends SlimErrorHandler
     public function __construct(
         CallableResolverInterface $callableResolver,
         ResponseFactoryInterface $responseFactory,
-        private RequestRepositoryInterface $requestRepository
+        private IRequestRepository $requestRepository
     ) {
         parent::__construct($callableResolver, $responseFactory);
     }

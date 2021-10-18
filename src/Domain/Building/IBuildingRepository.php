@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace App\Domain\Building;
 
-use App\Domain\Model\RepositoryInterface;
+use App\Domain\Model\IRepository;
 use App\Utils\JsonDateTime;
 
 
-interface IBuildingRepository extends RepositoryInterface
+interface IBuildingRepository extends IRepository
 {
 
     /**

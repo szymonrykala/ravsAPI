@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Domain\Request;
 
 use App\Domain\Model\Model;
-use App\Domain\User\User;
 use App\Utils\JsonDateTime;
 
 
@@ -25,7 +24,7 @@ final class Request extends Model
     }
 
     /**
-     * @return array
+     * {@inheritDoc}
      */
     public function jsonSerialize(): array
     {

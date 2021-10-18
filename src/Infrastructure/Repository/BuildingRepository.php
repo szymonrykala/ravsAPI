@@ -12,7 +12,7 @@ use App\Domain\Building\{
     Building
 };
 
-use App\Domain\Image\ImageRepositoryInterface;
+use App\Domain\Image\IImageRepository;
 use App\Domain\Model\Model;
 use App\Utils\JsonDateTime;
 use Psr\Container\ContainerInterface;
@@ -26,7 +26,7 @@ final class BuildingRepository extends BaseRepository implements IBuildingReposi
 
     public function __construct(
         ContainerInterface $di,
-        private ImageRepositoryInterface $imageRepository,
+        private IImageRepository $imageRepository,
         private IAddressRepository $addressRepository
     ) {
         parent::__construct($di);

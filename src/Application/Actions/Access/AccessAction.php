@@ -3,24 +3,23 @@ declare(strict_types=1);
 
 namespace App\Application\Actions\Access;
 
-use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use App\Application\Actions\Action;
-use App\Domain\Access\AccessRepositoryInterface;
-use App\Domain\Request\RequestRepositoryInterface;
+use App\Domain\Access\IAccessRepository;
+
 
 
 abstract class AccessAction extends Action
 {
-    protected AccessRepositoryInterface $accessRepository;
+    protected IAccessRepository $accessRepository;
 
     /**
      * @param LoggerInterface $logger
-     * @param AccessRepositoryInterface $imageRepository
+     * @param IAccessRepository $imageRepository
      */
     public function __construct(
         LoggerInterface $logger,
-        AccessRepositoryInterface $repository
+        IAccessRepository $repository
     ) {
         parent::__construct($logger);
         $this->accessRepository = $repository;

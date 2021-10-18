@@ -118,7 +118,6 @@ return function (App $app) {
 
     $app->group('/v1', function (Group $v1) {
 
-        // ------ WHITE LIST ENDPOINTS --------
         $v1->group('/users', function (Group $unAuth) {
             $unAuth->post('', User\RegisterUser::class);
 
@@ -127,13 +126,11 @@ return function (App $app) {
             $unAuth->patch('/activate', User\ActivateUser::class);
             $unAuth->patch('/password', User\ChangeUserPassword::class);
         })->add(RequestLoggingMiddleware::class);
-        // ------------ END ---------------
 
         $v1->group('', function (Group $protected) {
 
             $protected->get('/{request_subject:.*}/requests', RequestActions\ListRequests::class);
             $protected->get('/requests/stats', Stats\ViewRequestStats::class);
-            $protected->delete('/requests', RequestActions\DeleteRequests::class);
 
             $protected->group('/configurations', function (Group $configs) {
                 $configs->get('', Configuration\ViewConfiguration::class);
@@ -145,8 +142,6 @@ return function (App $app) {
                 $users->get('', User\ListAllUsers::class);
                 $users->get('/stats', Stats\ViewUserStats::class);
 
-                // $users->post('', User\RegisterUser::class);
-
                 $users->group('/{user_id:[0-9]+}', function (Group $user) {
                     $user->get('', User\ViewUser::class);
                     $user->get('/stats', Stats\ViewUserStats::class);
@@ -155,8 +150,6 @@ return function (App $app) {
                     $user->delete('', User\DeleteUser::class);
 
                     addReservationGets($user);
-
-                    // $one->get('/report', User\GenerateUserReport::class);
                 });
             });
 

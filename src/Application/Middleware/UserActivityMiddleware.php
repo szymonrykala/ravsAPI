@@ -4,26 +4,18 @@ declare(strict_types=1);
 
 namespace App\Application\Middleware;
 
-use Psr\Http\Message\{
-    ResponseInterface as Response,
-    ServerRequestInterface as Request
-};
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 
-use Psr\Http\Server\{
-    MiddlewareInterface as Middleware,
-    RequestHandlerInterface as RequestHandler
-};
-
-use App\Domain\User\UserRepositoryInterface;
+use App\Domain\User\IUserRepository;
 use Psr\Log\LoggerInterface;
-use RuntimeException;
 
 
 
 class UserActivityMiddleware extends BaseMiddleware
 {
     public function __construct(
-        private UserRepositoryInterface $userRepository,
+        private IUserRepository $userRepository,
         LoggerInterface $logger
     ) {
         parent::__construct($logger);

@@ -6,7 +6,7 @@ namespace App\Application\Actions\Address;
 
 use App\Domain\Address\IAddressRepository;
 use App\Domain\Building\IBuildingRepository;
-use App\Domain\Room\RoomRepositoryInterface;
+use App\Domain\Room\IRoomRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 
 use Psr\Log\LoggerInterface;
@@ -15,13 +15,13 @@ class ViewResourcesMap extends AddressAction
 {
 
     private IBuildingRepository $buildingRepository;
-    private RoomRepositoryInterface $roomRepository;
+    private IRoomRepository $roomRepository;
 
     public function __construct(
         LoggerInterface $logger,
         IAddressRepository $addressRepository,
         IBuildingRepository $buildingRepository,
-        RoomRepositoryInterface $roomRepository
+        IRoomRepository $roomRepository
     ) {
         parent::__construct($logger, $addressRepository);
         $this->roomRepository = $roomRepository;

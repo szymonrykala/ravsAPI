@@ -22,8 +22,6 @@ use stdClass;
 abstract class BaseMiddleware implements Middleware
 {
     protected Request $request;
-    private string $clockName = 'processingTime';
-
 
     public function __construct(
         protected LoggerInterface $logger

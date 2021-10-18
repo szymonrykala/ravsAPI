@@ -6,7 +6,7 @@ namespace App\Application\Middleware\Auth;
 
 use App\Application\Middleware\BaseMiddleware;
 use App\Domain\Access\Access;
-use App\Domain\Access\AccessRepositoryInterface;
+use App\Domain\Access\IAccessRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 
 use Psr\Http\Server\{
@@ -15,6 +15,8 @@ use Psr\Http\Server\{
 use Psr\Log\LoggerInterface;
 use Slim\Exception\HttpForbiddenException;
 
+
+
 abstract class BaseAuthorizationMiddleware extends BaseMiddleware
 {
     protected string $subject;
@@ -22,7 +24,7 @@ abstract class BaseAuthorizationMiddleware extends BaseMiddleware
     protected Access $userAccess;
 
     public function __construct(
-        protected AccessRepositoryInterface $accessRepository,
+        protected IAccessRepository $accessRepository,
         LoggerInterface $logger
     ) {
         parent::__construct($logger);

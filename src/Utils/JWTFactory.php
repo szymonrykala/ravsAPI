@@ -1,9 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Utils;
-
-use App\Domain\Exception\DomainUnauthorizedOperationException;
 
 use \Firebase\JWT\{
     ExpiredException,
@@ -35,12 +34,12 @@ class JWTFactory
         ];
 
         $jwt = JWT::encode(
-            $data,    
+            $data,
             JWTFactory::KEY,
             'HS512'
         );
 
-        if($jwt !== false){
+        if ($jwt !== false) {
             return $jwt;
         }
 
@@ -49,22 +48,22 @@ class JWTFactory
 
     public static function decode(string $userToken): stdClass
     {
-        try{
+        try {
 
             $token = JWT::decode(
                 $userToken,
                 JWTFactory::KEY,
                 ['HS512']
             );
-        }catch(ExpiredException $e){
-            throw new TokenExpiredException(); 
-        }catch(\Exception $e){
+        } catch (ExpiredException $e) {
+            throw new TokenExpiredException();
+        } catch (\Exception $e) {
             throw new TokenNotValidException();
         }
-        
+
         $now = new DateTime('now');
 
-        if(
+        if (
             $now->getTimestamp() > $token->exp
         ) throw new TokenExpiredException();
 
@@ -72,18 +71,21 @@ class JWTFactory
     }
 }
 
+class JWTException extends RuntimeException
+{
+};
 
-class JWTGeneratorException extends RuntimeException
+class JWTGeneratorException extends JWTException
 {
     public $message = "Nie udało się wygenerować tokenu. Spróbuj jeszcze raz.";
 }
 
-class TokenExpiredException extends DomainUnauthorizedOperationException
+class TokenExpiredException extends JWTException
 {
     public $message = "Token wygasł. Zaloguj się ponownie.";
 }
 
-class TokenNotValidException extends DomainUnauthorizedOperationException
+class TokenNotValidException extends JWTException
 {
     public $message = "Token jest nieprawidłowy.";
 }

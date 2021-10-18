@@ -4,21 +4,21 @@ declare(strict_types=1);
 namespace App\Application\Actions\Image;
 
 use App\Application\Actions\Action;
-use App\Domain\Image\ImageRepositoryInterface;
+use App\Domain\Image\IImageRepository;
 use Psr\Log\LoggerInterface;
-use App\Domain\Request\RequestRepositoryInterface;
+
 
 abstract class ImageAction extends Action
 {
-    protected ImageRepositoryInterface $imageRepository;
+    protected IImageRepository $imageRepository;
 
     /**
      * @param LoggerInterface $logger
-     * @param ImageRepositoryInterface $imageRepository
+     * @param IImageRepository $imageRepository
      */
     public function __construct(
         LoggerInterface $logger,
-        ImageRepositoryInterface $imageRepository
+        IImageRepository $imageRepository
     ) {
         parent::__construct($logger);
         $this->imageRepository = $imageRepository;

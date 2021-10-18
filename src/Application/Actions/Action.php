@@ -48,9 +48,7 @@ abstract class Action
 
     protected array $args;
 
-    /**
-     * @param LoggerInterface $logger
-     */
+
     public function __construct(
         LoggerInterface $logger
     ) {

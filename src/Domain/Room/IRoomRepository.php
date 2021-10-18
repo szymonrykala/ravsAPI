@@ -3,30 +3,26 @@ declare(strict_types=1);
 
 namespace App\Domain\Room;
 
-use App\Domain\Model\RepositoryInterface;
+use App\Domain\Model\IRepository;
 
 
 
-interface RoomRepositoryInterface extends RepositoryInterface
+interface IRoomRepository extends IRepository
 {
 
     /**
      * enable building loading
      * @return RoomRepositoryInterfave
      */
-    public function withBuilding(): RoomRepositoryInterface;
+    public function withBuilding(): IRoomRepository;
 
     /**
-     * @param Room room
+     * {@inheritDoc}
      */
     public function save(Room $room ): void;
 
     /**
-     * @param string name
-     * @param int buildingId
-     * @param string roomType
-     * @param int seatsCount
-     * @param int floor
+     * {@inheritDoc}
      */
     public function create(
         string  $name,

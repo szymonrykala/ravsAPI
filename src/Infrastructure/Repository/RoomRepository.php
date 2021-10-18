@@ -6,24 +6,24 @@ namespace App\Infrastructure\Repository;
 
 use App\Domain\Building\IBuildingRepository;
 use App\Domain\Room\{
-    RoomRepositoryInterface,
+    IRoomRepository,
     Room
 };
 
 use App\Domain\Exception\DomainResourceNotFoundException;
-use App\Domain\Image\ImageRepositoryInterface;
-use App\Infrastructure\Database\IDatabase;
+use App\Domain\Image\IImageRepository;
 use App\Utils\JsonDateTime;
 use Psr\Container\ContainerInterface;
 
-final class RoomRepository extends BaseRepository implements RoomRepositoryInterface
+
+final class RoomRepository extends BaseRepository implements IRoomRepository
 {
     protected string $table = 'room';
     private bool $buildingLoading = FALSE;
 
     public function __construct(
         ContainerInterface $di,
-        private ImageRepositoryInterface $imageRepository,
+        private IImageRepository $imageRepository,
         private IBuildingRepository $buildingRepository
     ) {
         parent::__construct($di);
@@ -32,7 +32,7 @@ final class RoomRepository extends BaseRepository implements RoomRepositoryInter
     /**
      * {@inheritDoc}
      */
-    public function withBuilding(): RoomRepositoryInterface
+    public function withBuilding(): IRoomRepository
     {
         $this->buildingLoading = TRUE;
         return $this;

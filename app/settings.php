@@ -21,15 +21,11 @@ return function (ContainerBuilder $containerBuilder) {
                     'path' => isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app.log',
                     'level' => Logger::DEBUG,
                 ],
-
                 'database' => [
                     'user' => 'root',
                     'password' => '',
                     'host' => '127.0.0.1',
                     'name' => 'ravs'
-                ],
-                'authWhiteList' => [
-                    '/v1/users/auth', '/v1/users/key', '/v1/users/activate', '/v1/users/password'
                 ],
                 'smtp' => [
                     'host' => 'smtp.gmail.com',

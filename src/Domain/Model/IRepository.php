@@ -6,23 +6,24 @@ namespace App\Domain\Model;
 
 use App\Utils\Pagination;
 
-interface RepositoryInterface
+
+interface IRepository
 {
 
     /**
      * Builds WHERE clause of query with provided data of array
      */
-    public function where(array $searchParams): RepositoryInterface;
+    public function where(array $searchParams): IRepository;
 
     /**
      * Enables ordering on results
      */
-    public function orderBy(string $name, string $direction = 'DESC'): RepositoryInterface;
+    public function orderBy(string $name, string $direction = 'DESC'): IRepository;
 
     /**
      * Sets pagination feature enabled
      */
-    public function setPagination(Pagination &$pagination): RepositoryInterface;
+    public function setPagination(Pagination &$pagination): IRepository;
 
     /**
      * reads all results of query
@@ -31,7 +32,8 @@ interface RepositoryInterface
     public function all(): array;
 
     /**
-     * @return Model
+     * gets one item from collection
+     * @throws DomainRecordNotFoundException
      */
     public function one(): Model;
 
