@@ -5,7 +5,7 @@ declare(strict_types=1);
 use App\Application\Settings\Settings;
 use App\Application\Settings\SettingsInterface;
 use DI\ContainerBuilder;
-use Monolog\Logger;
+
 
 return function (ContainerBuilder $containerBuilder) {
 
@@ -13,27 +13,27 @@ return function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
         SettingsInterface::class => function () {
             return new Settings([
-                'displayErrorDetails' => true, // Should be set to false in production
-                'logError'            => false,
-                'logErrorDetails'     => false,
+                'displayErrorDetails' => boolval($_ENV['DISPLAY_ERROR_DETAILS'] ?? false), // Should be set to false in production
+                'logError'            => boolval($_ENV['LOG_ERROR_DETAILS'] ?? false),
+                'logErrorDetails'     => boolval($_ENV['LOG_ERROR'] ?? false),
                 'logger' => [
                     'name' => 'ravs_api',
-                    'path' => isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app.log',
-                    'level' => Logger::DEBUG,
+                    'path' => $_ENV['LOG_PATH'] ?? 'php://stdout',
+                    'level' => $_ENV['LOGGER_LEVEL'],
                 ],
                 'database' => [
-                    'user' => 'root',
-                    'password' => '',
-                    'host' => '127.0.0.1',
-                    'name' => 'ravs'
+                    'user' => $_ENV['DB_USER'],
+                    'password' => $_ENV['DB_PASSWORD'],
+                    'host' => $_ENV['DB_HOST'],
+                    'name' => $_ENV['DB_NAME']
                 ],
                 'smtp' => [
-                    'host' => 'smtp.gmail.com',
-                    'port' => 587,
-                    'username' => 'szymonrykala@gmail.com',
-                    'password' => 'rolekskejt1214',
-                    'mailerName' => 'Ravs system',
-                    'debug' => 0
+                    'host' => $_ENV['SMTP_HOST'],
+                    'port' => $_ENV['SMTP_PORT'],
+                    'username' => $_ENV['SMTP_USER'],
+                    'password' => $_ENV['SMTP_PASSWORD'],
+                    'mailerName' => 'Rav System',
+                    'debug' => (int) $_ENV['SMTP_DEBUG'] ?? 0
                 ]
             ]);
         }

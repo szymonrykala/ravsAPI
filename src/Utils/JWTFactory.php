@@ -16,9 +16,6 @@ use stdClass;
 
 class JWTFactory
 {
-
-    private const KEY = 'bGS6lzFqvvSQ8ALbOxatm7/Vk7mLQyzqaS34Q4oR1ew=';
-
     private const DOMAIN_IDENTITY = "ravsapi.szymonr.pl";
 
 
@@ -33,9 +30,11 @@ class JWTFactory
             'exp' => $now->modify('+20 hours')->getTimestamp()    // expiration timestamp
         ];
 
+        $secret = $_ENV['TOKEN_SECRET'];
+
         $jwt = JWT::encode(
             $data,
-            JWTFactory::KEY,
+            $secret,
             'HS512'
         );
 
@@ -48,11 +47,12 @@ class JWTFactory
 
     public static function decode(string $userToken): stdClass
     {
-        try {
+        $secret = $_ENV['TOKEN_SECRET'];
 
+        try {
             $token = JWT::decode(
                 $userToken,
-                JWTFactory::KEY,
+                $secret,
                 ['HS512']
             );
         } catch (ExpiredException $e) {

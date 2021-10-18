@@ -8,4 +8,4 @@
 
 /docs
 .phpdoc
-.editorconfig
+.env
