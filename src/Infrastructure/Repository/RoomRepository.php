@@ -80,6 +80,17 @@ final class RoomRepository extends BaseRepository implements IRoomRepository
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function setDefaultImage(Room $room): void
+    {
+        $this->db->query(
+            "UPDATE `$this->table` SET `image` = DEFAULT WHERE `id` = :id",
+            [':id' => $room->id]
+        );
+    }
+
+    /**
      * @param Room room
      */
     public function save(Room $room): void
@@ -127,8 +138,8 @@ final class RoomRepository extends BaseRepository implements IRoomRepository
         int     $seatsCount,
         int     $floor
     ): int {
-        $sql = "INSERT `$this->table`(name, building, room_type, seats_count, floor)
-                VALUES(:name, :buildingId, :roomType, :seatsCount, :floor)";
+        $sql = "INSERT `$this->table`(name, building, room_type, seats_count, image, floor)
+                VALUES(:name, :buildingId, :roomType, :seatsCount, DEFAULT, :floor)";
 
         $params =  [
             ':name' => $name,

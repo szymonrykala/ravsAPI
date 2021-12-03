@@ -14,20 +14,16 @@ class DeleteImage extends ImageAction
      */
     protected function action(): Response
     {
-        $imageId = (int) $this->resolveArg($this::IMAGE_ID);
+        [$repo, $objectId] = $this->getPropperObjectSet();
 
-        $image = $this->imageRepository->byId($imageId);
-
-        [$repo, $objectId, $defaultImageId] = $this->getPropperObjectSet();
         /** @var Model $object */
         $object = $repo->byId((int)$objectId);
 
-        $object->imageId = $defaultImageId;
-        $repo->save($object);
+        $repo->setDefaultImage($object);
+        
+        $this->imageRepository->delete($object->image);
 
-        $this->imageRepository->delete($image);
-
-        $this->logger->info("Image of id `${imageId}` has been deleted.");
+        $this->logger->info('Image with id `' . $object->image->id . '` has been deleted.');
 
         return $this->respondWithData();
     }

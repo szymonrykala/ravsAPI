@@ -9,12 +9,12 @@ use Monolog\Logger;
 use Monolog\Processor\UidProcessor;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
-
 use App\Infrastructure\Database;
 
 use App\Domain\Reservation\Policy\ReservationCreatePolicy;
 use App\Infrastructure\Mailing\IMailingService;
 use App\Infrastructure\Mailing\MailingService;
+use Cloudinary\Cloudinary;
 
 use function DI\autowire;
 
@@ -49,6 +49,21 @@ return function (ContainerBuilder $containerBuilder) {
         },
         IMailingService::class => autowire(MailingService::class),
 
-        ReservationCreatePolicy::class => autowire(ReservationCreatePolicy::class)
+        ReservationCreatePolicy::class => autowire(ReservationCreatePolicy::class),
+
+        Cloudinary::class => function (ContainerInterface $c) {
+            $cloudinarySettings = $c->get(SettingsInterface::class)->get('cloudinary');
+
+            return new Cloudinary([
+                'cloud' => [
+                    'cloud_name' => $cloudinarySettings['cloudName'],
+                    'api_key'  => $cloudinarySettings['key'],
+                    'api_secret' => $cloudinarySettings['secret'],
+                    'url' => [
+                        'secure' => true
+                    ]
+                ]
+            ]);
+        }
     ]);
 };

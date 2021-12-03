@@ -23,6 +23,8 @@ interface IUserRepository extends IRepository
      */
     public function save(User $user): void;
 
+    /** sets default image for user */
+    public function setDefaultImage(User $user): void;
 
     /**
      * Creates new User account

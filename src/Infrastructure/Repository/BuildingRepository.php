@@ -13,7 +13,6 @@ use App\Domain\Building\{
 };
 
 use App\Domain\Image\IImageRepository;
-use App\Domain\Image\Image;
 use App\Domain\Model\Model;
 use App\Utils\JsonDateTime;
 use Psr\Container\ContainerInterface;
@@ -47,9 +46,6 @@ final class BuildingRepository extends BaseRepository implements IBuildingReposi
      */
     protected function newItem(array $data): Building
     {
-        // if(empty($data['image'])){
-        //     $image = new Image(0, '', 90, new JsonDateTime('now'), new JsonDateTime('now'));
-        // }
         $image = $this->imageRepository->byId((int)$data['image']);
         $address = $this->addressLoading ? $this->addressRepository->byId((int) $data['address']) : NULL;
 
@@ -96,6 +92,17 @@ final class BuildingRepository extends BaseRepository implements IBuildingReposi
     /**
      * {@inheritDoc}
      */
+    public function setDefaultImage(Building $building): void
+    {
+        $this->db->query(
+            "UPDATE `$this->table` SET `image` = DEFAULT WHERE `id` = :id",
+            [':id' => $building->id]
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function create(
         string $name,
         JsonDateTime $openTime,
@@ -103,7 +110,7 @@ final class BuildingRepository extends BaseRepository implements IBuildingReposi
         int $addressId
     ): int {
         $sql = "INSERT `$this->table`(name, address, open_time, close_time, image) 
-                    VALUES(:name, :address, :openTime, :closeTime, (SELECT `value` FROM configuration WHERE `key`='BUILDING_IMAGE'))";
+                    VALUES(:name, :address, :openTime, :closeTime, DEFAULT)";
         $params = [
             ':name' => $name,
             ':address' => $addressId,

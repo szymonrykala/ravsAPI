@@ -6,6 +6,7 @@ namespace App\Infrastructure\Repository;
 
 use App\Domain\Configuration\Configuration;
 use App\Domain\Configuration\IConfigurationRepository;
+use App\Domain\Exception\DomainBadRequestException;
 use Psr\Http\Message\UploadedFileInterface;
 use App\Infrastructure\Repository\BaseRepository;
 
@@ -17,18 +18,17 @@ use App\Domain\Image\{
 };
 use App\Domain\Model\Model;
 use App\Utils\JsonDateTime;
+use Cloudinary\Cloudinary;
+use Exception;
 use Psr\Container\ContainerInterface;
-use Slim\Psr7\Factory\StreamFactory;
-use Slim\Psr7\Stream;
 
 
 
 final class ImageRepository extends BaseRepository implements IImageRepository
 {
-    private const DIRECTORY = __DIR__ . '/../../../public/images/';
-
     protected string $table = 'image';
     protected Configuration $configuration;
+    private Cloudinary $cloudinary;
 
 
     public function __construct(
@@ -37,6 +37,41 @@ final class ImageRepository extends BaseRepository implements IImageRepository
     ) {
         parent::__construct($di);
         $this->configuration = $configuration->load();
+        $this->cloudinary = $di->get(Cloudinary::class);
+    }
+
+
+    /**
+     * Uploads file to the Cloudinary and applies transformation
+     * @return array uploaded file info
+     */
+    private function uploadToCloudinary(UploadedFileInterface $file): array
+    {
+        try {
+            $resp = $this->cloudinary->uploadApi()->upload($file->getStream(), [
+                'resource_type' => 'image',
+                'folder' => 'ravs-images',
+                'discard_original_filename' => TRUE,
+                'unique_filename' => TRUE,
+                'transformation' => 'ravs-image-transformation'
+            ]);
+        } catch (Exception $e) {
+            throw new DomainBadRequestException($e->getMessage());
+        }
+
+        return $resp->getArrayCopy();
+    }
+
+    /**
+     * deletes image from Cloudinary by public_id
+     */
+    private function deleteFromCloudinary(string $publicId): void
+    {
+        try {
+            $this->cloudinary->adminApi()->deleteAssets($publicId);
+        } catch (Exception $e) {
+            throw new DomainBadRequestException($e->getMessage());
+        }
     }
 
     /**
@@ -46,9 +81,10 @@ final class ImageRepository extends BaseRepository implements IImageRepository
     protected function newItem(array $data): Image
     {
         return new Image(
-            (int) $data['id'],
-            $data['name'],
-            (int) $data['size'],
+            (int)   $data['id'],
+            $data['public_id'],
+            (int)   $data['size'],
+            $data['url'],
             new JsonDateTime($data['created']),
             new JsonDateTime($data['updated'])
         );
@@ -56,39 +92,21 @@ final class ImageRepository extends BaseRepository implements IImageRepository
 
 
     /**
-     * Delete image if it is not default and nobody is use it
+     * Delete image if it is not default one
      * {@inheritDoc}
      * @param Image $image
      */
     public function delete(Model $image): void
     {
-
-        // query need to check if image is used to not throw an error while deleting user image while deleting user
-        // image is not default imageand is used by noone
-        $sql = "DELETE FROM $this->table WHERE `id` = :imageId
-                    AND `id` NOT IN (SELECT `value` FROM $this->configTable WHERE `key` IN ('BUILDING_IMAGE','ROOM_IMAGE','USER_IMAGE'))
-                    AND (
-                           `id` IN(SELECT distinct image from room)
-                        OR `id` IN(SELECT distinct image from building)
-                        OR `id` IN(SELECT distinct image from user)
-                    ) = 1
-                ";
-        $resp = $this->db->query($sql, [':imageId' => $image->id]);
-
-        if (!empty($resp)) {
-            unlink($this->public . $image->name);
+        // default images has url as NULL
+        if ($image->url !== NULL) {
+            $this->deleteFromCloudinary($image->publicId);
+            // delete record from database; 
+            $sql = "DELETE FROM $this->table WHERE `id` = :imageId AND `url` IS NOT NULL";
+            $this->db->query($sql, [':imageId' => $image->id]);
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function viewImageFile(int $id): Stream
-    {
-        $image = $this->byId($id);
-        $file = file_get_contents($this::DIRECTORY . $image->name);
-        return (new StreamFactory())->createStream($file);
-    }
 
     /**
      * {@inheritDoc}
@@ -102,30 +120,25 @@ final class ImageRepository extends BaseRepository implements IImageRepository
             throw new ImageSizeExceededException($this->configuration->maxImageSize);
         }
 
-        $filename = $this->moveUploadedFile($this::DIRECTORY, $file);
+        $data = $this->uploadToCloudinary($file);
 
-        $sql = "INSERT INTO `$this->table` (`name`, `size`) VALUES(:name, :size)";
+        $sql = "INSERT INTO `$this->table` (`url`, `public_id`, `size`, `created`) 
+        VALUES(:url, :publicId, :size, :created)";
+
         $params = [
-            'name' => $filename,
-            'size' => $file->getSize()
+            'url' => $data['secure_url'],
+            'publicId' => $data['public_id'],
+            'size' => $data['bytes'],
+            'created' => new JsonDateTime($data['created_at'])
         ];
-        $this->db->query($sql, $params);
+
+        try {
+            $this->db->query($sql, $params);
+        } catch (Exception $e) {
+            $this->deleteFromCloudinary($data['public_id']);
+            throw $e;
+        }
+
         return $this->db->lastInsertId();
-    }
-
-
-    /**
-     * Moves uploaded file to new location and return it's name
-     */
-    private function moveUploadedFile(string $directory, UploadedFileInterface $uploadedFile): string
-    {
-        $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
-
-        $basename = '_' . bin2hex(random_bytes(8));
-        $filename = sprintf('%s.%0.8s', $basename, $extension);
-
-        $uploadedFile->moveTo($directory . $filename);
-
-        return $filename;
     }
 }

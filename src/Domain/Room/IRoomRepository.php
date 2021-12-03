@@ -21,6 +21,9 @@ interface IRoomRepository extends IRepository
      */
     public function save(Room $room ): void;
 
+    /** Sets default image for room */
+    public function setDefaultImage(Room $room): void;
+
     /**
      * {@inheritDoc}
      */

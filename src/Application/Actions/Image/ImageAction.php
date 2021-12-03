@@ -49,9 +49,9 @@ abstract class ImageAction extends Action
 
 
         $set = match ('string') {
-            gettype($roomId) => [$this->roomRepository, $roomId, $this->configuration->roomImage],
-            gettype($userId) => [$this->userRepository, $userId, $this->configuration->userImage],
-            gettype($buildingId) => [$this->buildingRepository, $buildingId, $this->configuration->buildingImage],
+            gettype($roomId) => [$this->roomRepository, $roomId],
+            gettype($userId) => [$this->userRepository, $userId],
+            gettype($buildingId) => [$this->buildingRepository, $buildingId],
         };
 
         return $set;

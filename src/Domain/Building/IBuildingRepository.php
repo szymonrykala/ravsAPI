@@ -21,6 +21,9 @@ interface IBuildingRepository extends IRepository
      */
     public function save(Building $building): void;
 
+    /** sets default image for building */
+    public function setDefaultImage(Building $building): void;
+
     /**
      * @param string name
      * @param int imageId

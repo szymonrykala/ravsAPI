@@ -6,7 +6,7 @@ namespace App\Domain\Image;
 
 use Psr\Http\Message\UploadedFileInterface;
 use App\Domain\Model\IRepository;
-use Slim\Psr7\Stream;
+
 
 interface IImageRepository extends IRepository
 {
@@ -17,8 +17,4 @@ interface IImageRepository extends IRepository
      */
     public function save(UploadedFileInterface $file): int;
 
-    /**
-     * returns stream content of the image file
-     */
-    public function viewImageFile(int $id):Stream;
 }

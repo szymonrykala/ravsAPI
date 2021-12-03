@@ -84,6 +84,17 @@ final class UserRepository extends BaseRepository implements IUserRepository
     /**
      * {@inheritDoc}
      */
+    public function setDefaultImage(User $user): void
+    {
+        $this->db->query(
+            "UPDATE `$this->table` SET `image` = DEFAULT WHERE `id` = :id",
+            [':id' => $user->id]
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function save(User $user): void
     {
         $user->validate();
@@ -131,8 +142,7 @@ final class UserRepository extends BaseRepository implements IUserRepository
 
         $sql = "INSERT `$this->table`
                         (`name`, `surname`, `email`, `password`,`unique_key`, `image`, `access`) 
-                VALUES (:name, :surname, :email, :password, :uniqueKey, 
-                    (SELECT value FROM $this->configTable WHERE `key`='USER_IMAGE'),
+                VALUES (:name, :surname, :email, :password, :uniqueKey, DEFAULT,
                     (SELECT value FROM $this->configTable WHERE `key`='DEFAULT_USER_ACCESS')
                 )";
 
@@ -189,7 +199,7 @@ final class UserRepository extends BaseRepository implements IUserRepository
                     `surname` = :surname,
                     `deleted` = :deleted,
                     `email` = :email,
-                    `image` = (SELECT `value` FROM $this->configTable WHERE `key`='USER_IMAGE')
+                    `image` = DEFAULT
                 WHERE `id` = :id";
 
         $params = [

@@ -11,8 +11,9 @@ final class Image extends Model
 {
     public function __construct(
         public int $id,
-        public string $name,
+        public string $publicId,
         public int $size,
+        public ?string $url,
         public JsonDateTime $created,
         public JsonDateTime $updated
     ) {
@@ -27,7 +28,7 @@ final class Image extends Model
         return array_merge(
             [
                 'size' => $this->size,
-                'href' => '/v1/images/'.$this->id
+                'url' => $this->url ?? ('/images/' . $this->publicId)
             ],
             parent::jsonSerialize()
         );

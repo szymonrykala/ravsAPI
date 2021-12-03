@@ -58,8 +58,8 @@ function registerRooms(&$buildingPath)
             $room->patch('', Room\UpdateRoom::class);
             $room->delete('', Room\DeleteRoom::class);
 
-            $room->post('/images', Image\UploadImage::class);
-            $room->delete('/images/{image_id:[0-9]+}', Image\DeleteImage::class);
+            $room->post('/image', Image\UploadImage::class);
+            $room->delete('/image', Image\DeleteImage::class);
 
             $room->get('/stats', Stats\ViewRoomStats::class);
 
@@ -88,8 +88,8 @@ function registerBuildings(&$addressPath)
             $building->patch('', Building\UpdateBuilding::class);
             $building->delete('', Building\DeleteBuilding::class);
 
-            $building->post('/images', Image\UploadImage::class);
-            $building->delete('/images/{image_id:[0-9]+}', Image\DeleteImage::class);
+            $building->post('/image', Image\UploadImage::class);
+            $building->delete('/image', Image\DeleteImage::class);
 
             addReservationGets($building);
             registerRooms($building);
@@ -126,8 +126,6 @@ return function (App $app) {
     $app->group('/v1', function (Group $v1) {
 
         $v1->group('', function (Group $unAuth) {
-            $unAuth->get('/images/{image_id:[0-9]+}', Image\ViewImage::class);
-
             $unAuth->group('/users', function (Group $users) {
                 $users->post('', User\RegisterUser::class);
 
@@ -161,8 +159,8 @@ return function (App $app) {
                     $user->patch('/access', User\UpdateUserAccess::class);
                     $user->delete('', User\DeleteUser::class);
 
-                    $user->post('/images', Image\UploadImage::class);
-                    $user->delete('/images/{image_id:[0-9]+}', Image\DeleteImage::class);
+                    $user->post('/image', Image\UploadImage::class);
+                    $user->delete('/image', Image\DeleteImage::class);
 
                     addReservationGets($user);
                 });
@@ -195,12 +193,6 @@ return function (App $app) {
             // appends /addresses; /buildings; /rooms; /reservations
             registerAddresses($protected);
 
-            $protected->group('/images', function (Group $images) {
-                $images->group('/{image_id:[0-9]+}', function (Group $image) {
-
-                    // $image->delete('', Image\DeleteImage::class);
-                });
-            });
         })->add(AuthorizationMiddleware::class)
             ->add(RequestLoggingMiddleware::class)
             ->add(UserActivityMiddleware::class)

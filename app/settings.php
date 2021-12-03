@@ -34,6 +34,11 @@ return function (ContainerBuilder $containerBuilder) {
                     'password' => $_ENV['SMTP_PASSWORD'],
                     'mailerName' => 'Rav System',
                     'debug' => (int) $_ENV['SMTP_DEBUG'] ?? 0
+                ],
+                'cloudinary' => [
+                    'cloudName' => $_ENV['CLOUDINARY_CLOUD_NAME'],
+                    'secret' => $_ENV['CLOUDINARY_SECRET'],
+                    'key' => $_ENV['CLOUDINARY_KEY']
                 ]
             ]);
         }

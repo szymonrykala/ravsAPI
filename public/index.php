@@ -3,6 +3,7 @@
 declare(strict_types=1);
 date_default_timezone_set("Europe/Warsaw");
 
+
 use App\Application\Handlers\HttpErrorHandler;
 use App\Application\Handlers\ShutdownHandler;
 use App\Application\ResponseEmitter\ResponseEmitter;
@@ -19,7 +20,7 @@ $dotenv->load();
 $dotenv->required([
 	'DB_HOST', 'DB_NAME', 'DB_USER', 'DB_PASSWORD',
 	'SMTP_USER', 'SMTP_PASSWORD', 'SMTP_HOST', 'SMTP_PORT',
-	'TOKEN_SECRET'
+	'TOKEN_SECRET', 'CLOUDINARY_CLOUD_NAME', 'CLOUDINARY_SECRET', 'CLOUDINARY_KEY'
 ]);
 
 // Instantiate PHP-DI ContainerBuilder
