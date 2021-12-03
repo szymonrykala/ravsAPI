@@ -5,7 +5,7 @@
 			"$ref": "api://schema/reuse/name.json"
 		},
 		"roomType": {
-            "enum": ["lecture", "laboratory"]
+            "enum": ["Sala laboratoryjna", "Sala konferencyjna", "Sala wykładowa"]
 		},
 		"seatsCount": {
 			"type": "integer",

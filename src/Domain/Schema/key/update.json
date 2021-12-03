@@ -1,13 +1,13 @@
 {
 	"type": "object",
 	"properties": {
-		"NFCTag": {
+		"RFIDTag": {
 			"type": "string",
 			"minLength": 5
 		}
 	},
 	"required": [
-		"NFCTag"
+		"RFIDTag"
 	],
 	"additionalProperties": false
 }

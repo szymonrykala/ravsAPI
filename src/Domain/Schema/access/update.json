@@ -5,38 +5,30 @@
             "$ref": "api://schema/reuse/name.json"
         },
         "owner": {
-            "type": "boolean",
-            "default": false
+            "type": "boolean"
         },
         "accessAdmin": {
-            "type": "boolean",
-            "default": false
+            "type": "boolean"
         },
         "premisesAdmin": {
-            "type": "boolean",
-            "default": false
+            "type": "boolean"
         },
         "keysAdmin": {
-            "type": "boolean",
-            "default": false
+            "type": "boolean"
         },
         "reservationsAdmin": {
-            "type": "boolean",
-            "default": false
+            "type": "boolean"
         },
         "reservationsAbility": {
-            "type": "boolean",
-            "default": false
+            "type": "boolean"
         },
         "logsAdmin": {
-            "type": "boolean",
-            "default": false
+            "type": "boolean"
         },
         "statsViewer": {
-            "type": "boolean",
-            "default": false
+            "type": "boolean"
         }
     },
-    "required": [ ],
+    "required": [],
     "additionalProperties": false
 }

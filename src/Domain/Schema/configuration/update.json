@@ -1,18 +1,6 @@
 {
     "type": "object",
     "properties": {
-        "buildingImage": {
-            "$ref": "api://schema/reuse/id.json"
-        },
-        "roomImage": {
-            "$ref": "api://schema/reuse/id.json"
-        },
-        "userImage": {
-            "$ref": "api://schema/reuse/id.json"
-        },
-        "ownerAccess": {
-            "$ref": "api://schema/reuse/id.json"
-        },
         "maxImageSize": {
             "type": "integer",
             "minimum": 100,
@@ -26,6 +14,14 @@
             "minimum": 1
         },
         "minReservationTime": {
+            "type": "integer",
+            "minimum": 1
+        },
+        "reservationHistory": {
+            "type": "integer",
+            "minimum": 1
+        },
+        "requestHistory": {
             "type": "integer",
             "minimum": 1
         }
