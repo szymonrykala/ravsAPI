@@ -13,32 +13,32 @@ return function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
         SettingsInterface::class => function () {
             return new Settings([
-                'displayErrorDetails' => boolval($_ENV['DISPLAY_ERROR_DETAILS'] ?? false), // Should be set to false in production
-                'logError'            => boolval($_ENV['LOG_ERROR_DETAILS'] ?? false),
-                'logErrorDetails'     => boolval($_ENV['LOG_ERROR'] ?? false),
+                'displayErrorDetails' => boolval(getenv('DISPLAY_ERROR_DETAILS') ?? false), // Should be set to false in production
+                'logError'            => boolval(getenv('LOG_ERROR_DETAILS') ?? false),
+                'logErrorDetails'     => boolval(getenv('LOG_ERROR') ?? false),
                 'logger' => [
                     'name' => 'ravs_api',
-                    'path' => $_ENV['LOG_PATH'] ?? 'php://stdout',
-                    'level' => $_ENV['LOGGER_LEVEL'],
+                    'path' => getenv('LOG_PATH') ?? 'php://stdout',
+                    'level' => getenv('LOGGER_LEVEL'),
                 ],
                 'database' => [
-                    'user' => $_ENV['DB_USER'],
-                    'password' => $_ENV['DB_PASSWORD'],
-                    'host' => $_ENV['DB_HOST'],
-                    'name' => $_ENV['DB_NAME']
+                    'user' => getenv('DB_USER'),
+                    'password' => getenv('DB_PASSWORD'),
+                    'host' => getenv('DB_HOST'),
+                    'name' => getenv('DB_NAME')
                 ],
                 'smtp' => [
-                    'host' => $_ENV['SMTP_HOST'],
-                    'port' => $_ENV['SMTP_PORT'],
-                    'username' => $_ENV['SMTP_USER'],
-                    'password' => $_ENV['SMTP_PASSWORD'],
+                    'host' => getenv('SMTP_HOST'),
+                    'port' => getenv('SMTP_PORT'),
+                    'username' => getenv('SMTP_USER'),
+                    'password' => getenv('SMTP_PASSWORD'),
                     'mailerName' => 'Rav System',
-                    'debug' => (int) $_ENV['SMTP_DEBUG'] ?? 0
+                    'debug' => (int) getenv('SMTP_DEBUG') ?? 0
                 ],
                 'cloudinary' => [
-                    'cloudName' => $_ENV['CLOUDINARY_CLOUD_NAME'],
-                    'secret' => $_ENV['CLOUDINARY_SECRET'],
-                    'key' => $_ENV['CLOUDINARY_KEY']
+                    'cloudName' => getenv('CLOUDINARY_CLOUD_NAME'),
+                    'secret' => getenv('CLOUDINARY_SECRET'),
+                    'key' => getenv('CLOUDINARY_KEY')
                 ]
             ]);
         }

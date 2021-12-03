@@ -30,7 +30,7 @@ class JWTFactory
             'exp' => $now->modify('+20 hours')->getTimestamp()    // expiration timestamp
         ];
 
-        $secret = $_ENV['TOKEN_SECRET'];
+        $secret = getenv('TOKEN_SECRET');
 
         $jwt = JWT::encode(
             $data,
@@ -47,7 +47,7 @@ class JWTFactory
 
     public static function decode(string $userToken): stdClass
     {
-        $secret = $_ENV['TOKEN_SECRET'];
+        $secret = getenv('TOKEN_SECRET');
 
         try {
             $token = JWT::decode(
