@@ -15,13 +15,13 @@ use Slim\Factory\ServerRequestCreatorFactory;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
-$dotenv->load();
-$dotenv->required([
-	'DB_HOST', 'DB_NAME', 'DB_USER', 'DB_PASSWORD',
-	'SMTP_USER', 'SMTP_PASSWORD', 'SMTP_HOST', 'SMTP_PORT',
-	'TOKEN_SECRET', 'CLOUDINARY_CLOUD_NAME', 'CLOUDINARY_SECRET', 'CLOUDINARY_KEY'
-]);
+// $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+// $dotenv->load();
+// $dotenv->required([
+// 	'DB_HOST', 'DB_NAME', 'DB_USER', 'DB_PASSWORD',
+// 	'SMTP_USER', 'SMTP_PASSWORD', 'SMTP_HOST', 'SMTP_PORT',
+// 	'TOKEN_SECRET', 'CLOUDINARY_CLOUD_NAME', 'CLOUDINARY_SECRET', 'CLOUDINARY_KEY'
+// ]);
 
 // Instantiate PHP-DI ContainerBuilder
 $containerBuilder = new ContainerBuilder();
