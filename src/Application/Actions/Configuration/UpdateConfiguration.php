@@ -39,14 +39,8 @@ class UpdateConfiguration extends ConfigurationAction
         $form = $this->getFormData();
         $configs = $this->configurationRepository->load();
 
-        // check if specified images exists
-        foreach (['userImage', 'roomImage', 'buildingImage'] as $field) {
-            if (isset($form->$field))
-                $this->imageRepository->byId($form->$field);
-        }
-
         // check if the specified accesses exists
-        foreach (['ownerAccess', 'defaultUserAccess'] as $field) {
+        foreach (['defaultUserAccess'] as $field) {
             if (isset($form->$field))
                 $this->accessRepository->byId($form->$field);
         }

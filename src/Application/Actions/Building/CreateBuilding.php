@@ -21,8 +21,8 @@ class CreateBuilding extends BuildingAction
 
         $createdBuildingId = $this->buildingRepository->create(
             $form->name,
-            new JsonDateTime($form->open_time),
-            new JsonDateTime($form->close_time),
+            new JsonDateTime($form->openTime),
+            new JsonDateTime($form->closeTime),
             $addressId
         );
 

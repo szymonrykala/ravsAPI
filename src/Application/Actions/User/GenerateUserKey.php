@@ -54,6 +54,6 @@ class GenerateUserKey extends UserAction
         $this->mailer->setMessageType(MailingService::NEW_CODE_REQUEST);
         $this->mailer->send();
 
-        return $this->respondWithData("Code has been send to Your mailbox.", 201);
+        return $this->respondWithData("Kod został wysłany na adres email.", 201);
     }
 }

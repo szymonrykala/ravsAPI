@@ -24,13 +24,13 @@ class AssignKey extends KeyAction
         /** @var Room */
         $room = $this->roomRepository->withBuilding()->byId($roomId);
 
-        if($buildingId !== $room->building->id || $room->building->address !== $addressId)
+        if($buildingId !== $room->building->id || $room->building->addressId !== $addressId)
             throw new HttpBadRequestException(
                 $this->request, 
-                "Podane dane (id pokoju i/lub id adresu) są nieprawidłowe."
+                "Dane pokoju są nieprawidłowe."
             );
 
-        $room->rfid = $form->NFCTag;
+        $room->rfid = $form->RFIDTag;
 
         $this->roomRepository->save($room);
 

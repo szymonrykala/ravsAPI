@@ -30,8 +30,9 @@ final class StatsRepository implements IStatsRepository
     private string $requests = 'request';
 
 
-    private string $avgTimeFileds = "SEC_TO_TIME(AVG(TIME_TO_SEC(TIMEDIFF(res.planned_end, res.planned_start)))) as 'averagePlannedTime',
-        SEC_TO_TIME(AVG(TIME_TO_SEC(TIMEDIFF(res.actual_end, res.actual_start)))) as 'averageActualTime'";
+    private string $avgTimeFileds = "ROUND(AVG(TIME_TO_SEC(TIMEDIFF(res.planned_end, res.planned_start)))/60) as 'avgPlannedTimeMinutes',
+        ROUND(AVG(TIME_TO_SEC(TIMEDIFF(res.actual_end, res.actual_start)))/60) as 'avgActualTimeMinutes',
+        SUM(ROUND(TIME_TO_SEC(TIMEDIFF(res.actual_end, res.actual_start))/60)) as 'allTimeMinutes'";
 
 
     public function __construct(
@@ -54,6 +55,73 @@ final class StatsRepository implements IStatsRepository
     {
         return $this->db->query($sql, $this->params);
     }
+
+
+    /**
+     * parse values to integers excluding keys contains in $excludeKeys array
+     */
+    private function parseToNumbers(&$data, array $excludeKeys = [])
+    {
+        foreach ($data as &$obj) {
+            foreach ($obj as $key => &$value) {
+                if (!in_array($key, $excludeKeys)) $value = (float) $value;
+            }
+        }
+    }
+
+    /**
+     * fills data for data per day of week
+     */
+    private function fillDaysOfWeek(array $data): array
+    {
+        $temp = [];
+        $filledData = [];
+
+        foreach ($data as &$obj) $temp[$obj['day']] = $obj;
+
+        for ($i = 1; $i < 7; $i++) {
+            if (isset($temp[$i])) {
+                $tempObj = $temp[$i];
+
+                array_push($filledData, $tempObj);
+            } else {
+                array_push($filledData, [
+                    'reservationsCount' => 0,
+                    'avgActualTimeMinutes' => 0,
+                    'avgPlannedTimeMinutes' => 0,
+                    'allTimeMinutes' => 0,
+                    'day' => $i,
+                ]);
+            }
+        }
+        return $filledData;
+    }
+
+    /**
+     * fills data for data per day of month
+     */
+    private function fillDaysOfMonth(array $data): array
+    {
+        $temp = [];
+        $filledData = [];
+
+        foreach ($data as $obj) $temp[$obj['day']] = $obj;
+
+
+        for ($i = 1; $i <= 32; $i++) {
+            $item = isset($temp[$i]) ? $temp[$i] : [
+                "reservationsCount" => 0,
+                "day" => $i,
+                "avgPlannedTimeMinutes" => 0,
+                "avgActualTimeMinutes" => 0,
+                "allTimeMinutes" => 0
+            ];
+
+            array_push($filledData, $item);
+        }
+        return $filledData;
+    }
+
 
     /** {@inheritDoc} */
     public function setTimeSpan(?string $from = NULL, string $to = 'now'): IStatsRepository
@@ -90,9 +158,12 @@ final class StatsRepository implements IStatsRepository
                     GROUP BY r.id 
                     ORDER BY r.id";
 
+        $data =  $this->execute($sql);
+        $this->parseToNumbers($data, ['name']);
+
         $this->stats->addStatsItem(new StatsItem(
-            'allRoomsReservations',
-            $this->execute($sql)
+            'allReservations',
+            $data
         ));
 
         return $this->stats;
@@ -107,36 +178,42 @@ final class StatsRepository implements IStatsRepository
         // Reservations for specific room groupped by day of week
         {
             $sql = "SELECT COUNT(res.id) as 'reservationsCount',
-                            DAYOFWEEK (res.planned_start) AS 'dayOfWeek',
+                            DAYOFWEEK (res.planned_start) AS 'day',
                             {$this->avgTimeFileds}
                         FROM {$this->rooms} r 
                             INNER JOIN {$this->reservations} res ON res.room = r.id
                         WHERE r.id = :roomId AND {$this->between}
-                        GROUP BY dayOfWeek
-                        ORDER BY dayOfWeek";
+                        GROUP BY day
+                        ORDER BY day";
 
+            $data = $this->execute($sql);
+            $this->parseToNumbers($data);
 
+            $filledData = $this->fillDaysOfWeek($data);
 
             $this->stats->addStatsItem(new StatsItem(
-                'dayOfWeek',
-                $this->execute($sql)
+                'weekly',
+                $filledData
             ));
         }
         // Reservations for specific room groupped by day of month
         {
             $sql = "SELECT COUNT(res.id) as 'reservationsCount',
-                            DAYOFMONTH (res.planned_start) AS 'dayOfMonth',
+                            DAYOFMONTH (res.planned_start) AS 'day',
                             {$this->avgTimeFileds}
                         FROM `{$this->rooms}` r 
                             INNER JOIN `{$this->reservations}` res ON res.room = r.id
                         WHERE r.id = :roomId AND {$this->between}
-                        GROUP BY dayOfMonth
-                        ORDER BY dayOfMonth";
+                        GROUP BY day
+                        ORDER BY day";
+
+            $data = $this->execute($sql);
+            $this->parseToNumbers($data);
 
 
             $this->stats->addStatsItem(new StatsItem(
-                'dayOfMonth',
-                $this->execute($sql)
+                'monthly',
+                $this->fillDaysOfMonth($data)
             ));
         }
         // Users who makes reservation for specific room
@@ -152,10 +229,13 @@ final class StatsRepository implements IStatsRepository
                         GROUP BY  u.email 
                         ORDER BY reservationsCount";
 
+            $data = $this->execute($sql);
+            $this->parseToNumbers($data, ['email']);
+
 
             $this->stats->addStatsItem(new StatsItem(
                 'users',
-                $this->execute($sql)
+                $data
             ));
         }
 
@@ -172,13 +252,16 @@ final class StatsRepository implements IStatsRepository
                         {$this->avgTimeFileds}
                     FROM {$this->reservations} res 
                         INNER JOIN {$this->users} u ON res.user = u.id 
-                    WHERE {$this->between}
+                    WHERE u.deleted = 0 AND {$this->between} 
                     GROUP BY res.user 
                     ORDER BY reservationsCount";
 
+        $data =  $this->execute($sql);
+        $this->parseToNumbers($data, ['email']);
+
         $this->stats->addStatsItem(new StatsItem(
-            'allUsers',
-            $this->execute($sql)
+            'users',
+            $data
         ));
 
         return $this->stats;
@@ -193,35 +276,40 @@ final class StatsRepository implements IStatsRepository
         {
             $sql = "SELECT 
                             COUNT(res.id) as 'reservationsCount', 
-                            DAYOFWEEK (res.planned_start) AS 'dayOfWeek', 
+                            DAYOFWEEK (res.planned_start) AS 'day', 
                             {$this->avgTimeFileds}
                         FROM `{$this->users}` u 
                             INNER JOIN `{$this->reservations}` res ON res.user = u.id 
                         WHERE u.id = :userId AND {$this->between}
-                        GROUP BY dayOfWeek
-                        ORDER BY dayOfWeek";
+                        GROUP BY day
+                        ORDER BY day";
 
+            $data =  $this->execute($sql);
+            $this->parseToNumbers($data);
 
             $this->stats->addStatsItem(new StatsItem(
-                'dayOfWeek',
-                $this->execute($sql)
+                'weekly',
+                $this->fillDaysOfWeek($data)
             ));
         }
         // Reservations of specific room groupped by day of month
         {
             $sql = "SELECT 
                             COUNT(res.id) as 'reservationsCount',
-                            DAYOFMONTH(res.planned_start) AS 'dayOfMonth',
+                            DAYOFMONTH(res.planned_start) AS 'day',
                             {$this->avgTimeFileds}
                         FROM `{$this->users}` u 
                             INNER JOIN `{$this->reservations}` res ON res.user = u.id 
                         WHERE u.id = :userId AND {$this->between}
-                        GROUP BY dayOfMonth
-                        ORDER BY dayOfMonth";
+                        GROUP BY day
+                        ORDER BY day";
+
+            $data =  $this->execute($sql);
+            $this->parseToNumbers($data);
 
             $this->stats->addStatsItem(new StatsItem(
-                'dayOfMonth',
-                $this->execute($sql)
+                'monthly',
+                $this->fillDaysOfMonth($data)
             ));
         }
         // Rooms reserved by specific User
@@ -239,10 +327,12 @@ final class StatsRepository implements IStatsRepository
                         GROUP BY res.room
                         ORDER BY res.room";
 
+            $data =  $this->execute($sql);
+            $this->parseToNumbers($data, ['roomName', 'buildingName']);
 
             $this->stats->addStatsItem(new StatsItem(
                 'reservedRooms',
-                $this->execute($sql)
+                $data
             ));
         }
 
@@ -263,9 +353,12 @@ final class StatsRepository implements IStatsRepository
                     GROUP BY b.id 
                     ORDER BY b.id";
 
+        $data =  $this->execute($sql);
+        $this->parseToNumbers($data, ['name']);
+
         $this->stats->addStatsItem(new StatsItem(
             'allReservations',
-            $this->execute($sql)
+            $data
         ));
 
         return $this->stats;
@@ -279,36 +372,38 @@ final class StatsRepository implements IStatsRepository
         // Reservations for specific room groupped by day of week
         {
             $sql = "SELECT COUNT(res.id) as 'reservationsCount',
-                            DAYOFWEEK (res.planned_start) AS 'dayOfWeek',
+                            DAYOFWEEK (res.planned_start) AS 'day',
                             {$this->avgTimeFileds}
                         FROM `{$this->reservations}` res 
                             INNER JOIN `{$this->rooms}` r ON r.id = res.room
                             INNER JOIN `{$this->buildings}` b ON r.building = b.id
                         WHERE b.id = :buildingId AND {$this->between}
-                        GROUP BY dayOfWeek";
+                        GROUP BY day";
 
-
+            $data = $this->execute($sql);
+            $this->parseToNumbers($data);
 
             $this->stats->addStatsItem(new StatsItem(
-                'dayOfWeek',
-                $this->execute($sql)
+                'weekly',
+                $this->fillDaysOfWeek($data)
             ));
         }
         // Reservations for specific room groupped by day of month
         {
             $sql = "SELECT COUNT(res.id) as 'reservationsCount',
-                            DAYOFMONTH (res.planned_start) AS 'dayOfMonth',
+                            DAYOFMONTH (res.planned_start) AS 'day',
                             {$this->avgTimeFileds}
                         FROM `{$this->reservations}` res 
                             INNER JOIN `{$this->rooms}` r ON r.id = res.room
                             INNER JOIN `{$this->buildings}` b ON r.building = b.id
                         WHERE b.id = :buildingId AND {$this->between}
-                        GROUP BY dayOfMonth";
-
+                        GROUP BY day";
+            $data =  $this->execute($sql);
+            $this->parseToNumbers($data);
 
             $this->stats->addStatsItem(new StatsItem(
-                'dayOfMonth',
-                $this->execute($sql)
+                'monthly',
+                $this->fillDaysOfMonth($data)
             ));
         }
         // Users who makes reservation for specific building
@@ -325,10 +420,12 @@ final class StatsRepository implements IStatsRepository
                         GROUP BY  u.email 
                         ORDER BY reservationsCount";
 
+            $data =  $this->execute($sql);
+            $this->parseToNumbers($data, ['email']);
 
             $this->stats->addStatsItem(new StatsItem(
                 'users',
-                $this->execute($sql)
+                $data
             ));
         }
 
@@ -343,18 +440,22 @@ final class StatsRepository implements IStatsRepository
         $sql = "SELECT 
                     method, 
                     COUNT(id) as calls,
-                    REGEXP_REPLACE(endpoint, '\\\d+', 'id') as 'generalEndpoint' , 
+                    REGEXP_REPLACE(endpoint, '/\\\d+', '/id') as 'generalEndpoint' , 
                     AVG(time) as avgTime,
                     SUM(time) as timeForEndpoint
                 FROM {$this->requests} 
-                WHERE `created` BETWEEN DATE(:from) AND DATE(:to)
                 GROUP BY generalEndpoint, method 
                 ORDER BY generalEndpoint ASC
         ";
+        $this->params = [];
+
+        $data =  $this->execute($sql);
+        $this->parseToNumbers($data, ['method', 'generalEndpoint']);
+
 
         $this->stats->addStatsItem(new StatsItem(
             'endpoints',
-            $this->execute($sql)
+            $data
         ));
 
         return $this->stats;

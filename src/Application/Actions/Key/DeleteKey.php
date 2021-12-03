@@ -6,9 +6,10 @@ namespace App\Application\Actions\Key;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\Room\Room;
+use Slim\Exception\HttpBadRequestException;
 
 
-class ViewKey extends KeyAction
+class DeleteKey extends KeyAction
 {
     /**
      * {@inheritDoc}
@@ -26,9 +27,17 @@ class ViewKey extends KeyAction
             ->withBuilding()
             ->where($params)->one();
 
+        if ($buildingId && (int) $buildingId !== $room->building->id)
+            throw new HttpBadRequestException(
+                $this->request,
+                "Dane pokoju są nieprawidłowe."
+            );
 
-        $this->logger->info("NFC key of room id {$room->id} was viewed");
+        $room->rfid = NULL;
 
-        return $this->respondWithData($room->rfid);
+        $this->roomRepository->save($room);
+        $this->logger->info("RFIDTag was removed for {$room->id}");
+
+        return $this->respondWithData(NULL);
     }
 }

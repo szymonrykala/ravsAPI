@@ -20,6 +20,19 @@ final class RequestRepository extends BaseRepository implements IRequestReposito
     /**
      * {@inheritDoc}
      */
+    public function whereLIKE(array $searchParams): IRequestRepository
+    {
+        foreach ($searchParams as $key => $value) {
+            $this->SQLwhere .= " AND `$this->table`.`$key` LIKE :$key";
+            $this->params[":$key"] = $value.'%';
+        }
+
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     protected function newItem(array $data): Request
     {
         return new Request(

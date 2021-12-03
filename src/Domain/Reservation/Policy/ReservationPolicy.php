@@ -105,7 +105,7 @@ abstract class ReservationPolicy
 
         if (!$futureTime)
             throw new IncorrectTimeSlotException(
-                'The time you want to reserve has already passed.'
+                'Czas który chcesz zarezerwować już minął.'
             );
     }
 
@@ -120,22 +120,22 @@ abstract class ReservationPolicy
 
         if ($timeDiff->invert === 1)
             throw new IncorrectTimeSlotException(
-                'Incorrect time slot: \'plannedStart\' have to be earlier then \'plannedEnd\''
-            );
-        
-        $localStart = clone $this->start;
-        // if planned end is bigger than planned start + max avaliable time
-        if( $this->end > $localStart->add($this->configuration->maxReservationTime) )
-            throw new IncorrectTimeSlotException(
-                "Reservation time slot is too long - maximum time is {$this->configuration->maxReservationTime->i} minutes."
+                'Początek rezerwacji musi być wcześniej niż jej koniec.'
             );
 
-            // print_r($this->start);
+        $localStart = clone $this->start;
+        // if planned end is bigger than planned start + max avaliable time
+        if ($this->end > $localStart->add($this->configuration->maxReservationTime))
+            throw new IncorrectTimeSlotException(
+                "Czas rezerwacji jest zbyt długi - maximum to {$this->configuration->maxReservationTime->i} minut."
+            );
+
+        // print_r($this->start);
         $localStart = clone $this->start;
         // if planned end is smaller then planned start + required min time
-        if($this->end < $localStart->add($this->configuration->minReservationTime))
+        if ($this->end < $localStart->add($this->configuration->minReservationTime))
             throw new IncorrectTimeSlotException(
-                "Reservation time is to short - at least {$this->configuration->minReservationTime->i} minutes is required."
+                "Czas rezerwacji jest zbyt krótki - minimum to {$this->configuration->minReservationTime->i} minut."
             );
     }
 
@@ -147,15 +147,15 @@ abstract class ReservationPolicy
     protected function reservationWhenBuildingIsOpen(): void
     {
 
-        $startsAfterOpen = $this->start->getTime() > $this->building->openTime->getTime();
-        $endsBeforeClose = $this->end->getTime() < $this->building->closeTime->getTime();
+        $startsAfterOpen = $this->start->getTime() >= $this->building->openTime->getTime();
+        $endsBeforeClose = $this->end->getTime() <= $this->building->closeTime->getTime();
 
         if (!$startsAfterOpen || !$endsBeforeClose)
             throw new TimeSlotConflictException(
-                'Building opening hours are \''
+                'Budynek jest otwarty od \''
                     . $this->building->openTime->getTime()
-                    . '\' to \'' . $this->building->closeTime->getTime()
-                    . '\'. Please, change reservation time slot.\''
+                    . '\' do \'' . $this->building->closeTime->getTime()
+                    . '\'. Zmień czas rezerwacji.\''
             );
     }
 

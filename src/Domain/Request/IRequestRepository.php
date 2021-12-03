@@ -14,4 +14,9 @@ interface IRequestRepository extends IRepository
      */
     public function create(ServerRequestInterface $request): void;
 
+
+    /**
+     * search entires where search params are LIKE given values
+     */
+    public function whereLIKE(array $searchParams): IRequestRepository;
 }

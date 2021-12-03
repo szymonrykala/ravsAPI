@@ -76,7 +76,7 @@ class SchemaValidationMiddleware extends BaseMiddleware
      */
     private function shouldBeValidated(): bool
     {
-        return isset($this->loadMap[$this->getMethod()][$this->getPath()]);
+        return isset($this->loadMap[$this->getMethod()][$this->getProcessURI()]);
     }
 
     /**

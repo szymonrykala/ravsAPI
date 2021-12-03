@@ -30,7 +30,7 @@ final class Access extends Model
     /**
      * {@inheritDoc}
      */
-    public function validateCallback(): void
+    public function validate(): void
     {
         if ($this->id === 1) {
             throw new AccessUpdateException();

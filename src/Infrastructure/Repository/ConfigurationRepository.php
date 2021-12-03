@@ -39,13 +39,10 @@ final class ConfigurationRepository implements IConfigurationRepository
     {
         $configuration->validate();
         $arr = [
-            'BUILDING_IMAGE' => $configuration->buildingImage,
             'DEFAULT_USER_ACCESS' => $configuration->defaultUserAccess,
             'MAX_IMAGE_SIZE' => $configuration->maxImageSize,
             'MAX_RESERVATION_TIME' => $configuration->maxReservationTime->i,
             'MIN_RESERVATION_TIME' => $configuration->minReservationTime->i,
-            'ROOM_IMAGE' => $configuration->roomImage,
-            'USER_IMAGE' => $configuration->userImage,
             'RESERVATION_HISTORY' => $configuration->reservationHistory,
             'REQUEST_HISTORY' => $configuration->requestHistory
         ];

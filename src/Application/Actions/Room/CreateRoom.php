@@ -1,14 +1,26 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application\Actions\Room;
 
+use App\Domain\Building\IBuildingRepository;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 
 
 
 class CreateRoom extends RoomAction
 {
+    private IBuildingRepository $buildingRepository;
+
+    public function __construct(ContainerInterface $di)
+    {
+        parent::__construct($di);
+
+        $this->buildingRepository = $di->get(IBuildingRepository::class);
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -16,10 +28,13 @@ class CreateRoom extends RoomAction
     {
         $buildingId = (int) $this->resolveArg($this::BUILDING_ID);
         $addressId = (int) $this->resolveArg($this::ADDRESS_ID);
-        
+
         $form = $this->getformData();
-        
-        $this->buildingRepository->byIdAndAddressId($buildingId, $addressId);
+
+        $this->buildingRepository->where([
+            'id' => $buildingId,
+            'address' => $addressId
+        ])->one();
 
         $newRoomId = $this->roomRepository->create(
             $form->name,

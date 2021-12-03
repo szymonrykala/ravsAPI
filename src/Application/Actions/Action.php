@@ -145,7 +145,7 @@ abstract class Action
      */
     public function preparePagination(): Pagination
     {
-        $currentPage = (int) $this->resolveQueryArg(Pagination::CURRENT_PAGE, 1);
+        $currentPage = (int) $this->resolveQueryArg(Pagination::CURRENT_PAGE, 0);
         $onPage = (int) $this->resolveQueryArg(Pagination::ITEMS_ON_PAGE, 15);
 
         $this->pagination = new Pagination($currentPage, $onPage);

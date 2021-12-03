@@ -125,7 +125,7 @@ abstract class BaseRepository implements IRepository
     protected function executeQuery(): array
     {
         // echo "\n" . $this->SQL . $this->SQLwhere . $this->SQLorder . $this->SQLlimit . "\n";
-
+        // var_dump($this->params);
         $result =  $this->db->query(
             $this->SQL . $this->SQLwhere . $this->SQLorder . $this->SQLlimit,
             $this->params

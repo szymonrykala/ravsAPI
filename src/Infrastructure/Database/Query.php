@@ -29,17 +29,28 @@ class Query
         try {
             $this->statement->execute($this->params);
         } catch (PDOException $e) {
+            $error = new DataIntegrityException('');
             // var_dump($e->getMessage());       
-            throw new DataIntegrityException($e->getMessage());
+            // var_dump($e->getCode());
+            $message = '';
             switch ($e->getCode()) {
-                case '':
-                    # code...
+                case '23000':
+                    preg_match('/Duplicate\sentry\s\'(.*)\'\s/', $e->getMessage(), $outputArray);
+                    $message = isset($outputArray[1])? "'$outputArray[1]'" : 'podana wartość';
+                    $error->message = "Niestesty $message już istnieje.";
                     break;
+                case '42S22':
+                    preg_match('/Unknown\scolumn\s\'(.*)\'\s/', $e->getMessage(), $outputArray);
+                    $message = isset($outputArray[1]) && $outputArray[1];
+                    $error->message = "Właściwość '$message' nie istnieje.";
 
+                    break;
                 default:
+                    $message = $e->getMessage();
                     # code...
                     break;
             }
+            throw $error;
         }
         // $r = $this->statement->fetchAll(PDO::FETCH_ASSOC);
         // print_r($r);

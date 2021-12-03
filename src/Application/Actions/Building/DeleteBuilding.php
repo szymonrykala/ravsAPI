@@ -18,8 +18,8 @@ class DeleteBuilding extends BuildingAction
         $addressId = (int) $this->resolveArg($this::ADDRESS_ID);
 
         $building = $this->buildingRepository->where([
-            ':id' => $buildingId,
-            ':address_id' => $addressId
+            'id' => $buildingId,
+            'address' => $addressId
         ])->one();
 
 

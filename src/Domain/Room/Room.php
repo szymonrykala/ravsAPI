@@ -19,7 +19,7 @@ final class Room extends Model
         public string  $name,
         public Image   $image,
         public ?Building $building,
-        public string  $rfid,
+        public ?string  $rfid,
         public string  $roomType,
         public int     $seatsCount,
         public int     $floor,
@@ -93,7 +93,7 @@ final class Room extends Model
                 "floor" => $this->floor,
                 "blocked" => $this->blocked,
                 "occupied" => $this->occupied,
-                "hasNFCTag" => (bool) $this->rfid
+                "RFIDTag" => $this->rfid
             ],
             parent::jsonSerialize()
         );

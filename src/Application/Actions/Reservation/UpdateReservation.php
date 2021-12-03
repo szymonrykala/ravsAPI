@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace App\Application\Actions\Reservation;
 
-use App\Domain\Exception\DomainBadRequestException;
-use App\Domain\Reservation\IReservationRepository;
 use App\Domain\Reservation\Policy\ReservationUpdatePolicy;
 use Psr\Http\Message\ResponseInterface as Response;
 
-use Psr\Log\LoggerInterface;
 use App\Domain\Reservation\Reservation;
 use App\Utils\JsonDateTime;
 use Psr\Container\ContainerInterface;

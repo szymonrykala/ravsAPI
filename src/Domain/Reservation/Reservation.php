@@ -86,9 +86,9 @@ final class Reservation extends Model
     /**
      * {@inheritDoc}
      */
-    protected function validateCallback(): void
+    public function validate(): void
     {
-        // validation details
+        $now = new JsonDateTime('now');
     }
 
     /**

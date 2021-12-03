@@ -16,10 +16,6 @@ final class ViewRequestStats extends StatsAction
      */
     protected function action(): Response
     {
-        $time = $this->getTimeSpanParans();
-
-        $this->statsRepository->setTimeSpan($time->from, $time->to);
-
         /** @var Stats $stats */
         $stats = $this->statsRepository->getRequestsStats();
 

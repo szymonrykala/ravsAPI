@@ -26,7 +26,7 @@ abstract class StatsAction extends Action
      * Collects 'from' and 'to' params from query string
      */
     protected function getTimeSpanParans(
-        string $defaultFrom = '1 month ago',
+        string $defaultFrom = '2 month ago',
         string $defaultTo = 'now'
     ): stdClass {
         return  (object) [

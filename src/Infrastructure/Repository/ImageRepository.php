@@ -54,6 +54,7 @@ final class ImageRepository extends BaseRepository implements IImageRepository
         );
     }
 
+
     /**
      * Delete image if it is not default and nobody is use it
      * {@inheritDoc}
@@ -70,7 +71,7 @@ final class ImageRepository extends BaseRepository implements IImageRepository
                            `id` IN(SELECT distinct image from room)
                         OR `id` IN(SELECT distinct image from building)
                         OR `id` IN(SELECT distinct image from user)
-                    ) = 0
+                    ) = 1
                 ";
         $resp = $this->db->query($sql, [':imageId' => $image->id]);
 

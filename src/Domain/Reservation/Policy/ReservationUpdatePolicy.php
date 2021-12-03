@@ -45,16 +45,18 @@ final class ReservationUpdatePolicy extends ReservationPolicy
                 $this->roomCannotBeBlocked();
             }
 
+            $this->start = $form->plannedStart ?? $originalReservation->plannedStart;
+            $this->end = $form->plannedEnd ?? $originalReservation->plannedEnd;
+
             if ($timeUpdate) {
-                $this->start = $form->plannedStart ?? $originalReservation->plannedStart;
-                $this->end = $form->plannedEnd ?? $originalReservation->plannedEnd;
 
                 $this->reservationHasFutureTime();
                 $this->reservationTimeSlotLengthIsOk();
                 $this->reservationWhenBuildingIsOpen();
-            }
 
+            }
             $this->noCrossingReservationWasMade($originalReservation->id);
+
         }
     }
 

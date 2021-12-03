@@ -34,7 +34,7 @@ class ListRequests extends RequestAction
 
 
         $requests = $this->requestRepository
-            ->where($searchParams)
+            ->whereLIKE($searchParams)
             ->setPagination($pagination)
             ->all();
 

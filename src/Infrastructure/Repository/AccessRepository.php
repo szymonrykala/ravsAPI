@@ -61,14 +61,14 @@ final class AccessRepository extends BaseRepository implements IAccessRepository
 
         $sql = "UPDATE `$this->table` SET
                     `name` = :name,
-                    `owner` = :owner
+                    `owner` = :owner,
                     `access_admin` = :accessAdmin,
                     `premises_admin` = :premisesAdmin,
                     `keys_admin` = :keysAdmin,
                     `reservations_admin` = :reservationsAdmin,
                     `reservations_ability` = :reservationsAbility,
                     `logs_admin` = :logsAdmin,
-                    `stats_viewer` = :statsViewer,
+                    `stats_viewer` = :statsViewer
                 WHERE `id` = :id";
 
         $params = [
@@ -114,7 +114,7 @@ final class AccessRepository extends BaseRepository implements IAccessRepository
                 )
                 VALUES (
                     :name,
-                    :owner
+                    :owner,
                     :accessAdmin,
                     :premisesAdmin,
                     :keysAdmin,

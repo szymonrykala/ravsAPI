@@ -26,9 +26,6 @@ final class Configuration extends Model
         foreach ($data as $var) {
 
             $field = match($var['key']){
-                'BUILDING_IMAGE' => 'buildingImage',
-                'ROOM_IMAGE' => 'roomImage',
-                'USER_IMAGE' => 'userImage',
                 'MAX_IMAGE_SIZE' => 'maxImageSize',
                 'DEFAULT_USER_ACCESS' => 'defaultUserAccess',
                 'MAX_RESERVATION_TIME' => 'maxReservationTime',
@@ -64,9 +61,6 @@ final class Configuration extends Model
     public function jsonSerialize(): array
     {
         return [
-            'buildingImage' => $this->buildingImage,
-            'roomImage' => $this->roomImage,
-            'userImage' => $this->userImage,
             'maxImageSize' => $this->maxImageSize, //bytes
             'defaultUserAccess' => $this->defaultUserAccess,
             'maxReservationTime' => $this->maxReservationTime->i, // minutes

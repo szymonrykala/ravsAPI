@@ -38,7 +38,7 @@ class UpdateBuilding extends BuildingAction
 
         $building->update($form);
 
-        // $this->buildingRepository->save($building);
+        $this->buildingRepository->save($building);
 
 
         $this->logger->info("Building id $buildingId was updated.");

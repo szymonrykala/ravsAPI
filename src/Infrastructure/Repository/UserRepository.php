@@ -155,9 +155,9 @@ final class UserRepository extends BaseRepository implements IUserRepository
     public function search(string $phrase): UserRepository
     {
         $this->SQLwhere = " WHERE 
-                        email LIKE :phrase
+                        (email LIKE :phrase
                         OR name LIKE :phrase
-                        OR surname LIKE :phrase ";
+                        OR surname LIKE :phrase) ";
         $this->params[':phrase'] = '%' . str_replace(' ', '%', $phrase) . '%';
 
         return $this;

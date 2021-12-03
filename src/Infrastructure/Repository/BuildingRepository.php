@@ -13,6 +13,7 @@ use App\Domain\Building\{
 };
 
 use App\Domain\Image\IImageRepository;
+use App\Domain\Image\Image;
 use App\Domain\Model\Model;
 use App\Utils\JsonDateTime;
 use Psr\Container\ContainerInterface;
@@ -46,6 +47,9 @@ final class BuildingRepository extends BaseRepository implements IBuildingReposi
      */
     protected function newItem(array $data): Building
     {
+        // if(empty($data['image'])){
+        //     $image = new Image(0, '', 90, new JsonDateTime('now'), new JsonDateTime('now'));
+        // }
         $image = $this->imageRepository->byId((int)$data['image']);
         $address = $this->addressLoading ? $this->addressRepository->byId((int) $data['address']) : NULL;
 

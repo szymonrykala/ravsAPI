@@ -157,7 +157,7 @@ final class ReservationRepository extends BaseRepository implements IReservation
      */
     public function fromDate(JsonDateTime $date): void
     {
-        $this->SQLwhere .= ' AND `planned_start` >= :startDate';
+        $this->SQLwhere .= ' AND ((`actual_start` >= :startDate OR `planned_start`>= :startDate ) OR (`actual_start` IS NOT NULL AND `actual_end` IS NULL))';
         $this->params[':startDate'] = $date;
     }
 
@@ -214,6 +214,7 @@ final class ReservationRepository extends BaseRepository implements IReservation
     {
         if ($reservation->notStarted()) {
             parent::delete($reservation);
+            return;
         }
 
         throw new StartedReservationDeleteException();

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application\Actions\Image;
@@ -16,6 +17,14 @@ class DeleteImage extends ImageAction
         $imageId = (int) $this->resolveArg($this::IMAGE_ID);
 
         $image = $this->imageRepository->byId($imageId);
+
+        [$repo, $objectId, $defaultImageId] = $this->getPropperObjectSet();
+        /** @var Model $object */
+        $object = $repo->byId((int)$objectId);
+
+        $object->imageId = $defaultImageId;
+        $repo->save($object);
+
         $this->imageRepository->delete($image);
 
         $this->logger->info("Image of id `${imageId}` has been deleted.");
