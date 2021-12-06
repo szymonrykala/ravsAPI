@@ -12,8 +12,9 @@ use Psr\Log\LoggerInterface;
 use App\Infrastructure\Database;
 
 use App\Domain\Reservation\Policy\ReservationCreatePolicy;
-use App\Infrastructure\Mailing\IMailingService;
-use App\Infrastructure\Mailing\MailingService;
+use App\Infrastructure\Database\PostgreSQL;
+use App\Infrastructure\Mailing\{IMailingService, MailingService};
+use App\Infrastructure\TokenFactory\{ITokenFactory, JWTFactory};
 use Cloudinary\Cloudinary;
 
 use function DI\autowire;
@@ -35,18 +36,10 @@ return function (ContainerBuilder $containerBuilder) {
             return $logger;
         },
 
-        Database\IDatabase::class => function (ContainerInterface $c) {
-            $dbSettings = $c->get(SettingsInterface::class)->get('database');
+        Database\IDatabase::class => autowire(PostgreSQL::class),
 
-            $database = new Database\MySQLDatabase(
-                $dbSettings['user'],
-                $dbSettings['password'],
-                $dbSettings['host'],
-                $dbSettings['name'],
-            );
+        ITokenFactory::class => autowire(JWTFactory::class),
 
-            return $database;
-        },
         IMailingService::class => autowire(MailingService::class),
 
         ReservationCreatePolicy::class => autowire(ReservationCreatePolicy::class),

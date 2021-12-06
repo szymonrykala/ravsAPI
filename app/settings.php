@@ -21,12 +21,7 @@ return function (ContainerBuilder $containerBuilder) {
                     'path' => getenv('LOG_PATH') ?? 'php://stdout',
                     'level' => getenv('LOGGER_LEVEL'),
                 ],
-                'database' => [
-                    'user' => getenv('DB_USER'),
-                    'password' => getenv('DB_PASSWORD'),
-                    'host' => getenv('DB_HOST'),
-                    'name' => getenv('DB_NAME')
-                ],
+                'databaseUrl' => getenv('DATABASE_URL'),
                 'smtp' => [
                     'host' => getenv('SMTP_HOST'),
                     'port' => getenv('SMTP_PORT'),

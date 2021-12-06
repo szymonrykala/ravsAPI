@@ -30,7 +30,7 @@ class Query
             $this->statement->execute($this->params);
         } catch (PDOException $e) {
             $error = new DataIntegrityException('');
-            // var_dump($e->getMessage());
+            var_dump($e->getMessage());
             // var_dump($e->getCode());
             $message = '';
             switch ($e->getCode()) {

@@ -4,49 +4,41 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Database;
 
+use App\Application\Settings\SettingsInterface;
 use PDO;
 use PDOException;
 
 use App\Infrastructure\Database\Query;
 
 
-class MySQLDatabase implements IDatabase
+class PostgreSQL implements IDatabase
 {
-
+    /** PDO database connection */
     private PDO $conn;
 
-    /**
-     * @param string $user
-     * @param string $password
-     * @param string $host
-     * @param string $name
-     */
+
     public function __construct(
-        string $user,
-        string $password,
-        string $host,
-        string $name
-    ) {
-        $this->user = $user;
-        $this->password = $password;
-        $this->host = $host;
-        $this->name = $name;
-    }
+        private SettingsInterface $settings
+    ) {}
 
     /**
      * {@inheritDoc}
      */
     public function connect(): void
     {
-        try {
-            $this->conn = new PDO(
-                'mysql:host=' . $this->host . ';dbname=' . $this->name . ';charset=utf8mb4',
-                $this->user,
-                $this->password
-            );
+        $db = parse_url($this->settings->get('databaseUrl'));
+                try {
+            $this->conn = new PDO("pgsql:" . sprintf(
+                "host=%s;port=%s;user=%s;password=%s;dbname=%s",
+                $db["host"],
+                $db["port"],
+                $db["user"],
+                $db["pass"],
+                ltrim($db["path"], "/")
+            ));
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
-            throw new DatabaseConnectionError();
+            throw new DatabaseConnectionError($e->getMessage());
         }
     }
 
@@ -57,6 +49,7 @@ class MySQLDatabase implements IDatabase
     {
         // echo $sql."\n";
         // print_r($params);
+        // echo "\n";
         $query = new Query($this->conn, $sql, $params);
         return $query->execute();
     }
