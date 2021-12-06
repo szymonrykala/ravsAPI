@@ -31,7 +31,7 @@ final class User extends Model
         public int $loginFails,
         public bool $blocked,
         public bool $deleted,
-        public string $uniqueKey,
+        public ?string $uniqueKey,
         public JsonDateTime $lastGeneratedKeyDate,
         public ?Access $access,
         public Image $image,
