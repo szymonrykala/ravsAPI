@@ -4,11 +4,11 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="https://www.phpdoc.org"
 >
-    <title>RavsAPI docs</title>
+    <title>RavSystem API docs</title>
     <paths>
-        <output>docs/</output>
+        <output>public/docs/</output>
     </paths>
-    <version number="0.8.1">
+    <version number="0.9.0">
         <api>
             <source dsn=".">
                 <path>src/</path>
@@ -17,7 +17,7 @@
             <extensions>
                 <extension>php</extension>
             </extensions>
-             <default-package-name>RavsAPI</default-package-name>
+             <default-package-name>RavSystem</default-package-name>
             <markers>
                 <marker>TODO</marker>
                 <marker>FIXME</marker>

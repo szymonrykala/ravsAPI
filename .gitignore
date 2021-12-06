@@ -6,6 +6,6 @@
 !/logs/README.md
 .phpunit.result.cache
 
-/docs
+/public/docs/*
 .phpdoc
 .env

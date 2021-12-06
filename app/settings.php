@@ -24,7 +24,7 @@ return function (ContainerBuilder $containerBuilder) {
                 'databaseUrl' => getenv('DATABASE_URL'),
                 'token' => [
                     'secret' => getenv('TOKEN_SECRET'),
-                    'expiry' => getenv('TOKEN_EXPIRY') ?? "+20 hours",
+                    'expiry' => getenv('TOKEN_EXPIRY') ?? "20 hours",
                     'encoding' => getenv('TOKEN_SIPHER_ALGORITHM') ?? 'HS512',
                 ],
                 'smtp' => [
