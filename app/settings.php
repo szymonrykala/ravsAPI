@@ -22,6 +22,11 @@ return function (ContainerBuilder $containerBuilder) {
                     'level' => getenv('LOGGER_LEVEL'),
                 ],
                 'databaseUrl' => getenv('DATABASE_URL'),
+                'token' => [
+                    'secret' => getenv('TOKEN_SECRET'),
+                    'expiry' => getenv('TOKEN_EXPIRY') ?? "+20 hours",
+                    'encoding' => getenv('TOKEN_SIPHER_ALGORITHM') ?? 'HS512',
+                ],
                 'smtp' => [
                     'host' => getenv('SMTP_HOST'),
                     'port' => getenv('SMTP_PORT'),

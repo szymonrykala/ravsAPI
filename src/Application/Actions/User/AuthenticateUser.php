@@ -5,24 +5,23 @@ declare(strict_types=1);
 namespace App\Application\Actions\User;
 
 use App\Domain\User\Exceptions\BadCredentialsException;
-use App\Domain\User\Exceptions\UserBlockedException;
 use App\Domain\User\User;
 use App\Infrastructure\Mailing\IMailingService;
 use App\Infrastructure\Mailing\MailingService;
+use App\Infrastructure\TokenFactory\ITokenFactory;
 use Psr\Http\Message\ResponseInterface as Response;
-
-use App\Utils\JWTFactory;
 use Psr\Container\ContainerInterface;
+
+
 
 class AuthenticateUser extends UserAction
 {
-
-    private IMailingService $mailer;
-
-    public function __construct(ContainerInterface $di)
-    {
+    public function __construct(
+        ContainerInterface $di,
+        private ITokenFactory $tokenFactory,
+        private IMailingService $mailer
+    ) {
         parent::__construct($di);
-        $this->mailer = $di->get(IMailingService::class);
     }
 
 
@@ -35,7 +34,6 @@ class AuthenticateUser extends UserAction
         $user = $this->getUserByEmail($form->email);
 
         try {
-
             $previousBlockedState = $user->blocked;
 
             $user->login($form->password);
@@ -49,7 +47,7 @@ class AuthenticateUser extends UserAction
             throw $ex;
         }
 
-        $userToken = JWTFactory::generateToken($user);
+        $userToken = $this->tokenFactory->generateToken($user);
 
         $this->logger->info("User id {$user->id} was authenticated");
         $this->userRepository->save($user);
@@ -64,7 +62,8 @@ class AuthenticateUser extends UserAction
     /**
      * Sends email notification to user about blockade
      */
-    private function sendBlockNotification(User $user){
+    private function sendBlockNotification(User $user)
+    {
         $this->mailer->setReciever($user);
         $this->mailer->setMessageType(
             MailingService::ACCOUNT_BLOCKED,

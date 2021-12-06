@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace App\Application\Middleware;
 
+use App\Infrastructure\TokenFactory\ITokenFactory;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 
 use Slim\Exception\HttpUnauthorizedException;
 
-use App\Utils\JWTFactory;
-use App\Utils\JWTException;
-
+use Psr\Log\LoggerInterface;
 
 /**
  * Reads data from token provided from user
@@ -19,17 +18,19 @@ use App\Utils\JWTException;
  */
 class SessionMiddleware extends BaseMiddleware
 {
+    public function __construct(
+        LoggerInterface $logger,
+        private ITokenFactory $tokenFactory
+    ) {
+        parent::__construct($logger);
+    }
 
     /**
      * {@inheritDoc}
      */
     public function processRequest(RequestHandler $handler): Response
     {
-        try {
-            $tokenData = JWTFactory::decode($this->getToken());
-        } catch (JWTException $e) {
-            throw new HttpUnauthorizedException($this->request, $e->getMessage());
-        }
+        $tokenData = $this->tokenFactory->decode($this->getToken());
 
         $this->request = $this->request->withAttribute('session', $tokenData);
 
