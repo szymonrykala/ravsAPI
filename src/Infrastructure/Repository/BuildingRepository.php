@@ -21,7 +21,7 @@ use Psr\Container\ContainerInterface;
 
 final class BuildingRepository extends BaseRepository implements IBuildingRepository
 {
-    protected string $table = 'building';
+    protected string $table = '"building"';
     private bool $addressLoading = FALSE;
 
     public function __construct(
@@ -69,13 +69,13 @@ final class BuildingRepository extends BaseRepository implements IBuildingReposi
     public function save(Building $building): void
     {
         $building->validate();
-        $sql = "UPDATE `$this->table` SET
-                    `name` = :name,
-                    `address` = :addressId,
-                    `image` = :imageId,
-                    `close_time` = :closeTime,
-                    `open_time` = :openTime
-                WHERE `id` = :id";
+        $sql = "UPDATE $this->table SET
+                    name = :name,
+                    address = :addressId,
+                    image = :imageId,
+                    close_time = :closeTime,
+                    open_time = :openTime
+                WHERE id = :id";
 
         $params = [
             ':name' => $building->name,
@@ -95,7 +95,7 @@ final class BuildingRepository extends BaseRepository implements IBuildingReposi
     public function setDefaultImage(Building $building): void
     {
         $this->db->query(
-            "UPDATE `$this->table` SET `image` = DEFAULT WHERE `id` = :id",
+            "UPDATE $this->table SET image = DEFAULT WHERE id = :id",
             [':id' => $building->id]
         );
     }
@@ -109,7 +109,7 @@ final class BuildingRepository extends BaseRepository implements IBuildingReposi
         JsonDateTime $closeTime,
         int $addressId
     ): int {
-        $sql = "INSERT `$this->table`(name, address, open_time, close_time, image) 
+        $sql = "INSERT $this->table(name, address, open_time, close_time, image) 
                     VALUES(:name, :address, :openTime, :closeTime, DEFAULT)";
         $params = [
             ':name' => $name,

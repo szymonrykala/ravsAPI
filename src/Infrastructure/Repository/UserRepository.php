@@ -18,7 +18,7 @@ use Psr\Container\ContainerInterface;
 
 final class UserRepository extends BaseRepository implements IUserRepository
 {
-    protected string $table = 'user';
+    protected string $table = '"user"';
     private bool $accessLoading = FALSE;
 
     public function __construct(
@@ -76,7 +76,7 @@ final class UserRepository extends BaseRepository implements IUserRepository
     public function registerActivity(int $userId): void
     {
         $this->db->query(
-            "UPDATE `$this->table` SET `last_activity` = NOW() WHERE `id` = :userId",
+            "UPDATE $this->table SET last_activity = NOW() WHERE id = :userId",
             [':userId' => $userId]
         );
     }
@@ -87,7 +87,7 @@ final class UserRepository extends BaseRepository implements IUserRepository
     public function setDefaultImage(User $user): void
     {
         $this->db->query(
-            "UPDATE `$this->table` SET `image` = DEFAULT WHERE `id` = :id",
+            "UPDATE $this->table SET image = DEFAULT WHERE id = :id",
             [':id' => $user->id]
         );
     }
@@ -98,28 +98,28 @@ final class UserRepository extends BaseRepository implements IUserRepository
     public function save(User $user): void
     {
         $user->validate();
-        $sql = "UPDATE `$this->table` SET
-                    `name` = :name,
-                    `surname` = :surname,
-                    `password` = :password,
-                    `activated` = :activated,
-                    `login_fails` = :loginFails,
-                    `blocked` = :blocked,
-                    `unique_key` = :uniqueKey,
-                    `last_generated_key_date` = :lastGeneratedKeyDate,
-                    `access` = :accessId,
-                    `image` = :imageId,
-                    `metadata` = :metadata
-                WHERE `id` = :id";
+        $sql = "UPDATE $this->table SET
+                    name = :name,
+                    surname = :surname,
+                    password = :password,
+                    activated = :activated,
+                    login_fails = :loginFails,
+                    blocked = :blocked,
+                    unique_key = :uniqueKey,
+                    last_generated_key_date = :lastGeneratedKeyDate,
+                    access = :accessId,
+                    image = :imageId,
+                    metadata = :metadata
+                WHERE id = :id";
 
         $params = [
             ':id' => $user->id,
             ':name' => ucfirst($user->name),
             ':surname' => ucfirst($user->surname),
             ':password' => $user->password,
-            ':activated' => (int) $user->activated,
+            ':activated' => $user->activated,
             ':loginFails' => $user->loginFails,
-            ':blocked' => (int) $user->blocked,
+            ':blocked' => $user->blocked,
             ':uniqueKey' => $user->uniqueKey,
             ':lastGeneratedKeyDate' => $user->lastGeneratedKeyDate->format('Y-m-d H:i:s'),
             ':accessId' => $user->accessId,
@@ -140,10 +140,10 @@ final class UserRepository extends BaseRepository implements IUserRepository
         string $password
     ): int {
 
-        $sql = "INSERT `$this->table`
-                        (`name`, `surname`, `email`, `password`,`unique_key`, `image`, `access`) 
+        $sql = "INSERT INTO $this->table
+                        (name, surname, email, password,unique_key, image, access) 
                 VALUES (:name, :surname, :email, :password, :uniqueKey, DEFAULT,
-                    (SELECT value FROM $this->configTable WHERE `key`='DEFAULT_USER_ACCESS')
+                    (SELECT value FROM $this->configTable WHERE key='DEFAULT_USER_ACCESS')
                 )";
 
         $params = [
@@ -194,19 +194,19 @@ final class UserRepository extends BaseRepository implements IUserRepository
         $user->setAsDeleted();
 
 
-        $sql = "UPDATE `$this->table` SET
-                    `name` = :name,
-                    `surname` = :surname,
-                    `deleted` = :deleted,
-                    `email` = :email,
-                    `image` = DEFAULT
-                WHERE `id` = :id";
+        $sql = "UPDATE $this->table SET
+                    name = :name,
+                    surname = :surname,
+                    deleted = :deleted,
+                    email = :email,
+                    image = DEFAULT
+                WHERE id = :id";
 
         $params = [
             ':id' => $user->id,
             ':name' => $user->name,
             ':surname' => $user->surname,
-            ':deleted' => (int) $user->deleted,
+            ':deleted' => $user->deleted,
             ':email' => $user->email
         ];
 

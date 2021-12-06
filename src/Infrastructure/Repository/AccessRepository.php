@@ -16,7 +16,7 @@ use App\Utils\JsonDateTime;
 
 final class AccessRepository extends BaseRepository implements IAccessRepository
 {
-    protected string $table = 'access';
+    protected string $table = '"access"';
 
     /**
      * {@inheritDoc}
@@ -59,17 +59,17 @@ final class AccessRepository extends BaseRepository implements IAccessRepository
     {
         $access->validate();
 
-        $sql = "UPDATE `$this->table` SET
-                    `name` = :name,
-                    `owner` = :owner,
-                    `access_admin` = :accessAdmin,
-                    `premises_admin` = :premisesAdmin,
-                    `keys_admin` = :keysAdmin,
-                    `reservations_admin` = :reservationsAdmin,
-                    `reservations_ability` = :reservationsAbility,
-                    `logs_admin` = :logsAdmin,
-                    `stats_viewer` = :statsViewer
-                WHERE `id` = :id";
+        $sql = "UPDATE $this->table SET
+                    name = :name,
+                    owner = :owner,
+                    access_admin = :accessAdmin,
+                    premises_admin = :premisesAdmin,
+                    keys_admin = :keysAdmin,
+                    reservations_admin = :reservationsAdmin,
+                    reservations_ability = :reservationsAbility,
+                    logs_admin = :logsAdmin,
+                    stats_viewer = :statsViewer
+                WHERE id = :id";
 
         $params = [
             ':id' => $access->id,
@@ -101,16 +101,16 @@ final class AccessRepository extends BaseRepository implements IAccessRepository
         bool $logsAdmin,
         bool $statsViewer
     ): int {
-        $sql = "INSERT `$this->table`(
-                    `name`,
-                    `owner`,
-                    `access_admin`,
-                    `premises_admin`,
-                    `keys_admin`,
-                    `reservations_admin`,
-                    `reservations_ability`,
-                    `logs_admin`,
-                    `stats_viewer`
+        $sql = "INSERT $this->table(
+                    name,
+                    owner,
+                    access_admin,
+                    premises_admin,
+                    keys_admin,
+                    reservations_admin,
+                    reservations_ability,
+                    logs_admin,
+                    stats_viewer
                 )
                 VALUES (
                     :name,

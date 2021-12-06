@@ -15,7 +15,7 @@ use App\Utils\JsonDateTime;
 
 final class AddressRepository extends BaseRepository implements IAddressRepository
 {
-    protected string $table = 'address';
+    protected string $table = '"address"';
 
     /**
      * {@inheritDoc}
@@ -42,13 +42,13 @@ final class AddressRepository extends BaseRepository implements IAddressReposito
     public function save(Address $address): void
     {
         $address->validate();
-        $sql = "UPDATE `$this->table` SET
-                    `country` = :country,
-                    `town` = :town,
-                    `postal_code` = :postalCode,
-                    `street` = :street,
-                    `number` = :number
-                WHERE `id` = :id";
+        $sql = "UPDATE $this->table SET
+                    country = :country,
+                    town = :town,
+                    postal_code = :postalCode,
+                    street = :street,
+                    number = :number
+                WHERE id = :id";
 
         $params = [
             ':id' => $address->id,
@@ -73,8 +73,8 @@ final class AddressRepository extends BaseRepository implements IAddressReposito
         string $street,
         string $number
     ): int {
-        $sql = "INSERT INTO `$this->table`
-                    (`country`,`town`,`postal_code`,`street`,`number`)
+        $sql = "INSERT INTO $this->table
+                    (country,town,postal_code,street,number)
                 VALUES(:country, :town, :postalCode, :street, :number)";
 
         $params = [

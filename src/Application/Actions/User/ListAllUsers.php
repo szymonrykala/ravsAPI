@@ -27,11 +27,12 @@ class ListAllUsers extends UserAction
         $params = [];
 
         $accessId && $params['access'] = (int) $accessId;
-        $activated && $params['activated'] =  $this->strToBool($activated);
+        $activated && $params['activated'] =  $this->strToBoolInt($activated);
 
 
-        if ($listDeleted && $this->strToBool($listDeleted) === FALSE) {
-            $params['deleted'] = FALSE;
+        $deleteVar = $this->strToBoolInt($listDeleted);
+        if ($listDeleted && $deleteVar === FALSE) {
+            $params['deleted'] = $deleteVar;
         }
         
         if ($searchPhrase)
@@ -50,9 +51,9 @@ class ListAllUsers extends UserAction
         return $this->respondWithData($users);
     }
 
-    private function strToBool(string $val): bool
+    private function strToBoolInt(string $val): int
     {
         $val = strtoupper($val);
-        return $val === 'TRUE';
+        return (int) ($val === 'TRUE');
     }
 }

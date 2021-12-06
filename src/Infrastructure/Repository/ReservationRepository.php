@@ -18,7 +18,7 @@ final class ReservationRepository extends BaseRepository implements IReservation
 {
 
     /** {@inheritDoc} */
-    protected string $table = 'reservation';
+    protected string $table = '"reservation"';
 
     public function __construct(
         ContainerInterface $di,
@@ -62,15 +62,15 @@ final class ReservationRepository extends BaseRepository implements IReservation
     public function save(Reservation $reservation): void
     {
         $reservation->validate();
-        $sql = "UPDATE `$this->table` SET
-                    `title` = :title,
-                    `description` = :description,
-                    `room` = :room,
-                    `planned_start` = :plannedStart,
-                    `planned_end` = :plannedEnd,
-                    `actual_start` = :actualStart,
-                    `actual_end` = :actualEnd
-                WHERE `id` = :id";
+        $sql = "UPDATE $this->table SET
+                    title = :title,
+                    description = :description,
+                    room = :room,
+                    planned_start = :plannedStart,
+                    planned_end = :plannedEnd,
+                    actual_start = :actualStart,
+                    actual_end = :actualEnd
+                WHERE id = :id";
 
         $params = [
             ':id' => $reservation->id,
@@ -98,7 +98,7 @@ final class ReservationRepository extends BaseRepository implements IReservation
         JsonDateTime    $plannedStart,
         JsonDateTime    $plannedEnd
     ): int {
-        $sql = "INSERT `$this->table`(title, description, room, user, planned_start, planned_end)
+        $sql = "INSERT $this->table(title, description, room, user, planned_start, planned_end)
                 VALUES(:title, :description, :room, :user, :plannedStart, :plannedEnd)";
 
         $params = [
@@ -157,7 +157,7 @@ final class ReservationRepository extends BaseRepository implements IReservation
      */
     public function fromDate(JsonDateTime $date): void
     {
-        $this->SQLwhere .= ' AND ((`actual_start` >= :startDate OR `planned_start`>= :startDate ) OR (`actual_start` IS NOT NULL AND `actual_end` IS NULL))';
+        $this->SQLwhere .= ' AND ((actual_start >= :startDate OR planned_start>= :startDate ) OR (actual_start IS NOT NULL AND actual_end IS NULL))';
         $this->params[':startDate'] = $date;
     }
 
@@ -168,8 +168,8 @@ final class ReservationRepository extends BaseRepository implements IReservation
     public function search(string $phrase): void
     {
         $this->SQLwhere .= ' AND (
-            `description` LIKE :searchString
-            OR `title` LIKE :searchString
+            description LIKE :searchString
+            OR title LIKE :searchString
         )';
         $this->params[':searchString'] = '%' . str_replace(' ', '%', $phrase) . '%';
     }
@@ -180,7 +180,7 @@ final class ReservationRepository extends BaseRepository implements IReservation
      */
     public function forUser(int $userId): void
     {
-        $this->SQLwhere .= ' AND `user` = :userId';
+        $this->SQLwhere .= ' AND user = :userId';
         $this->params[':userId'] = $userId;
     }
 
@@ -190,7 +190,7 @@ final class ReservationRepository extends BaseRepository implements IReservation
      */
     public function forRoom(int $roomId): void
     {
-        $this->SQLwhere .= ' AND `room` = :roomId';
+        $this->SQLwhere .= ' AND room = :roomId';
         $this->params[':roomId'] = $roomId;
     }
 
@@ -200,7 +200,7 @@ final class ReservationRepository extends BaseRepository implements IReservation
     public function deleteAllFutureUserReservations(int $deletedUserId): void
     {
         $sql = "DELETE FROM $this->table WHERE
-                    `planned_start` > NOW()
+                    planned_start > NOW()
                     AND user = :userId";
         $params = [':userId' => $deletedUserId];
         $this->db->query($sql, $params);

@@ -12,7 +12,7 @@ use App\Infrastructure\Database\IDatabase;
 final class ConfigurationRepository implements IConfigurationRepository
 {
 
-    private string $table = 'configuration';
+    private string $table = '"configuration"';
 
 
     public function __construct(
@@ -50,7 +50,7 @@ final class ConfigurationRepository implements IConfigurationRepository
         $sql = "";
 
         foreach ($arr as $key => $value) {
-            $sql .= "UPDATE `$this->table` SET `value` = :$key WHERE `key` = '$key';";
+            $sql .= "UPDATE $this->table SET value = :$key WHERE key = '$key';";
             $params[':' . $key] = $value;
         }
 

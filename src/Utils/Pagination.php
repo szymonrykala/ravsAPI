@@ -13,6 +13,8 @@ class Pagination implements JsonSerializable
     public const CURRENT_PAGE = 'currentPage';
     public const ITEMS_ON_PAGE = 'itemsOnPage';
 
+    // onPage page total
+
     private int $pagesCount;
     private int $currentPage;
     private int $itemsOnPage;
@@ -44,8 +46,7 @@ class Pagination implements JsonSerializable
      */
     public function generateSQL(): string
     {
-        $sql = ' LIMIT ' . ($this->itemsOnPage * ($this->currentPage - 1))
-            . ',' . $this->itemsOnPage;
+        $sql = ' LIMIT ' . $this->itemsOnPage . ' OFFSET ' . (($this->currentPage - 1) * $this->itemsOnPage);
         return $sql;
     }
 

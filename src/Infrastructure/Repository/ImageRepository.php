@@ -26,7 +26,7 @@ use Psr\Container\ContainerInterface;
 
 final class ImageRepository extends BaseRepository implements IImageRepository
 {
-    protected string $table = 'image';
+    protected string $table = '"image"';
     protected Configuration $configuration;
     private Cloudinary $cloudinary;
 
@@ -102,7 +102,7 @@ final class ImageRepository extends BaseRepository implements IImageRepository
         if ($image->url !== NULL) {
             $this->deleteFromCloudinary($image->publicId);
             // delete record from database; 
-            $sql = "DELETE FROM $this->table WHERE `id` = :imageId AND `url` IS NOT NULL";
+            $sql = "DELETE FROM $this->table WHERE id = :imageId AND url IS NOT NULL";
             $this->db->query($sql, [':imageId' => $image->id]);
         }
     }
@@ -122,7 +122,7 @@ final class ImageRepository extends BaseRepository implements IImageRepository
 
         $data = $this->uploadToCloudinary($file);
 
-        $sql = "INSERT INTO `$this->table` (`url`, `public_id`, `size`, `created`) 
+        $sql = "INSERT INTO $this->table (url, public_id, size, created) 
         VALUES(:url, :publicId, :size, :created)";
 
         $params = [
