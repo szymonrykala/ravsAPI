@@ -19,7 +19,8 @@ class PostgreSQL implements IDatabase
 
     public function __construct(
         private SettingsInterface $settings
-    ) {}
+    ) {
+    }
 
     /**
      * {@inheritDoc}
@@ -27,15 +28,19 @@ class PostgreSQL implements IDatabase
     public function connect(): void
     {
         $db = parse_url($this->settings->get('databaseUrl'));
-                try {
-            $this->conn = new PDO("pgsql:" . sprintf(
-                "host=%s;port=%s;user=%s;password=%s;dbname=%s",
-                $db["host"],
-                $db["port"],
-                $db["user"],
-                $db["pass"],
-                ltrim($db["path"], "/")
-            ));
+        try {
+            $this->conn = new PDO(
+                "pgsql:" . sprintf(
+                    "host=%s;port=%s;user=%s;password=%s;dbname=%s;sslmode=require",
+                    $db["host"],
+                    $db["port"],
+                    $db["user"],
+                    $db["pass"],
+                    ltrim($db["path"], "/")
+                ),
+                $db['user'],
+                $db["pass"]
+            );
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
             throw new DatabaseConnectionError($e->getMessage());
