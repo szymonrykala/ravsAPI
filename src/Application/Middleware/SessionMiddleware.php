@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace App\Application\Middleware;
 
+use App\Infrastructure\TokenFactory\Exceptions\{
+    TokenExpiredException,
+    TokenNotValidException
+};
+
 use App\Infrastructure\TokenFactory\ITokenFactory;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
@@ -30,7 +35,14 @@ class SessionMiddleware extends BaseMiddleware
      */
     public function processRequest(RequestHandler $handler): Response
     {
-        $tokenData = $this->tokenFactory->decode($this->getToken());
+        try {
+            $tokenData = $this->tokenFactory->decode($this->getToken());
+        } catch (TokenExpiredException $e) {
+            throw new HttpUnauthorizedException($this->request, $e->getMessage());
+        } catch (TokenNotValidException $e) {
+            throw new HttpUnauthorizedException($this->request, $e->getMessage());
+        }
+
 
         $this->request = $this->request->withAttribute('session', $tokenData);
 

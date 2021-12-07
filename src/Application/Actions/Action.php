@@ -39,8 +39,6 @@ abstract class Action
     protected const FROM_DATE = 'from';
     protected const TO_DATE = 'to';
 
-    protected LoggerInterface $logger;
-
     protected Request $request;
     protected Response $response;
 
@@ -50,18 +48,11 @@ abstract class Action
 
 
     public function __construct(
-        LoggerInterface $logger
-    ) {
-        $this->logger = $logger;
-    }
+        protected LoggerInterface $logger
+    ) {}
 
     /**
      * Called to handle request
-     * @throws HttpNotFoundException
-     * @throws HttpBadRequestException
-     * @throws HttpForbiddenException
-     * @throws HttpUnauthorizedException
-     * @throws HttpConflictException
      */
     public function __invoke(Request $request, Response $response, array $args): Response
     {

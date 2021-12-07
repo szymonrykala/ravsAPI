@@ -40,7 +40,7 @@ class JWTFactory implements ITokenFactory
             'accessId' => $user->accessId,
             'iat' => $now->getTimestamp(),                        // timestamp token issuing
             'iss' => $this->domain_identity,                 // domain indentifier
-            'exp' => $now->modify("+".$this->settings->expiry)->getTimestamp()    // expiration timestamp
+            'exp' => $now->modify("+{$this->settings->expiry} days")->getTimestamp()    // expiration timestamp
         ];
 
         $jwt = JWT::encode(
@@ -65,7 +65,6 @@ class JWTFactory implements ITokenFactory
                 [$this->settings->encoding]
             );
         } catch (ExpiredException $e) {
-            echo $e->getMessage();
             throw new TokenExpiredException();
         } catch (\Exception $e) {
             throw new TokenNotValidException();
