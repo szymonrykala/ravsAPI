@@ -42,6 +42,7 @@ class PostgreSQL implements IDatabase
                 $db["pass"]
             );
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $this->conn->setAttribute(PDO::ATTR_CASE, PDO::CASE_NATURAL);
         } catch (PDOException $e) {
             throw new DatabaseConnectionError($e->getMessage());
         }

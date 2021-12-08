@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace App\Domain\Stats;
 
-use JsonSerializable;
 
-
-class StatsItem
+class StatsArray
 {
     /** Title of data table */
     private string $title;
