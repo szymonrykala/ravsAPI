@@ -38,7 +38,7 @@ final class StatsRepository implements IStatsRepository
     private string $avgTimeFileds = "
     ROUND(AVG(extract(epoch  from  (select res.planned_end - res.planned_start)))/60) as avg_planned_time_minutes,
     ROUND(AVG(extract(epoch  from  (select res.actual_end - res.actual_start)))/60) as avg_actual_time_minutes,
-    SUM(ROUND(extract(epoch  from  (select res.actual_end - res.actual_start))/60)) as avg_actual_time_minutes
+    SUM(ROUND(extract(epoch  from  (select res.actual_end - res.actual_start))/60)) as all_time_minutes
     ";
 
     public function __construct(
@@ -193,7 +193,7 @@ final class StatsRepository implements IStatsRepository
             $this->stats->addStatsItem(new StatsArray(
                 'weekly',
                 array_map(fn ($row) => new PerDayStatItem(
-                    $row['day'],
+                    (int) $row['day'],
                     (int) $row['reservations_count'],
                     (float) $row['avg_actual_time_minutes'],
                     (float) $row['avg_planned_time_minutes'],
@@ -218,7 +218,7 @@ final class StatsRepository implements IStatsRepository
             $this->stats->addStatsItem(new StatsArray(
                 'monthly',
                 array_map(fn ($row) => new PerDayStatItem(
-                    $row['day'],
+                    (int) $row['day'],
                     (int) $row['reservations_count'],
                     (float) $row['avg_actual_time_minutes'],
                     (float) $row['avg_planned_time_minutes'],
@@ -310,7 +310,7 @@ final class StatsRepository implements IStatsRepository
             $this->stats->addStatsItem(new StatsArray(
                 'weekly',
                 array_map(fn ($row) => new PerDayStatItem(
-                    $row['day'],
+                    (int) $row['day'],
                     (int) $row['reservations_count'],
                     (float) $row['avg_actual_time_minutes'],
                     (float) $row['avg_planned_time_minutes'],
@@ -335,7 +335,7 @@ final class StatsRepository implements IStatsRepository
             $this->stats->addStatsItem(new StatsArray(
                 'monthly',
                 array_map(fn ($row) => new PerDayStatItem(
-                    $row['day'],
+                    (int) $row['day'],
                     (int)$row['reservations_count'],
                     (float)$row['avg_actual_time_minutes'],
                     (float)$row['avg_planned_time_minutes'],
@@ -428,7 +428,7 @@ final class StatsRepository implements IStatsRepository
             $this->stats->addStatsItem(new StatsArray(
                 'weekly',
                 array_map(fn ($row) => new PerDayStatItem(
-                    $row['day'],
+                    (int) $row['day'],
                     (int)$row['reservations_count'],
                     (float)$row['avg_actual_time_minutes'],
                     (float)$row['avg_planned_time_minutes'],
@@ -451,7 +451,7 @@ final class StatsRepository implements IStatsRepository
             $this->stats->addStatsItem(new StatsArray(
                 'monthly',
                 array_map(fn ($row) => new PerDayStatItem(
-                    $row['day'],
+                    (int) $row['day'],
                     (int) $row['reservations_count'],
                     (float) $row['avg_actual_time_minutes'],
                     (float) $row['avg_planned_time_minutes'],

@@ -166,17 +166,17 @@ abstract class ReservationPolicy
      */
     protected function noCrossingReservationWasMade(?int $excludeId = NULL): void
     {
-        $sql = 'SELECT `id` from `reservation` WHERE '
-            . ($excludeId ? '`id` != :reservationId AND ' : '') . //excluding current reservation while updating
-            '`room` = :roomId 
+        $sql = 'SELECT id from "reservation" WHERE '
+            . ($excludeId ? 'id != :reservationId AND ' : '') . //excluding current reservation while updating
+            'room = :roomId 
                 AND (
                         (
-                            `planned_start` BETWEEN :plannedStart AND :plannedEnd
-                            OR `planned_end` BETWEEN :plannedStart AND :plannedEnd
+                            planned_start BETWEEN :plannedStart AND :plannedEnd
+                            OR planned_end BETWEEN :plannedStart AND :plannedEnd
                         )
                         OR 
                         (
-                            `planned_start` < :plannedStart AND `planned_end` > :plannedEnd
+                            planned_start < :plannedStart AND planned_end > :plannedEnd
                         )
                     )
          ';

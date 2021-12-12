@@ -17,8 +17,7 @@ final class ConfigurationRepository implements IConfigurationRepository
 
     public function __construct(
         private IDatabase $db
-    )
-    {
+    ) {
         $this->db->connect();
     }
 
@@ -47,13 +46,13 @@ final class ConfigurationRepository implements IConfigurationRepository
             'REQUEST_HISTORY' => $configuration->requestHistory
         ];
 
-        $sql = "";
-
         foreach ($arr as $key => $value) {
-            $sql .= "UPDATE $this->table SET value = :$key WHERE key = '$key';";
-            $params[':' . $key] = $value;
+            $this->db->query(
+                "UPDATE $this->table SET value = :$key WHERE key = '$key';",
+                [
+                    ":$key" => $value
+                ]
+            );
         }
-
-        $this->db->query($sql, $params);
     }
 }

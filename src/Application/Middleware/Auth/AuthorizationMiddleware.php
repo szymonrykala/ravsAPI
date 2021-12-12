@@ -39,7 +39,7 @@ class AuthorizationMiddleware extends BaseAuthorizationMiddleware
     private function getResolver(): callable
     {
         return match ($this->subject) {
-            'resources', 'images', 'me' => fn () => TRUE,
+            'resources', 'image', 'me' => fn () => TRUE,
 
             'requests' => fn () => $this->userAccess->logsAdmin,
             'accesses' => fn () => $this->userAccess->accessAdmin,

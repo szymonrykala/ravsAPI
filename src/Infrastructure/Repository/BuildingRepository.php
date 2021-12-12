@@ -109,7 +109,7 @@ final class BuildingRepository extends BaseRepository implements IBuildingReposi
         JsonDateTime $closeTime,
         int $addressId
     ): int {
-        $sql = "INSERT $this->table(name, address, open_time, close_time, image) 
+        $sql = "INSERT INTO $this->table(name, address, open_time, close_time, image) 
                     VALUES(:name, :address, :openTime, :closeTime, DEFAULT)";
         $params = [
             ':name' => $name,

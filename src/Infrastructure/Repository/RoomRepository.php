@@ -138,7 +138,7 @@ final class RoomRepository extends BaseRepository implements IRoomRepository
         int     $seatsCount,
         int     $floor
     ): int {
-        $sql = "INSERT $this->table(name, building, room_type, seats_count, image, floor)
+        $sql = "INSERT INTO $this->table(name, building, room_type, seats_count, image, floor)
                 VALUES(:name, :buildingId, :roomType, :seatsCount, DEFAULT, :floor)";
 
         $params =  [

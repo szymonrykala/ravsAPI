@@ -36,7 +36,7 @@ class UpdateConfiguration extends ConfigurationAction
      */
     protected function action(): Response
     {
-        $form = $this->getFormData();
+        $form = clone $this->getFormData(); // copy value to not pass reference into the logging
         $configs = $this->configurationRepository->load();
 
         // check if the specified accesses exists

@@ -101,7 +101,7 @@ final class AccessRepository extends BaseRepository implements IAccessRepository
         bool $logsAdmin,
         bool $statsViewer
     ): int {
-        $sql = "INSERT $this->table(
+        $sql = "INSERT INTO $this->table(
                     name,
                     owner,
                     access_admin,

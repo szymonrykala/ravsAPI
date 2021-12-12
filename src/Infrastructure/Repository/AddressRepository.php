@@ -15,7 +15,7 @@ use App\Utils\JsonDateTime;
 
 final class AddressRepository extends BaseRepository implements IAddressRepository
 {
-    protected string $table = '"address"';
+    protected string $table = 'address';
 
     /**
      * {@inheritDoc}

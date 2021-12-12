@@ -11,9 +11,9 @@ use PDOException;
 class Query
 {
     /**
-     * @param PDO $conn
+     * @param PDO $database connection
      * @param string $sql
-     * @param array $params=[]
+     * @param array $sql params
      */
     public function __construct(PDO $conn, string $sql, array $params = [])
     {
@@ -53,8 +53,7 @@ class Query
             }
             throw $error;
         }
-        // $r = $this->statement->fetchAll(PDO::FETCH_ASSOC);
-        // print_r($r);
+
         return $this->statement->fetchAll(PDO::FETCH_ASSOC);
     }
 }

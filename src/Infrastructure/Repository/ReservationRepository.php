@@ -98,7 +98,7 @@ final class ReservationRepository extends BaseRepository implements IReservation
         JsonDateTime    $plannedStart,
         JsonDateTime    $plannedEnd
     ): int {
-        $sql = "INSERT $this->table(title, description, room, user, planned_start, planned_end)
+        $sql = "INSERT INTO $this->table (title, description, room, \"user\", planned_start, planned_end)
                 VALUES(:title, :description, :room, :user, :plannedStart, :plannedEnd)";
 
         $params = [
@@ -180,7 +180,7 @@ final class ReservationRepository extends BaseRepository implements IReservation
      */
     public function forUser(int $userId): void
     {
-        $this->SQLwhere .= ' AND user = :userId';
+        $this->SQLwhere .= ' AND "user" = :userId';
         $this->params[':userId'] = $userId;
     }
 
@@ -201,7 +201,7 @@ final class ReservationRepository extends BaseRepository implements IReservation
     {
         $sql = "DELETE FROM $this->table WHERE
                     planned_start > NOW()
-                    AND user = :userId";
+                    AND \"user\" = :userId";
         $params = [':userId' => $deletedUserId];
         $this->db->query($sql, $params);
     }

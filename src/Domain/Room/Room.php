@@ -50,7 +50,8 @@ final class Room extends Model
      */
     public function valiadateRfidKey(string $key): void
     {
-        if ($key !== $this->rfid)
+        // if key is assigned and is different
+        if ($this->rfid && $key !== $this->rfid)
             throw new RfidKeyNotValidException();
     }
 

@@ -26,6 +26,7 @@ if (empty($adminEmail)) {
     throw new Exception('You must specify "ADMIN_EMAIL" to proceed.');
 }
 
+$pdo->exec("SET TIMEZONE='Europe/Warsaw';");
 
 /* #### T A B L E S #### */
 $pdo->exec(
@@ -53,7 +54,7 @@ $pdo->exec(
 
 $pdo->exec(
     "CREATE TABLE IF NOT EXISTS access (
-        id serial PRIMARY KEY, 
+        id nextval('access_id_seq'::regclass) PRIMARY KEY, 
         name text NOT NULL,
         owner boolean NOT NULL DEFAULT FALSE,
         access_admin boolean NOT NULL DEFAULT FALSE,
@@ -110,12 +111,13 @@ $pdo->exec(
         FALSE
     );"
 );
+$pdo->exec("SELECT setval('access_id_seq', 3);");
 
 
 /* IMAGE */
 $pdo->exec(
     "CREATE TABLE IF NOT EXISTS image (
-        id serial PRIMARY KEY,
+        id nextval('image_id_seq'::regclass) PRIMARY KEY,
         public_id text NOT NULL,
         size int NOT NULL,
         url text DEFAULT NULL,
@@ -133,6 +135,8 @@ $pdo->exec(
         (3, 'building.jpg', 280000)
     ;"
 );
+
+$pdo->exec("SELECT setval('image_id_seq', 3);");
 
 
 /* REQUEST */
@@ -171,7 +175,7 @@ $pdo->exec(
         created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
         last_activity timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-        UNIQUE(id, email),
+        UNIQUE(email),
 
         CONSTRAINT user_image FOREIGN key (image) REFERENCES image(id) 
             ON UPDATE CASCADE 

@@ -1,5 +1,5 @@
 {
     "type": "string",
     "minLength": 1,
-    "pattern": "^\\d+[A-z]{0,1}\\/?\\d+[A-z]{0,1}$"
+    "pattern": "^\\d+[A-z]?(/\\d+[A-z]?)?$"
 }
