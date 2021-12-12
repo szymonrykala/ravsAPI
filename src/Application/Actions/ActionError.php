@@ -66,7 +66,7 @@ class ActionError implements JsonSerializable
     /**
      * {@inheritDoc}
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         $payload = [
             'type' => $this->type,

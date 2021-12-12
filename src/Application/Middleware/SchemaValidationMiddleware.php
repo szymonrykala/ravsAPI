@@ -97,12 +97,10 @@ class SchemaValidationMiddleware extends BaseMiddleware
      */
     private function combineResult($result): void
     {
-        $error = (new ErrorFormatter())->format($result->error());
+        $error = $result->error();
+        $formater = new ErrorFormatter();
 
-        $errorMessage = '';
-        foreach ($error as $root => $message) {
-            $errorMessage .= $root . ' - ' . $message[0] . ' ';
-        }
+        $errorMessage = implode(', ', $formater->format($error, false));
 
         throw new HttpUnprocessableEntityException($this->request, $errorMessage);
     }
