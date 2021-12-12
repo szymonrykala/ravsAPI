@@ -8,9 +8,6 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
 use Slim\Interfaces\RouteCollectorProxyInterface as Group;
 
-use Psr\Http\Server\{
-    RequestHandlerInterface as RequestHandler
-};
 
 use App\Application\Actions\{
     Image,
