@@ -9,3 +9,4 @@
 /public/docs/*
 .phpdoc
 .env
+deploy-key*

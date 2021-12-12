@@ -9,12 +9,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - uses: actions/checkout@v2
+
     - name: install phpDoc
       run: |
         wget https://phpdoc.org/phpDocumentor.phar
         chmod +x phpDocumentor.phar
         mv phpDocumentor.phar /usr/local/bin/phpDocumentor
         pwd
+        echo `ls`
 
     - name: generate docs
       run: phpDocumentor --config phpdoc.xml
