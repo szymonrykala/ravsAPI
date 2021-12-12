@@ -26,7 +26,7 @@ final class ReservationUpdatePolicy extends ReservationPolicy
         $this->reservation = $originalReservation;
 
         // $this->form = $form;
-        $this->reservationIsNotOver();
+        $this->reservationHasNotStarted();
         $this->updateMaxOneDayBefore();
 
         $timeUpdate = isset($form->plannedEnd) || isset($form->plannedStart);
@@ -53,31 +53,26 @@ final class ReservationUpdatePolicy extends ReservationPolicy
                 $this->reservationHasFutureTime();
                 $this->reservationTimeSlotLengthIsOk();
                 $this->reservationWhenBuildingIsOpen();
-
             }
             $this->noCrossingReservationWasMade($originalReservation->id);
-
         }
     }
 
     /**
-     * @throw 
-     * @return void
+     * check if update is max day before - disabled
      */
     private function updateMaxOneDayBefore(): void
     {
         /** @var DateInterval $timeDiff*/
         $timeDiff = $this->reservation->plannedStart->diff(new JsonDateTime('now'));
 
-        // if reservation start time is not earlier than current time
-        if ($timeDiff->invert === 0) {
-
-            $moreThanOneDayBefore = $timeDiff->d = 0 && $timeDiff->h < 24;
-            if (!$moreThanOneDayBefore) throw new TooLateReservationUpdateException();
-        }
+        if ($timeDiff->d === 0 && $timeDiff->h < 24) throw new TooLateReservationUpdateException();
     }
 
-    private function reservationIsNotOver(): void
+    /**
+     * chceck if reservation has already started
+     */
+    private function reservationHasNotStarted(): void
     {
         if ($this->reservation->plannedStart < new JsonDateTime('now'))
             throw new PassedReservationUpdateException();
