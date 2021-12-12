@@ -1,50 +1,39 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application\Actions\Room;
 
-use App\Domain\Room;
 
 use App\Application\Actions\Action;
-use App\Domain\Room\RoomRepositoryInterface;
-use App\Domain\Building\IBuildingRepository;
-use App\Domain\Image\ImageRepositoryInterface;
-use App\Domain\Request\RequestRepositoryInterface;
-
+use App\Domain\Room\IRoomRepository;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
-use App\Application\Actions\IActionCache;
 
 
 abstract class RoomAction extends Action
 {
-    protected $roomRepository;    
-    protected $imageRepository;    
-    protected $buildingRepository;
+    protected IRoomRepository $roomRepository;
 
-    protected IActionCache $cache;
+
+    public function __construct(ContainerInterface $di)
+    {
+        parent::__construct($di->get(LoggerInterface::class));
+
+        $this->roomRepository = $di->get(IRoomRepository::class);
+    }
 
     /**
-     * @param LoggerInterface $logger
-     * @param RequestRepositoryInterface $requestRepository
-     * @param IActionCache $cache
-     * @param RoomRepositoryInterface $userRepository
-     * @param IBuildingRepository $userRepository
-     * @param ImageRepositoryInterface $imageRepository
+     * Collects room_id and optional building_id from URI
      */
-    public function __construct(
-        LoggerInterface $logger,
-        RequestRepositoryInterface $requestRepo,
-        IActionCache $cache,
-        RoomRepositoryInterface $roomRepository,
-        IBuildingRepository $buildingRepository,
-        ImageRepositoryInterface $imageRepository
-    ) {
-        parent::__construct($logger, $requestRepo);
-        $this->cache = $cache;
+    protected function getUriParams(): array
+    {
+        $roomId = $this->resolveArg($this::ROOM_ID);
+        $buildingId = $this->resolveArg($this::BUILDING_ID, FALSE);
 
-        $this->roomRepository = $roomRepository;
-        $this->buildingRepository = $buildingRepository;
-        $this->imageRepository = $imageRepository;
+        $params = ['id' => (int)  $roomId];
+        $buildingId && $params['building'] = (int) $buildingId;
+
+        return $params;
     }
 }
-

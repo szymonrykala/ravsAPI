@@ -4,20 +4,13 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Database;
 
-use App\Domain\Exception\DomainBadRequestException;
+use App\Domain\Exception\DomainConflictException;
 
 
-class DataIntegrityException extends DomainBadRequestException
+class DataIntegrityException extends DomainConflictException
 {
     public function __construct(string $message)
     {
-        $this->message = "Data integrity exception founded:" . $this->processMessage($message);
-    }
-
-    private function processMessage(string $message): string
-    {
-        preg_match('/\s\d{4,}(.*)$/', $message, $output_array);
-
-        return array_pop($output_array) ?? $message;
+        $this->message = "Niestety '".$message."' już istnieje.";
     }
 }

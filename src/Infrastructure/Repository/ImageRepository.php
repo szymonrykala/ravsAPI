@@ -4,104 +4,141 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Repository;
 
-use App\Application\Settings\SettingsInterface;
-
+use App\Domain\Configuration\Configuration;
+use App\Domain\Configuration\IConfigurationRepository;
+use App\Domain\Exception\DomainBadRequestException;
 use Psr\Http\Message\UploadedFileInterface;
 use App\Infrastructure\Repository\BaseRepository;
 
-use App\Infrastructure\Database\IDatabase;
-
 use App\Domain\Image\{
+    FileTypeException,
     Image,
-    ImageDeleteException,
     ImageSizeExceededException,
-    ImageRepositoryInterface
+    IImageRepository,
 };
+use App\Domain\Model\Model;
+use App\Utils\JsonDateTime;
+use Cloudinary\Cloudinary;
+use Exception;
+use Psr\Container\ContainerInterface;
 
-use DateTime;
 
 
-
-class ImageRepository extends BaseRepository implements ImageRepositoryInterface
+final class ImageRepository extends BaseRepository implements IImageRepository
 {
+    protected string $table = '"image"';
+    protected Configuration $configuration;
+    private Cloudinary $cloudinary;
 
-    private string $public = __DIR__ . '/../../../public';
 
-    protected string $table = 'image';
+    public function __construct(
+        ContainerInterface $di,
+        IConfigurationRepository $configuration
+    ) {
+        parent::__construct($di);
+        $this->configuration = $configuration->load();
+        $this->cloudinary = $di->get(Cloudinary::class);
+    }
 
-    public function __construct(IDatabase $db, SettingsInterface $settings)
+
+    /**
+     * Uploads file to the Cloudinary and applies transformation
+     * @return array uploaded file info
+     */
+    private function uploadToCloudinary(UploadedFileInterface $file): array
     {
-        parent::__construct($db);
-        $settings = $settings->get('image');
-        $this->directory = $settings['directory'];
-        $this->maxSize = $settings['maxSize'];
+        try {
+            $resp = $this->cloudinary->uploadApi()->upload($file->getStream(), [
+                'resource_type' => 'image',
+                'folder' => 'ravs-images',
+                'discard_original_filename' => TRUE,
+                'unique_filename' => TRUE,
+                'transformation' => 'ravs-image-transformation'
+            ]);
+        } catch (Exception $e) {
+            throw new DomainBadRequestException($e->getMessage());
+        }
+
+        return $resp->getArrayCopy();
     }
 
     /**
-     * @param array $data from database
+     * deletes image from Cloudinary by public_id
+     */
+    private function deleteFromCloudinary(string $publicId): void
+    {
+        try {
+            $this->cloudinary->adminApi()->deleteAssets($publicId);
+        } catch (Exception $e) {
+            throw new DomainBadRequestException($e->getMessage());
+        }
+    }
+
+    /**
+     * {@inheritDoc}
      * @return Image $image
      */
     protected function newItem(array $data): Image
     {
         return new Image(
-            (int) $data['id'],
-            $data['path'],
-            new DateTime($data['created']),
-            new DateTime($data['updated'])
+            (int)   $data['id'],
+            $data['public_id'],
+            (int)   $data['size'],
+            $data['url'],
+            new JsonDateTime($data['created']),
+            new JsonDateTime($data['updated'])
         );
     }
 
 
     /**
-     * {@inheritdoc}
+     * Delete image if it is not default one
+     * {@inheritDoc}
+     * @param Image $image
      */
-    public function deleteById(int $id): void
+    public function delete(Model $image): void
     {
-        $image = $this->byId($id);
-
-        if (strpos($image->path, 'default') !== False || !unlink($this->public . $image->path)) {
-            throw new ImageDeleteException($image->path);
+        // default images has url as NULL
+        if ($image->url !== NULL) {
+            $this->deleteFromCloudinary($image->publicId);
+            // delete record from database; 
+            $sql = "DELETE FROM $this->table WHERE id = :imageId AND url IS NOT NULL";
+            $this->db->query($sql, [':imageId' => $image->id]);
         }
-
-        $sql = "DELETE FROM `$this->table` WHERE `id` = :id";
-        $params = [':id' => $image->id];
-        $this->db->query($sql, $params);
     }
 
+
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      * @throws ImageSizeExceededException
      */
     public function save(UploadedFileInterface $file): int
     {
-        if ($file->getSize() > $this->maxSize) {
-            throw new ImageSizeExceededException($this->maxSize);
+        if (!str_contains($file->getClientMediaType(), 'image')) throw new FileTypeException();
+
+        if ($file->getSize() > $this->configuration->maxImageSize) {
+            throw new ImageSizeExceededException($this->configuration->maxImageSize);
         }
-        $filename = $this->moveUploadedFile($this->public . $this->directory, $file);
 
-        $sql = "INSERT INTO `$this->table` (`path`, `size`) VALUES(:path, :size)";
+        $data = $this->uploadToCloudinary($file);
+
+        $sql = "INSERT INTO $this->table (url, public_id, size, created) 
+        VALUES(:url, :publicId, :size, :created)";
+
         $params = [
-            'path' => $this->directory . $filename,
-            'size' => $file->getSize()
+            'url' => $data['secure_url'],
+            'publicId' => $data['public_id'],
+            'size' => $data['bytes'],
+            'created' => new JsonDateTime($data['created_at'])
         ];
-        $this->db->query($sql, $params);
+
+        try {
+            $this->db->query($sql, $params);
+        } catch (Exception $e) {
+            $this->deleteFromCloudinary($data['public_id']);
+            throw $e;
+        }
+
         return $this->db->lastInsertId();
-    }
-
-    /**
-     * @param string $directory
-     * @param UploadFileInterface $uploadedFile
-     * @return string $filename
-     */
-    private function moveUploadedFile(string $directory, UploadedFileInterface $uploadedFile): string
-    {
-        $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
-
-        $basename = bin2hex(random_bytes(8));
-        $filename = sprintf('%s.%0.8s', $basename, $extension);
-
-        $uploadedFile->moveTo($directory . $filename);
-
-        return $filename;
     }
 }

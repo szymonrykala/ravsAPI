@@ -7,15 +7,13 @@
         {
             "$func": "min-datetime",
             "$vars": {
-                "value": "2021-09-01T19:00:00Z",
-                "timezone": "UTC"
+                "value": "2021-09-01T19:00:00"
             }
         },
         {
             "$func": "max-datetime",
             "$vars": {
-                "value": "2030-01-01T12:00:00Z",
-                "timezone": "UTC"
+                "value": "2030-01-01T12:00:00"
             }
         }
     ]

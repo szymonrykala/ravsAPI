@@ -6,5 +6,5 @@ namespace App\Domain\Exception;
 
 class DomainConflictException extends DomainException
 {
-    public $message = "Domain has encountered a conflict.";
+    public $message = "System napotkał konflikt i nie może wykonać tej operacji.";
 }

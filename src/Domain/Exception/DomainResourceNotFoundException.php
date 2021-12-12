@@ -6,5 +6,5 @@ namespace App\Domain\Exception;
 
 class DomainResourceNotFoundException extends DomainException
 {
-    public $message = "Requested resource, is not exist.";
+    public $message = "Żądany zasób nie istnieje.";
 }

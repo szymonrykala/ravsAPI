@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\Domain\User\Exceptions;
 
-use App\Domain\Exception\DomainBadRequestException;
+use App\Domain\Exception\DomainUnauthenticatedException;
 
 
-class BadCredentialsException extends DomainBadRequestException
+class BadCredentialsException extends DomainUnauthenticatedException
 {
-    public $message = "Provided credentials are incorrect";
+    public $message = "Podane hasło jest nieprawidłowe.";
 }

@@ -2,7 +2,7 @@
     "type": "object",
     "properties": {
         "name": {
-            "$ref": "schema://models/defaults/name#"
+            "$ref": "api://schema/reuse/name.json"
         },
         "openTime": {
             "type": "string",

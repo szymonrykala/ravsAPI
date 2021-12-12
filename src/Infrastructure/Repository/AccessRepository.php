@@ -6,27 +6,28 @@ namespace App\Infrastructure\Repository;
 
 
 use App\Domain\Access\{
-    AccessRepositoryInterface,
+    IAccessRepository,
     Access,
     AccessDeleteException
 };
+use App\Domain\Model\Model;
+use App\Utils\JsonDateTime;
 
-use DateTime;
 
-
-class AccessRepository extends BaseRepository implements AccessRepositoryInterface
+final class AccessRepository extends BaseRepository implements IAccessRepository
 {
-    protected string $table = 'access';
+    protected string $table = '"access"';
 
     /**
-     * @param array $data from database
+     * {@inheritDoc}
      * @return Access
      */
     protected function newItem(array $data): Access
     {
         return new Access(
             (int)   $data['id'],
-                    $data['name'],
+            $data['name'],
+            (bool)  $data['owner'],
             (bool)  $data['access_admin'],
             (bool)  $data['premises_admin'],
             (bool)  $data['keys_admin'],
@@ -34,48 +35,46 @@ class AccessRepository extends BaseRepository implements AccessRepositoryInterfa
             (bool)  $data['reservations_ability'],
             (bool)  $data['logs_admin'],
             (bool)  $data['stats_viewer'],
-            (bool)  $data['reports_viewer'],
-                    new DateTime($data['created']),
-                    new DateTime($data['updated']),
+            new JsonDateTime($data['created']),
+            new JsonDateTime($data['updated']),
         );
     }
 
-
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
+     * @throws AccessDeleteException
      */
-    public function deleteById(int $id): void
+    public function delete(Model $access): void
     {
-        if ($id === 1) {
+        if ($access->id === 1) {
             throw new AccessDeleteException();
         }
-        $sql = "DELETE FROM `$this->table` WHERE `id` = :id";
-        $params = [':id' => $id];
-        $this->db->query($sql, $params);
+        parent::delete($access);
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function save(Access $access): void
     {
         $access->validate();
 
-        $sql = "UPDATE `$this->table` SET
-                    `name` = :name,
-                    `access_admin` = :accessAdmin,
-                    `premises_admin` = :premisesAdmin,
-                    `keys_admin` = :keysAdmin,
-                    `reservations_admin` = :reservationsAdmin,
-                    `reservations_ability` = :reservationsAbility,
-                    `logs_admin` = :logsAdmin,
-                    `stats_viewer` = :statsViewer,
-                    `reports_viewer` = :reportsViewer
-                WHERE `id` = :id";
+        $sql = "UPDATE $this->table SET
+                    name = :name,
+                    owner = :owner,
+                    access_admin = :accessAdmin,
+                    premises_admin = :premisesAdmin,
+                    keys_admin = :keysAdmin,
+                    reservations_admin = :reservationsAdmin,
+                    reservations_ability = :reservationsAbility,
+                    logs_admin = :logsAdmin,
+                    stats_viewer = :statsViewer
+                WHERE id = :id";
 
         $params = [
             ':id' => $access->id,
             ':name' => ucfirst($access->name),
+            ':owner' => (int) $access->owner,
             ':accessAdmin' => (int) $access->accessAdmin,
             ':premisesAdmin' => (int) $access->premisesAdmin,
             ':keysAdmin' => (int) $access->keysAdmin,
@@ -83,51 +82,51 @@ class AccessRepository extends BaseRepository implements AccessRepositoryInterfa
             ':reservationsAbility' => (int) $access->reservationsAbility,
             ':logsAdmin' => (int) $access->logsAdmin,
             ':statsViewer' => (int) $access->statsViewer,
-            ':reportsViewer' => (int) $access->reportsViewer,
         ];
 
         $this->db->query($sql, $params);
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function create(
         string $name,
+        bool $owner,
         bool $accessAdmin,
         bool $premisesAdmin,
         bool $keysAdmin,
         bool $reservationsAdmin,
         bool $reservationsAbility,
         bool $logsAdmin,
-        bool $statsViewer,
-        bool $reportsViewer
+        bool $statsViewer
     ): int {
-        $sql = "INSERT `$this->table`(
-                    `name`,
-                    `access_admin`,
-                    `premises_admin`,
-                    `keys_admin`,
-                    `reservations_admin`,
-                    `reservations_ability`,
-                    `logs_admin`,
-                    `stats_viewer`,
-                    `reports_viewer`
+        $sql = "INSERT INTO $this->table(
+                    name,
+                    owner,
+                    access_admin,
+                    premises_admin,
+                    keys_admin,
+                    reservations_admin,
+                    reservations_ability,
+                    logs_admin,
+                    stats_viewer
                 )
                 VALUES (
                     :name,
+                    :owner,
                     :accessAdmin,
                     :premisesAdmin,
                     :keysAdmin,
                     :reservationsAdmin,
                     :reservationsAbility,
                     :logsAdmin,
-                    :statsViewer,
-                    :reportsViewer
+                    :statsViewer
                 )";
 
         $params = [
             ':name' => ucfirst($name),
+            ':owner' => (int) $owner,
             ':accessAdmin' => (int) $accessAdmin,
             ':premisesAdmin' => (int) $premisesAdmin,
             ':keysAdmin' => (int) $keysAdmin,
@@ -135,7 +134,6 @@ class AccessRepository extends BaseRepository implements AccessRepositoryInterfa
             ':reservationsAbility' => (int) $reservationsAbility,
             ':logsAdmin' => (int) $logsAdmin,
             ':statsViewer' => (int) $statsViewer,
-            ':reportsViewer' => (int) $reportsViewer,
         ];
 
         $this->db->query($sql, $params);

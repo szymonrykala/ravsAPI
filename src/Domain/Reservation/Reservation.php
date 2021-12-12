@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Domain\Reservation;
@@ -6,90 +7,107 @@ namespace App\Domain\Reservation;
 use App\Domain\Model\Model;
 use App\Domain\Room\Room;
 use App\Domain\User\User;
-use DateTime;
+use App\Utils\JsonDateTime;
 
 
-class Reservation extends Model
+final class Reservation extends Model
 {
-    public string      $title;
-    public string      $description;
-    public Room        $room;
-    public User        $user;
-    public DateTime    $planned_start;
-    public DateTime    $planned_end;
-    public DateTime    $actual_start;
-    public DateTime    $actual_end; 
-    public bool        $confirmed;
-    public User        $confirmed_by;
-    public DateTime    $confirmed_at;
-
     public int $userId;
-    public int $confirmingUserId;
     public int $roomId;
 
-
     public function __construct(
-        int         $id,
-        string      $title,
-        string      $description,
-        int         $room,
-        int         $user,
-        DateTime    $planned_start,
-        DateTime    $planned_end,
-        DateTime    $actual_start,
-        DateTime    $actual_end,
-        bool        $confirmed,
-        int         $confirmed_by,
-        DateTime    $confirmed_at,
-        DateTime    $created,
-        DateTime    $updated
-    )
-    {
+        public int         $id,
+        public string      $title,
+        public string      $description,
+        public Room         $room,
+        public User         $user,
+        public JsonDateTime    $plannedStart,
+        public JsonDateTime    $plannedEnd,
+        public ?JsonDateTime    $actualStart,
+        public ?JsonDateTime    $actualEnd,
+        public JsonDateTime    $created,
+        public JsonDateTime    $updated
+    ) {
         parent::__construct($id, $created, $updated);
 
-        $this->title = $title;
-        $this->description = $description;
-        $this->room = $room;
-        $this->user = $user;
-        $this->planned_start = $planned_start;
-        $this->planned_end = $planned_end;
-        $this->actual_start = $actual_start;
-        $this->actual_end = $actual_end;
-        $this->confirmed = $confirmed;
-        $this->confirmed_by = $confirmed_by;
-        $this->confirmed_at = $confirmed_at;
+        $this->roomId = $room->id;
+        $this->userId = $user->id;
+    }
+
+    /**
+     * @return bool
+     */
+    public function notStarted(): bool
+    {
+        return !$this->actualStart && !$this->actualEnd;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasStarted(): bool
+    {
+        return $this->actualStart && !$this->actualEnd;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasEnded(): bool
+    {
+        return $this->actualStart && $this->actualEnd;
+    }
+
+    /**
+     * @return void
+     * @throws ReservationAlreadyStartedException
+     */
+    public function start(): void
+    {
+        if (!$this->actualStart && !$this->actualEnd) {
+            $this->actualStart = new JsonDateTime('now');
+        } else
+            throw new ReservationAlreadyStartedException();
+    }
+
+    /**
+     * @return void
+     * @throws ReservationAlreadyEndedException
+     */
+    public function end(): void
+    {
+        if ($this->actualStart && !$this->actualEnd) {
+            $this->actualEnd = new JsonDateTime('now');
+        } else
+            throw new ReservationAlreadyEndedException();
     }
 
 
     /**
-     * {@inheritdoc}
-     * @throws DomainConflictException
+     * {@inheritDoc}
      */
-    protected function validateCallback(): void
+    public function validate(): void
     {
-        // validation details
+        $now = new JsonDateTime('now');
     }
 
     /**
      * @return array
      */
-    public function jsonSerialize():array
+    public function jsonSerialize(): array
     {
-        return [
-            'id' => $this->id,
-            'title' => $this->title,
-            'description' => $this->description,
-            'room' => $this->room ?? $this->roomId,
-            'user' => $this->user ?? $this->userId,
-            'planned_start' => $this->planned_start->format('c'),
-            'planned_end' => $this->planned_end->format('c'),
-            'actual_start' => $this->actual_start->format('c'),
-            'actual_end' => $this->actual_end->format('c'),
-            'confirmed' => $this->confirmed,
-            'confirmed_by' => $this->confirmed_by,
-            'confirmed_at' => $this->confirmed_at->format('c'),
-            'created' => $this->created,
-            'updated' => $this->updated,
-        ];
+        return array_merge(
+            [
+                'title' => $this->title,
+                'description' => $this->description,
+                'room' => $this->room ?? $this->roomId,
+                'user' => $this->user ?? $this->userId,
+                'plannedStart' => $this->plannedStart,
+                'plannedEnd' => $this->plannedEnd,
+                'actualStart' => $this->actualStart,
+                'actualEnd' => $this->actualEnd
+            ],
+            parent::jsonSerialize()
+        );
     }
 }

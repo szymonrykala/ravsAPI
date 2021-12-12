@@ -9,7 +9,7 @@ class ImageSizeExceededException extends DomainException
 {
     public function __construct($size){
         parent::__construct(
-            'Image size can not exceed '.($size/1000).' kB'
+            'Przekroczony rozmiar zdjęcia. Maksymalny rozmiar to '.($size/1000).' kB'
         );
     }
 }

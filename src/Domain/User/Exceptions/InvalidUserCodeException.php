@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\Domain\User\Exceptions;
 
-use App\Domain\Exception\DomainBadRequestException;
+use App\Domain\Exception\DomainUnauthenticatedException;
 
 
-class InvalidUserCodeException extends DomainBadRequestException
+class InvalidUserCodeException extends DomainUnauthenticatedException
 {
-    public $message = "Provided code is not correct.";
+    public $message = "Podany kod jest nieprawidłowy.";
 }

@@ -6,5 +6,5 @@ namespace App\Domain\Exception;
 
 class DomainBadRequestException extends DomainException
 {
-    public $message = "You performed a bad request.";
+    public $message = "Złe zapytanie.";
 }

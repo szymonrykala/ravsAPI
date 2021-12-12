@@ -8,5 +8,5 @@ use App\Domain\Exception\DomainForbiddenOperationException;
 
 class UserBlockedException extends DomainForbiddenOperationException
 {
-    public $message = "User is blocked - You have to change password to unblock account.";
+    public $message = "Użytkownik jest zablokowany. Zmień hasło aby odblokować konto.";
 }

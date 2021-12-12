@@ -4,39 +4,31 @@ declare(strict_types=1);
 
 namespace App\Application\Middleware;
 
-use phpDocumentor\Reflection\Types\Object_;
-use Psr\Http\Message\{
-    ResponseInterface as Response,
-    ServerRequestInterface as Request
-};
+use App\Application\Exception\HttpUnprocessableEntityException;
+use Psr\Http\Message\ResponseInterface as Response;
 
-use Psr\Http\Server\{
-    MiddlewareInterface as Middleware,
-    RequestHandlerInterface as RequestHandler
-};
+use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 
-use Slim\Exception\HttpBadRequestException;
 use stdClass;
 
 
-class BodyParsingMiddleware implements Middleware
+final class BodyParsingMiddleware extends BaseMiddleware
 {
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function process(Request $request, RequestHandler $handler): Response
+    public function processRequest(RequestHandler $handler): Response
     {
-
-        if(in_array($request->getMethod(), ['POST', 'PATCH'])){
-
-            $input = json_decode(file_get_contents('php://input'));
+        $content = file_get_contents('php://input');
+        if(!empty($content)){
+            $input = json_decode($content);
 
             if (json_last_error() !== JSON_ERROR_NONE) {
-                throw new HttpBadRequestException($request, 'Malformed JSON input.');
+                throw new HttpUnprocessableEntityException($this->request, 'Nieprawidłowy format wiadomości. Użyj formatu JSON.');
             }
         }
 
-        return $handler->handle($request->withParsedBody($input ?? new stdClass()));
+        return $handler->handle($this->request->withParsedBody($input ?? new stdClass()));
     }
 }

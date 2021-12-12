@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use App\Application\Settings\SettingsInterface;
@@ -8,11 +9,15 @@ use Monolog\Logger;
 use Monolog\Processor\UidProcessor;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
-
 use App\Infrastructure\Database;
 
-use App\Application\Actions\IActionCache;
-use App\Application\Actions\ActionMemoryCache;
+use App\Domain\Reservation\Policy\ReservationCreatePolicy;
+use App\Infrastructure\Database\PostgreSQL;
+use App\Infrastructure\Mailing\{IMailingService, MailingService};
+use App\Infrastructure\TokenFactory\{ITokenFactory, JWTFactory};
+use Cloudinary\Cloudinary;
+
+use function DI\autowire;
 
 return function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
@@ -31,21 +36,27 @@ return function (ContainerBuilder $containerBuilder) {
             return $logger;
         },
 
-        IActionCache::class=>function(ContainerInterface $c){
-            return new ActionMemoryCache([]);
-        },
+        Database\IDatabase::class => autowire(PostgreSQL::class),
 
-        Database\IDatabase::class => function(ContainerInterface $c) {
-            $dbSettings = $c->get(SettingsInterface::class)->get('database');
+        ITokenFactory::class => autowire(JWTFactory::class),
 
-            $database = new Database\MySQLDatabase(
-                $dbSettings['user'],
-                $dbSettings['password'],
-                $dbSettings['host'],
-                $dbSettings['name'],
-            );
+        IMailingService::class => autowire(MailingService::class),
 
-            return $database;
+        ReservationCreatePolicy::class => autowire(ReservationCreatePolicy::class),
+
+        Cloudinary::class => function (ContainerInterface $c) {
+            $cloudinarySettings = $c->get(SettingsInterface::class)->get('cloudinary');
+
+            return new Cloudinary([
+                'cloud' => [
+                    'cloud_name' => $cloudinarySettings['cloudName'],
+                    'api_key'  => $cloudinarySettings['key'],
+                    'api_secret' => $cloudinarySettings['secret'],
+                    'url' => [
+                        'secure' => true
+                    ]
+                ]
+            ]);
         }
     ]);
 };

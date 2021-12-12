@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Infrastructure\Database;
@@ -7,13 +8,14 @@ use PDO;
 use PDOException;
 
 
-class Query{
+class Query
+{
     /**
-     * @param PDO $conn
+     * @param PDO $database connection
      * @param string $sql
-     * @param array $params=[]
+     * @param array $sql params
      */
-    public function __construct(PDO $conn, string $sql, array $params=[])
+    public function __construct(PDO $conn, string $sql, array $params = [])
     {
         $this->statement = $conn->prepare($sql);
         $this->params = $params;
@@ -22,24 +24,36 @@ class Query{
     /**
      * @return array
      */
-    public function execute() : array
+    public function execute(): array
     {
-        try{
+        try {
             $this->statement->execute($this->params);
-        }catch(PDOException $e){    
-            // var_dump($e->getMessage());       
-            throw new DataIntegrityException($e->getMessage());
+        } catch (PDOException $e) {
+            $error = new DataIntegrityException('');
+            // var_dump($e->getMessage());
+            // var_dump($e->getCode());
+            $message = '';
             switch ($e->getCode()) {
-                case '':
-                    # code...
+                case '23000':
+                    preg_match('/Duplicate\sentry\s\'(.*)\'\s/', $e->getMessage(), $outputArray);
+                    $message = isset($outputArray[1]) ? "'$outputArray[1]'" : 'podana wartość';
+                    $error->message = "Niestesty $message już istnieje.";
                     break;
-                
+                case '42S22':
+                    preg_match('/Unknown\scolumn\s\'(.*)\'\s/', $e->getMessage(), $outputArray);
+                    $message = isset($outputArray[1]) && $outputArray[1];
+                    $error->message = "Właściwość '$message' nie istnieje.";
+                case '22007':
+                    $error->message = 'Błąd składni SQL: ' . $e->getMessage();
+                    break;
                 default:
+                    $error->message = $e->getMessage();
                     # code...
                     break;
             }
+            throw $error;
         }
 
-        return $this->statement->fetchAll();
+        return $this->statement->fetchAll(PDO::FETCH_ASSOC);
     }
 }

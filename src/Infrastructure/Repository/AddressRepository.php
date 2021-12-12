@@ -1,62 +1,54 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Infrastructure\Repository;
+
 use App\Infrastructure\Repository\BaseRepository;
 
 use App\Domain\Address\IAddressRepository;
 use App\Domain\Address\Address;
 
-use DateTime;
+use App\Utils\JsonDateTime;
 
 
-class AddressRepository extends BaseRepository implements IAddressRepository
+
+final class AddressRepository extends BaseRepository implements IAddressRepository
 {
     protected string $table = 'address';
 
     /**
-     * @param array $data from database
+     * {@inheritDoc}
      * @return Address
      */
     protected function newItem(array $data): Address
     {
         return new Address(
             (int)   $data['id'],
-                    $data['country'],
-                    $data['town'],
-                    $data['postal_code'],
-                    $data['street'],
-                    $data['number'],
-                    new DateTime($data['created']),
-                    new DateTime($data['updated']),
+            $data['country'],
+            $data['town'],
+            $data['postal_code'],
+            $data['street'],
+            $data['number'],
+            new JsonDateTime($data['created']),
+            new JsonDateTime($data['updated']),
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function deleteById(int $id): void
-    {
-        $this->byId($id);
-        
-        $sql = "DELETE FROM `$this->table` WHERE `id` = :id";
-        $params = [':id' => $id];
-        $this->db->query($sql, $params);
-    }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function save(Address $address): void
     {
         $address->validate();
-        $sql = "UPDATE `$this->table` SET
-                    `country` = :country,
-                    `town` = :town,
-                    `postal_code` = :postalCode,
-                    `street` = :street,
-                    `number` = :number
-                WHERE `id` = :id";
+        $sql = "UPDATE $this->table SET
+                    country = :country,
+                    town = :town,
+                    postal_code = :postalCode,
+                    street = :street,
+                    number = :number
+                WHERE id = :id";
 
         $params = [
             ':id' => $address->id,
@@ -72,7 +64,7 @@ class AddressRepository extends BaseRepository implements IAddressRepository
 
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function create(
         string $country,
@@ -80,12 +72,11 @@ class AddressRepository extends BaseRepository implements IAddressRepository
         string $postalCode,
         string $street,
         string $number
-    ): int
-    {
-        $sql = "INSERT INTO `$this->table`
-                    (`country`,`town`,`postal_code`,`street`,`number`)
+    ): int {
+        $sql = "INSERT INTO $this->table
+                    (country,town,postal_code,street,number)
                 VALUES(:country, :town, :postalCode, :street, :number)";
-        
+
         $params = [
             ':country' => ucfirst($country),
             ':town' => ucfirst($town),
@@ -98,4 +89,4 @@ class AddressRepository extends BaseRepository implements IAddressRepository
 
         return $this->db->lastInsertId();
     }
-};
+}

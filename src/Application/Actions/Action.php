@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace App\Application\Actions;
 
-
+use App\Application\Exception\HttpConflictException;
 use App\Domain\Exception as Ex;
-
-use App\Domain\Request\RequestRepositoryInterface;
-
+use App\Utils\Pagination;
 use Psr\Log\LoggerInterface;
 use Psr\Http\Message\{
     ResponseInterface as Response,
@@ -22,42 +20,39 @@ use Slim\Exception\{
 };
 use stdClass;
 
-use Opis\JsonSchema\Validator;
 
 
 
 abstract class Action
 {
-    protected LoggerInterface $logger;
+    protected const ROOM_ID = 'room_id';
+    protected const BUILDING_ID = 'building_id';
+    protected const ADDRESS_ID = 'address_id';
+    protected const USER_ID = 'user_id';
+    protected const ACCESS_ID = 'access_id';
+    protected const IMAGE_ID = 'image_id';
+    protected const RESERVATION_ID = 'reservation_id';
+    protected const REQUEST_SUBJECT = 'request_subject';
+    protected const REQUEST_SUBJECT_ID = 'subject_id';
+
+    protected const SEARCH_STRING = 'search';
+    protected const FROM_DATE = 'from';
+    protected const TO_DATE = 'to';
 
     protected Request $request;
     protected Response $response;
 
-    protected Validator $schemaValidator;
+    protected ?Pagination $pagination = NULL;
 
     protected array $args;
 
-    /**
-     * @param LoggerInterface $logger
-     */
+
     public function __construct(
-        LoggerInterface $logger,
-        RequestRepositoryInterface $requestRepo
-    ) {
-        $this->logger = $logger;
-        $this->requestRepository = $requestRepo;
-    }
+        protected LoggerInterface $logger
+    ) {}
 
     /**
-     * @param Request $request
-     * @param Response $response
-     * @param array $args
-     * @return Response
-     * @throws HttpNotFoundException
-     * @throws HttpBadRequestException
-     * @throws HttpForbiddenException
-     * @throws HttpUnauthorizedException
-     * @throws HttpConflictException
+     * Called to handle request
      */
     public function __invoke(Request $request, Response $response, array $args): Response
     {
@@ -73,111 +68,95 @@ abstract class Action
             return $resp;
         } catch (Ex\DomainResourceNotFoundException $e) {
             throw new HttpNotFoundException($this->request, $e->getMessage());
-        } catch (Ex\DomainUnauthorizedOperationException $e) {
-            throw new HttpUnauthorizedException($this->request, $e->getMessage());
+
         } catch (Ex\DomainConflictException $e) {
-            throw new Ex\HttpConflictException($this->request, $e->getMessage(), 409);
+            throw new HttpConflictException($this->request, $e->getMessage());
+
         } catch (Ex\DomainForbiddenOperationException $e) {
             throw new HttpForbiddenException($this->request, $e->getMessage());
+
         } catch (Ex\DomainBadRequestException $e) {
             throw new HttpBadRequestException($this->request, $e->getMessage());
+
+        } catch (Ex\DomainUnauthenticatedException $e) {
+            throw new HttpUnauthorizedException($this->request, $e->getMessage());
         }
     }
 
     /**
-     * @return Response
-     * @throws DomainResourceNotFoundException
-     * @throws HttpBadRequestException
+     * controller action handling endpoint request
      */
     abstract protected function action(): Response;
 
     /**
-     * @return stdClass
-     * @throws HttpBadRequestException
+     * get form data of the request
      */
     protected function getFormData(): stdClass
     {
-        return $this->request->getParsedBody();
+        return (object) $this->request->getParsedBody();
     }
 
 
     /**
-     * @param  string $name
-     * @return mixed
+     * Resolves argument from URI string
+     * @param mixed $default
      * @throws HttpBadRequestException
      */
-    protected function resolveArg(string $name)
+    protected function resolveArg(string $name, $default = NULL)
     {
         if (!isset($this->args[$name])) {
-            throw new HttpBadRequestException($this->request, "Could not resolve argument `{$name}`.");
+            if ($default !== NULL) return $default;
+
+            throw new HttpBadRequestException($this->request, "Nie udało się pobrać parametru `{$name}`.");
         }
 
         return $this->args[$name];
     }
 
-
     /**
-     * @param string $keys
-     * @return stdClass[] 
+     * Resolves argument from query string.
+     * @param mixed $default
+     * @throws HttpBadRequestException
      */
-    public function collectDatesSearchParam(string $keys = 'created|updated'): array
+    protected function resolveQueryArg(string $name, $default = NULL)
     {
-        $query = $this->request->getUri()->getQuery();
+        // $isset = ;
+        if (!isset($_GET[$name])) {
+            if ($default !== NULL) return $default;
 
-        preg_match_all(
-            "/($keys)([=<>])(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\+\d{4})?)/",
-            urldecode($query),
-            $output_array
-        );
-
-        if (empty($output_array) || empty($output_array[0])) {
-            return [];
+            throw new HttpBadRequestException($this->request, "Nie udało się pobrać parametru `${name}` z zapytania.");
         }
 
-        $results = [];
-        for ($i = 0; $i < count($output_array[0]); $i++) {
-            array_push($results, (object)[
-                'name' => $output_array[1][$i],
-                'operator' => $output_array[2][$i],
-                'value' => $output_array[3][$i]
-            ]);
-        }
-
-        return $results;
-    }
-
-
-    public function collectPageQueryParams(): stdClass
-    {
-        $isPage = isset($_GET['page']) && is_numeric($_GET['page']);
-        $pageLimit = isset($_GET['page_limit']) && is_numeric($_GET['page_limit']);
-
-        $data = ['isset' => $isPage];
-
-        if ($isPage) {
-            $data['page'] = (int) $_GET['page'];
-            $data['limit'] = $pageLimit ?  (int) $_GET['page_limit'] : 20;
-        }
-
-        return (object) $data;
+        return $_GET[$name];
     }
 
 
     /**
-     * @param array|object|null $data
-     * @param int $statusCode
-     * @return Response
+     * prepares pagination feature object
+     */
+    public function preparePagination(): Pagination
+    {
+        $currentPage = (int) $this->resolveQueryArg(Pagination::CURRENT_PAGE, 0);
+        $onPage = (int) $this->resolveQueryArg(Pagination::ITEMS_ON_PAGE, 15);
+
+        $this->pagination = new Pagination($currentPage, $onPage);
+        return $this->pagination;
+    }
+
+
+    /**
+     * responds with given data
+     * @param mixed $data
      */
     protected function respondWithData($data = null, int $statusCode = 200): Response
     {
-        $payload = new ActionPayload($statusCode, $data);
+        $payload = new ActionPayload($statusCode, $data, NULL, $this->pagination);
 
         return $this->respond($payload);
     }
 
     /**
-     * @param ActionPayload $payload
-     * @return Response
+     * sends response from the API with provided $payload
      */
     protected function respond(ActionPayload $payload): Response
     {

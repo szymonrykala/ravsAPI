@@ -2,10 +2,10 @@
 	"type": "object",
 	"properties": {
 		"name": {
-            "$ref": "api://schema/reuse/name#"
+            "$ref": "api://schema/reuse/name.json"
 		},
 		"roomType": {
-            "enum": ["lecture", "laboratory"]
+            "enum": ["Sala laboratoryjna", "Sala konferencyjna", "Sala wykładowa"]
 		},
 		"seatsCount": {
 			"type": "integer",
@@ -18,17 +18,13 @@
             "maximum": 20
 		},
         "imageId": {
-            "$ref": "api://schema/reuse/id#"
+            "$ref": "api://schema/reuse/id.json"
         },
         "buildingId": {
-            "$ref": "api://schema/reuse/id#"
+            "$ref": "api://schema/reuse/id.json"
         },
         "blocked": {
             "type": "boolean"
-        },
-        "rfid": {
-            "type": "string",
-            "minLength": 5
         }
 	},
 	"required": [],

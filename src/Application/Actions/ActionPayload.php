@@ -1,44 +1,38 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application\Actions;
 
+use App\Utils\Pagination;
 use JsonSerializable;
 
 class ActionPayload implements JsonSerializable
 {
-    /**
-     * @var int
-     */
-    private $statusCode;
+    private int $statusCode;
 
     /**
      * @var array|object|null
      */
     private $data;
+    private ?ActionError $error;
+    private ?Pagination $pagination;
 
-    /**
-     * @var ActionError|null
-     */
-    private $error;
 
-    /**
-     * @param int                   $statusCode
-     * @param array|object|null     $data
-     * @param ActionError|null      $error
-     */
     public function __construct(
         int $statusCode = 200,
-        $data = null,
-        ?ActionError $error = null
+        $data = NULL,
+        ?ActionError $error = NULL,
+        ?Pagination $pagination = NULL
     ) {
         $this->statusCode = $statusCode;
         $this->data = $data;
         $this->error = $error;
+        $this->pagination = $pagination;
     }
 
     /**
-     * @return int
+     * get satus code of the payload
      */
     public function getStatusCode(): int
     {
@@ -46,7 +40,8 @@ class ActionPayload implements JsonSerializable
     }
 
     /**
-     * @return array|null|object
+     * get data of the payload
+     * @return array|object|null
      */
     public function getData()
     {
@@ -54,7 +49,7 @@ class ActionPayload implements JsonSerializable
     }
 
     /**
-     * @return ActionError|null
+     * get error of the action
      */
     public function getError(): ?ActionError
     {
@@ -62,16 +57,18 @@ class ActionPayload implements JsonSerializable
     }
 
     /**
-     * @return array
+     * {@inheritDoc}
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         $payload = [
             'statusCode' => $this->statusCode,
         ];
 
+        $this->pagination && $payload['pagination'] = $this->pagination;
+
         if ($this->data !== null) {
-            $payload['data'] = $this->data;
+            $payload['data'] =  $this->data;
         } elseif ($this->error !== null) {
             $payload['error'] = $this->error;
         }

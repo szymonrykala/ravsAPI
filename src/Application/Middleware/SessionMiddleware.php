@@ -4,43 +4,47 @@ declare(strict_types=1);
 
 namespace App\Application\Middleware;
 
+use App\Infrastructure\TokenFactory\Exceptions\{
+    TokenExpiredException,
+    TokenNotValidException
+};
+
+use App\Infrastructure\TokenFactory\ITokenFactory;
 use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Message\ServerRequestInterface as Request;
-use Psr\Http\Server\MiddlewareInterface as Middleware;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 
 use Slim\Exception\HttpUnauthorizedException;
 
-use App\Utils\JWTFactory;
-use App\Domain\Exception\DomainUnauthorizedOperationException;
+use Psr\Log\LoggerInterface;
 
-class SessionMiddleware implements Middleware
+/**
+ * Reads data from token provided from user
+ * and passes it as a session to the request context
+ */
+class SessionMiddleware extends BaseMiddleware
 {
-    /** @var Request $request */
-    private Request $request;
-
-    /** @var array white list endpoints  */
-    private array $whiteList = [
-        '/users/auth', '/users/key', '/users/activate', '/users/password'
-    ];
+    public function __construct(
+        LoggerInterface $logger,
+        private ITokenFactory $tokenFactory
+    ) {
+        parent::__construct($logger);
+    }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function process(Request $request, RequestHandler $handler): Response
+    public function processRequest(RequestHandler $handler): Response
     {
-        $this->request = $request;
-
-        if (!in_array($this->request->getUri()->getPath(), $this->whiteList)) {
-
-            try {
-                $tokenData = JWTFactory::decode($this->getToken());
-            } catch (DomainUnauthorizedOperationException $e) {
-                throw new HttpUnauthorizedException($request, $e->getMessage());
-            }
-
-            $this->request = $this->request->withAttribute('session', $tokenData);
+        try {
+            $tokenData = $this->tokenFactory->decode($this->getToken());
+        } catch (TokenExpiredException $e) {
+            throw new HttpUnauthorizedException($this->request, $e->getMessage());
+        } catch (TokenNotValidException $e) {
+            throw new HttpUnauthorizedException($this->request, $e->getMessage());
         }
+
+
+        $this->request = $this->request->withAttribute('session', $tokenData);
 
         return $handler->handle($this->request);
     }
@@ -50,7 +54,7 @@ class SessionMiddleware implements Middleware
         $auth = $this->request->getHeader('Authorization');
 
         if (!isset($auth[0])) {
-            throw new HttpUnauthorizedException($this->request, "Authorization header is missing.");
+            throw new HttpUnauthorizedException($this->request, "Brak nagłówka autoryzacji.");
         }
 
         return explode(' ', array_pop($auth))[1] ?? '';

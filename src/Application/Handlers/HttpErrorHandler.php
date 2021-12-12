@@ -1,11 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application\Handlers;
 
 use App\Application\Actions\ActionError;
 use App\Application\Actions\ActionPayload;
-use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Exception\HttpBadRequestException;
 use Slim\Exception\HttpException;
@@ -19,13 +19,24 @@ use Slim\Handlers\ErrorHandler as SlimErrorHandler;
 
 use Throwable;
 
-use App\Domain\Exception\{
-    HttpConflictException,
-    HttpUnprocessableEntityException
-};
+use App\Application\Exception\HttpConflictException;
+use App\Application\Exception\HttpUnprocessableEntityException;
+use App\Domain\Request\IRequestRepository;
+
+use Psr\Http\Message\ResponseFactoryInterface;
+use Slim\Interfaces\CallableResolverInterface;
 
 class HttpErrorHandler extends SlimErrorHandler
 {
+
+    public function __construct(
+        CallableResolverInterface $callableResolver,
+        ResponseFactoryInterface $responseFactory,
+        private IRequestRepository $requestRepository
+    ) {
+        parent::__construct($callableResolver, $responseFactory);
+    }
+
     /**
      * @inheritdoc
      */
@@ -35,7 +46,7 @@ class HttpErrorHandler extends SlimErrorHandler
         $statusCode = 500;
         $error = new ActionError(
             ActionError::SERVER_ERROR,
-            'An internal error has occurred while processing your request.'
+            'Wystąpił niespodziewany błąd serwera podczas przetwarzania żądania.'
         );
 
         if ($exception instanceof HttpException) {
@@ -68,6 +79,8 @@ class HttpErrorHandler extends SlimErrorHandler
         ) {
             $error->setDescription($exception->getMessage());
         }
+
+        $this->requestRepository->create($this->request);
 
         $payload = new ActionPayload($statusCode, null, $error);
         $encodedPayload = json_encode($payload, JSON_PRETTY_PRINT);

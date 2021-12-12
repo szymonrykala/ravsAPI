@@ -5,7 +5,7 @@ declare(strict_types=1);
 use App\Application\Settings\Settings;
 use App\Application\Settings\SettingsInterface;
 use DI\ContainerBuilder;
-use Monolog\Logger;
+
 
 return function (ContainerBuilder $containerBuilder) {
 
@@ -13,25 +13,32 @@ return function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
         SettingsInterface::class => function () {
             return new Settings([
-                'displayErrorDetails' => true, // Should be set to false in production
-                'logError'            => false,
-                'logErrorDetails'     => false,
+                'displayErrorDetails' => boolval(getenv('DISPLAY_ERROR_DETAILS') ?? false), // Should be set to false in production
+                'logError'            => boolval(getenv('LOG_ERROR_DETAILS') ?? false),
+                'logErrorDetails'     => boolval(getenv('LOG_ERROR') ?? false),
                 'logger' => [
-                    'name' => 'slim-app',
-                    'path' => isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app.log',
-                    'level' => Logger::DEBUG,
+                    'name' => 'ravs_api',
+                    'path' => getenv('LOG_PATH') ?? 'php://stdout',
+                    'level' => getenv('LOGGER_LEVEL'),
                 ],
-
-                'database' => [
-                    'user' => 'root',
-                    'password' => '',
-                    'host' => '127.0.0.1',
-                    'name' => 'ravs'
+                'databaseUrl' => getenv('DATABASE_URL'),
+                'token' => [
+                    'secret' => getenv('TOKEN_SECRET'),
+                    'expiry' => getenv('TOKEN_EXPIRY') ?? "1",
+                    'encoding' => getenv('TOKEN_SIPHER_ALGORITHM') ?? 'HS512',
                 ],
-
-                'image' => [
-                    'directory' => '/resources' . DIRECTORY_SEPARATOR,
-                    'maxSize' => 500 * 1000
+                'smtp' => [
+                    'host' => getenv('SMTP_HOST'),
+                    'port' => getenv('SMTP_PORT'),
+                    'username' => getenv('SMTP_USER'),
+                    'password' => getenv('SMTP_PASSWORD'),
+                    'mailerName' => 'Rav System',
+                    'debug' => (int) getenv('SMTP_DEBUG') ?? 0
+                ],
+                'cloudinary' => [
+                    'cloudName' => getenv('CLOUDINARY_CLOUD_NAME'),
+                    'secret' => getenv('CLOUDINARY_SECRET'),
+                    'key' => getenv('CLOUDINARY_KEY')
                 ]
             ]);
         }

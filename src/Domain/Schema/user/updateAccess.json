@@ -2,7 +2,7 @@
 	"type": "object",
 	"properties": {
         "accessId": {
-            "$ref": "api://schema/reuse/id.json#"
+            "$ref": "api://schema/reuse/id.json"
         }
 	},
 	"required": ["accessId"],

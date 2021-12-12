@@ -8,6 +8,9 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
 use Slim\Interfaces\RouteCollectorProxyInterface as Group;
 
+use Psr\Http\Server\{
+    RequestHandlerInterface as RequestHandler
+};
 
 use App\Application\Actions\{
     Image,
@@ -16,8 +19,101 @@ use App\Application\Actions\{
     Address,
     Building,
     Room,
-    Request as RequestActions
+    Request as RequestActions,
+    Reservation,
+    Configuration,
+    Key,
+    Stats
 };
+use App\Application\Middleware\Auth\AuthorizationMiddleware;
+use App\Application\Middleware\BodyParsingMiddleware;
+use App\Application\Middleware\RequestLoggingMiddleware;
+use App\Application\Middleware\SchemaValidationMiddleware;
+use App\Application\Middleware\SessionMiddleware;
+use App\Application\Middleware\UserActivityMiddleware;
+
+function addReservationGets(&$resourcePath)
+{
+    $resourcePath->group('/reservations', function (Group $reservations) {
+        $reservations->get('', Reservation\ListReservations::class);
+
+        $reservations->group('/{reservation_id:[0-9]+}', function (Group $reservation) {
+            $reservation->get('', Reservation\ViewReservation::class);
+        });
+    });
+}
+
+
+function registerRooms(&$buildingPath)
+{
+
+    $buildingPath->group('/rooms', function (Group $rooms) {
+        $rooms->get('', Room\ListRooms::class);
+        $rooms->get('/stats', Stats\ViewRoomStats::class);
+
+        $rooms->post('', Room\CreateRoom::class);
+
+        $rooms->group('/{room_id:[0-9]+}', function (Group $room) {
+            $room->get('', Room\ViewRoom::class);
+            $room->patch('', Room\UpdateRoom::class);
+            $room->delete('', Room\DeleteRoom::class);
+
+            $room->post('/image', Image\UploadImage::class);
+            $room->delete('/image', Image\DeleteImage::class);
+
+            $room->get('/stats', Stats\ViewRoomStats::class);
+
+            $room->delete('/keys', Key\DeleteKey::class);
+            $room->patch('/keys', Key\AssignKey::class);
+
+            // registerReservation($room);
+            $room->post('/reservations', Reservation\CreateReservation::class);
+            addReservationGets($room);
+        });
+    });
+}
+
+function registerBuildings(&$addressPath)
+{
+    $addressPath->group('/buildings', function (Group $buildings) {
+        $buildings->get('', Building\ListBuildings::class);
+        $buildings->get('/stats', Stats\ViewBuildingStats::class);
+
+        $buildings->post('', Building\CreateBuilding::class);
+
+        $buildings->group('/{building_id:[0-9]+}', function (Group $building) {
+            $building->get('', Building\ViewBuilding::class);
+            $building->get('/stats', Stats\ViewBuildingStats::class);
+
+            $building->patch('', Building\UpdateBuilding::class);
+            $building->delete('', Building\DeleteBuilding::class);
+
+            $building->post('/image', Image\UploadImage::class);
+            $building->delete('/image', Image\DeleteImage::class);
+
+            addReservationGets($building);
+            registerRooms($building);
+        });
+    });
+}
+
+function registerAddresses(&$authRoot)
+{
+    $authRoot->group('/addresses', function (Group $addresses) {
+        $addresses->get('', Address\ListAllAddresses::class);
+        $addresses->get('/resources', Address\ViewResourcesMap::class);
+        $addresses->post('', Address\CreateAddress::class);
+
+        $addresses->group('/{address_id:[0-9]+}', function (Group $address) {
+            $address->get('', Address\ViewAddress::class);
+            $address->patch('', Address\UpdateAddress::class);
+            $address->delete('', Address\DeleteAddress::class);
+
+            addReservationGets($address);
+            registerBuildings($address);
+        });
+    });
+}
 
 
 return function (App $app) {
@@ -26,94 +122,81 @@ return function (App $app) {
         return $response;
     });
 
-    $app->group('', function (Group $v1) {
 
-        // ------ WHITE LIST ENDPOINTS --------
-        $v1->group('/users', function (Group $unAuth) {
-            $unAuth->post('/auth', User\AuthenticateUserAction::class);
-            $unAuth->post('/key', User\GenerateUserKeyAction::class);
-            $unAuth->patch('/activate', User\ActivateUserAction::class);
-            $unAuth->patch('/password', User\ChangeUserPasswordAction::class);
-        });
-        // ------------ END ---------------
+    $app->group('/v1', function (Group $v1) {
 
-        $v1->group('', function (Group $auth) {
+        $v1->group('', function (Group $unAuth) {
+            $unAuth->group('/users', function (Group $users) {
+                $users->post('', User\RegisterUser::class);
 
-            $auth->group('/images', function (Group $group) {
-                $group->post('', Image\UploadImageAction::class);
-                $group->get('', Image\ListAllImagesAction::class);
+                $users->post('/auth', User\AuthenticateUser::class);
+                $users->post('/key', User\GenerateUserKey::class);
+                $users->patch('/activate', User\ActivateUser::class);
+                $users->patch('/password', User\ChangeUserPassword::class);
+            });
+        })->add(RequestLoggingMiddleware::class);
 
-                $group->group('/{id:[0-9]+}', function (Group $one) {
-                    $one->get('', Image\ViewImageAction::class);
-                    $one->delete('', Image\DeleteImageAction::class);
+
+        $v1->group('', function (Group $protected) {
+
+            $protected->get('/{request_subject:.*}/requests', RequestActions\ListRequests::class);
+            $protected->get('/requests/stats', Stats\ViewRequestStats::class);
+
+            $protected->group('/configurations', function (Group $configs) {
+                $configs->get('', Configuration\ViewConfiguration::class);
+                $configs->patch('', Configuration\UpdateConfiguration::class);
+            });
+
+            $protected->group('/users', function (Group $users) {
+                $users->get('/me', User\ViewCurrentUser::class);
+                $users->get('', User\ListAllUsers::class);
+                $users->get('/stats', Stats\ViewUserStats::class);
+
+                $users->group('/{user_id:[0-9]+}', function (Group $user) {
+                    $user->get('', User\ViewUser::class);
+                    $user->get('/stats', Stats\ViewUserStats::class);
+                    $user->patch('', User\UpdateUser::class);
+                    $user->patch('/access', User\UpdateUserAccess::class);
+                    $user->delete('', User\DeleteUser::class);
+
+                    $user->post('/image', Image\UploadImage::class);
+                    $user->delete('/image', Image\DeleteImage::class);
+
+                    addReservationGets($user);
                 });
             });
 
-            $auth->group('/users', function (Group $group) {
-                $group->get('/me', User\ViewCurrentUserAction::class);
-                $group->get('', User\ListAllUsersAction::class);
-                $group->post('', User\RegisterUserAction::class);
+            $protected->group('/accesses', function (Group $accesses) {
+                $accesses->get('', Access\ListAllAccesses::class);
+                $accesses->post('', Access\CreateAccess::class);
 
-                $group->group('/{userId:[0-9]+}', function (Group $one) {
-                    $one->get('', User\ViewUserAction::class);
-                    $one->patch('', User\UpdateUserAction::class);
-                    $one->patch('/access', User\UpdateUserAccessAction::class);
-                    $one->delete('', User\DeleteUserAction::class);
-
-                    // $one->get('/report', User\GenerateUserReportAction::class);
+                $accesses->group('/{access_id:[0-9]+}', function (Group $user) {
+                    $user->get('', Access\ViewAccess::class);
+                    $user->patch('', Access\UpdateAccess::class);
+                    $user->delete('', Access\DeleteAccess::class);
                 });
             });
 
-            $auth->group('/accesses', function (Group $group) {
-                $group->get('', Access\ListAllAccessesAction::class);
-                $group->post('', Access\CreateAccessAction::class);
+            addReservationGets($protected);
+            $protected->group('/reservations', function (Group $reservations) {
+                $reservations->post('', Reservation\CreateReservation::class);
 
-                $group->group('/{id:[0-9]+}', function (Group $one) {
-                    $one->get('', Access\ViewAccessAction::class);
-                    $one->patch('', Access\UpdateAccessAction::class);
-                    $one->delete('', Access\DeleteAccessAction::class);
+                $reservations->group('/{reservation_id:[0-9]+}', function (Group $reservation) {
+                    $reservation->patch('', Reservation\UpdateReservation::class);
+                    $reservation->delete('', Reservation\DeleteReservation::class);
+
+                    $reservation->patch('/keys', Key\HandOverKey::class);
                 });
             });
 
-            $auth->get('/requests', RequestActions\ListRequestsAction::class);
-            $auth->delete('/requests', RequestActions\DeleteRequestsAction::class);
-            $auth->group('/{subject:[a-z]+}', function (Group $group) {
-                $group->get('/requests', RequestActions\ListRequestsAction::class);
-                $group->get('/{subjectId:[0-9]+}/requests', RequestActions\ListRequestsAction::class);
-            });
 
+            // appends /addresses; /buildings; /rooms; /reservations
+            registerAddresses($protected);
 
-            $auth->group('/addresses', function (Group $group) {
-                $group->get('', Address\ListAllAddressesAction::class);
-                $group->post('', Address\CreateAddressAction::class);
-
-                $group->group('/{address_id}', function (Group $one) {
-                    $one->get('', Address\ViewAddressAction::class);
-                    $one->patch('', Address\UpdateAddressAction::class);
-                    $one->delete('', Address\DeleteAddressAction::class);
-
-                    $one->group('/buildings', function (Group $group) {
-                        $group->get('', Building\ListBuildingsAction::class);
-                        $group->post('', Building\CreateBuildingAction::class);
-
-                        $group->group('/{building_id}', function (Group $one) {
-                            $one->get('', Building\ViewBuildingAction::class);
-                            $one->patch('', Building\UpdateBuildingAction::class);
-                            $one->delete('', Building\DeleteBuildingAction::class);
-
-                            $one->group('/rooms', function (Group $group) {
-                                $group->get('', Room\ListRoomsAction::class);
-                                $group->post('', Room\CreateRoomAction::class);
-
-                                $group->group('/{room_id}', function (Group $one) {
-                                    $one->get('', Room\ViewRoomAction::class);
-                                    $one->patch('', Room\UpdateRoomAction::class);
-                                });
-                            });
-                        });
-                    });
-                });
-            });
-        });
-    });
+        })->add(AuthorizationMiddleware::class)
+            ->add(RequestLoggingMiddleware::class)
+            ->add(UserActivityMiddleware::class)
+            ->add(SessionMiddleware::class);
+    })->add(SchemaValidationMiddleware::class)
+        ->add(BodyParsingMiddleware::class);
 };

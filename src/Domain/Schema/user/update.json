@@ -2,16 +2,16 @@
 	"type": "object",
 	"properties": {
 		"name": {
-			"$ref": "api://schema/reuse/name.json#"
+			"$ref": "api://schema/reuse/name.json"
 		},
 		"surname": {
-			"$ref": "api://schema/reuse/name.json#"
+			"$ref": "api://schema/reuse/name.json"
 		},
         "imageId": {
-            "$ref": "api://schema/reuse/id.json#"
+            "$ref": "api://schema/reuse/id.json"
         },
 		"metadata": {
-			"$ref": "api://schema/reuse/meta.json#"
+			"$ref": "api://schema/reuse/meta.json"
 		}
 	},
 	"required": [],

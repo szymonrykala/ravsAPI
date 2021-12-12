@@ -4,48 +4,31 @@ declare(strict_types=1);
 
 namespace App\Application\Middleware;
 
-use Psr\Http\Message\{
-    ResponseInterface as Response,
-    ServerRequestInterface as Request
-};
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 
-use Psr\Http\Server\{
-    MiddlewareInterface as Middleware,
-    RequestHandlerInterface as RequestHandler
-};
+use App\Domain\Request\IRequestRepository;
+use Psr\Log\LoggerInterface;
 
-// use Slim\Exception\HttpBadRequestException;
-use App\Domain\Request\RequestRepositoryInterface;
 
-use stdClass;
 
-class RequestLoggingMiddleware implements Middleware
+class RequestLoggingMiddleware extends BaseMiddleware
 {
-
-    public function __construct(RequestRepositoryInterface $requestRepository)
-    {
-        $this->requestRepository = $requestRepository;
+    public function __construct(
+        private IRequestRepository $requestRepository,
+        LoggerInterface $logger
+    ) {
+        parent::__construct($logger);
     }
 
-
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function process(Request $request, RequestHandler $handler): Response
+    public function processRequest(RequestHandler $handler): Response
     {
+        $response = $handler->handle($this->request);
 
-        /** @var Response $response */
-        $response = $handler->handle($request);
-
-        /** @var stdClass $session */
-        $session = $request->getAttribute('session');
-        
-        $session && $this->requestRepository->create(
-            $request->getMethod(),
-            $request->getUri()->getPath(),
-            $request->getAttribute('session')->userId,
-            $request->getParsedBody()
-        );
+        $this->requestRepository->create($this->request);
 
         return $response;
     }

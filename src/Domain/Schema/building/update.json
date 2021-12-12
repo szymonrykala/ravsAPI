@@ -2,13 +2,13 @@
     "type": "object",
     "properties": {
         "name": {
-            "$ref": "api://schema/reuse/name#"
+            "$ref": "api://schema/reuse/name.json"
         },
         "imageId": {
-            "$ref":"api://schema/reuse/id#"
+            "$ref":"api://schema/reuse/id.json"
         },
         "addressId": {
-            "$ref":"api://schema/reuse/id#"
+            "$ref":"api://schema/reuse/id.json"
         },
         "openTime": {
             "type": "string",

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Domain\User;
@@ -6,130 +7,77 @@ namespace App\Domain\User;
 use App\Domain\Image\Image;
 use App\Domain\Access\Access;
 use App\Domain\Model\Model;
-use DateTime;
+use App\Domain\User\Exceptions\BadCredentialsException;
+use App\Domain\User\Exceptions\DefaultUserAccessUpdateException;
+use App\Domain\User\Exceptions\DeletedUserUpdateException;
+use App\Domain\User\Exceptions\InvalidUserCodeException;
+use App\Domain\User\Exceptions\UserBlockedException;
+use App\Domain\User\Exceptions\UserNotActivatedException;
+use App\Utils\JsonDateTime;
 use stdClass;
 
 
-class User extends Model
+
+final class User extends Model
 {
-    public int $id;
-    public string $name;
-    public string $surname;
-    public string $password;
-    public string $email;
-    public bool $activated;
-    public int $loginFails;
-    public bool $blocked;
-    public string $uniqueKey;
-    public DateTime $lastGeneratedKeyDate;
-    public stdClass $metadata;
-    
-    public Access $access;
-    public Image $image;
-
-    public int $imageId;
-    public int $accessId;
-
-    public DateTime $created;
-    public DateTime $updated;
-
     private bool $metadataShouldBeLoaded = FALSE;
 
-    /**
-     * @param int       id
-     * @param string    name
-     * @param string    surame
-     * @param string    email
-     * @param string    password
-     * @param bool      activated
-     * @param int       loginFails
-     * @param bool      blocked
-     * @param string    uniqueKey
-     * @param DateTime    lastGeneratedKeyDate,
-     * @param int       accessId
-     * @param int       imageId
-     * @param stdClass    metadata
-     * @param DateTime    created
-     * @param DateTime    updated
-     */
     public function __construct(
-        int $id, 
-        string $name, 
-        string $surname, 
-        string $email,
-        string $password,
-        bool $activated,
-        int $loginFails,
-        bool $blocked,
-        string $uniqueKey,
-        DateTime $lastGeneratedKeyDate,
-        int $accessId,
-        int $imageId,
-        stdClass $metadata,
-        DateTime $created,
-        DateTime $updated
-    )
-    {
+        public int $id,
+        public string $name,
+        public string $surname,
+        public string $email,
+        public string $password,
+        public bool $activated,
+        public int $loginFails,
+        public bool $blocked,
+        public bool $deleted,
+        public ?string $uniqueKey,
+        public JsonDateTime $lastGeneratedKeyDate,
+        public ?Access $access,
+        public Image $image,
+        public stdClass $metadata,
+        public JsonDateTime $lastActivity,
+        public JsonDateTime $created,
+        public JsonDateTime $updated,
+        public int $imageId,
+        public int $accessId
+    ) {
         parent::__construct($id, $created, $updated);
-
-        $this->name = ucfirst($name);
-        $this->surname = ucfirst($surname);
-        $this->email = strtolower($email);
-        $this->password = $password;
-        $this->activated = $activated;
-        $this->loginFails = $loginFails;
-        $this->blocked = $blocked;
-        $this->uniqueKey = $uniqueKey;
-        $this->lastGeneratedKeyDate = $lastGeneratedKeyDate;
-
-        $this->accessId = $accessId;
-        $this->imageId = $imageId;
-
-        $this->metadata = $metadata;
     }
 
     /** 
-     * @param int length of the key
-     * @return string unique key
+     * generates unique key
      */
-    public static function generateUniqueKey(int $length = 8): string
+    public static function generateUniqueKey(int $length = 10): string
     {
         return strtoupper(substr(uniqid(), 0, $length));
     }
 
 
     /**
-     * @param string $userUniqueKey
+     * Asserts that the key provided by user is correct
      * @throws InvalidUserCodeException
      */
-    private function assertUniqueKeyIsCorrect(string $userKey):void
+    private function assertUniqueKeyIsCorrect(string $userKey): void
     {
-        if(empty($this->uniqueKey) || $userKey !== $this->uniqueKey){
-            throw new Exceptions\InvalidUserCodeException();
-        } 
+        if (empty($this->uniqueKey) || $userKey !== $this->uniqueKey) {
+            throw new InvalidUserCodeException();
+        }
     }
 
     /**
-     * @return DateTime $lastGeneratedKeyDate
+     * Assigns unique key to the user
      */
-    public function getLastGeneratedKeyDate():DateTime
+    public function assignUniqueKey(): void
     {
-        return $this->lastGeneratedKeyDate;
+        $this->lastGeneratedKeyDate = new JsonDateTime('now');
+        $this->uniqueKey = User::generateUniqueKey();
     }
 
 
     /**
-     * @return void
-     */
-    public function assignUniqueKey(int $length=8):void
-    {
-        $this->lastGeneratedKeyDate = new DateTime('now');
-        $this->uniqueKey = User::generateUniqueKey($length);
-    }
-
-
-    /**
-     * @param string $userKey
+     * Activates the user if provided key is correct
      */
     public function activate(string $userKey): void
     {
@@ -140,7 +88,7 @@ class User extends Model
 
 
     /**
-     * @param string $useKey
+     * Unblock the user if provided key is correct
      */
     public function unblock(string $userKey): void
     {
@@ -151,58 +99,97 @@ class User extends Model
     }
 
     /**
-     * @param string $userPassword
-     * @return void
+     * Login the user.
+     * Checks if the user is activated.
+     * Authenticate the user and handle blocking in case of too many failed tries.
+     * @throws UserBlockedException
+     * @throws BadCredentialsException
+     * @throws UserNotActivatedException
      */
     public function login(string $userPassword): void
     {
 
-        if($this->blocked === TRUE){
-            throw new Exceptions\UserBlockedException();
+        if ($this->blocked === TRUE) {
+            throw new UserBlockedException();
         }
 
-        if(password_verify($userPassword, $this->password)){
+        if (password_verify($userPassword, $this->password)) {
             $this->loginFails = 0;
-        }else{
+        } else {
             $this->loginFails += 1;
-            if($this->loginFails > 3){
+            if ($this->loginFails > 3) {
                 $this->blocked = TRUE;
             }
-            throw new Exceptions\BadCredentialsException();
+            throw new BadCredentialsException();
         }
-    
-        if(!$this->activated){
-            throw new Exceptions\UserNotActivatedException();
-        }      
+
+        if (!$this->activated) {
+            throw new UserNotActivatedException();
+        }
     }
 
-    public function isSessionUser(stdClass $session):bool
+    /** 
+     * Checks if user is the user who performing request
+     */
+    public function isSessionUser(stdClass $session): bool
     {
         return $this->id === $session->userId;
     }
 
-    public function loadMetadata():void
+    /**
+     * Triggers loading metadata to User JSON representation
+     */
+    public function loadMetadata(): void
     {
         $this->metadataShouldBeLoaded = TRUE;
     }
 
     /**
-     * @return array
+     * Modify user object to deleted user state
      */
-    public function jsonSerialize() : array
+    public function setAsDeleted(): void
     {
-        $view = [
-            'id' => $this->id,
-            'email' => $this->email,
-            'name' => $this->name,
-            'surname' => $this->surname,
-            'activated' => $this->activated,
-            'image' => $this->image ?? $this->imageId,
-            'access' => $this->access ?? $this->accessId,
-            "created" => $this->created->format('c'),
-            "updated" => $this->updated->format('c'),
-        ];
-        if($this->metadataShouldBeLoaded) $view["metadata"] = $this->metadata;
+        $num = (string) time();
+        $this->name = 'User' . substr($num, 0, 5);
+        $this->surname = 'Deleted' . substr($num, 6);
+        $this->deleted = TRUE;
+        $this->email = 'deleted' . $num;
+        $this->imageId = 1; //default user image
+    }
+
+    /**
+     * {@inheritDoc}
+     * @throws DeletedUserUpdateException
+     */
+    public function validate(): void
+    {
+        if ($this->deleted)
+            throw new DeletedUserUpdateException();
+
+        if ($this->id === 1 && $this->accessId)
+            throw new DefaultUserAccessUpdateException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function jsonSerialize(): array
+    {
+        $view = array_merge(
+            [
+                'email' => $this->email,
+                'name' => $this->name,
+                'surname' => $this->surname,
+                'activated' => $this->activated,
+                'deleted' => $this->deleted,
+                'image' => $this->image,
+                'access' => $this->access ?? $this->accessId,
+                'lastActivity' => $this->lastActivity,
+            ],
+            parent::jsonSerialize()
+        );
+
+        if ($this->metadataShouldBeLoaded) $view["metadata"] = $this->metadata;
 
         return $view;
     }

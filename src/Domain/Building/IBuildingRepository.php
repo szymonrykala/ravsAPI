@@ -3,21 +3,26 @@ declare(strict_types=1);
 
 namespace App\Domain\Building;
 
-use App\Domain\Model\RepositoryInterface;
+use App\Domain\Model\IRepository;
+use App\Utils\JsonDateTime;
 
-use DateTime;
 
-interface IBuildingRepository extends RepositoryInterface
+interface IBuildingRepository extends IRepository
 {
+
     /**
-     * @param int id
+     * enable address loading
+     * @return IBuildingRepository
      */
-    public function deleteById(int $id): void;
+    public function withAddress(): IBuildingRepository;
     
     /**
      * @param Building building
      */
     public function save(Building $building): void;
+
+    /** sets default image for building */
+    public function setDefaultImage(Building $building): void;
 
     /**
      * @param string name
@@ -26,16 +31,9 @@ interface IBuildingRepository extends RepositoryInterface
      */
     public function create(
         string $name,
-        DateTime $openTime,
-        DateTime $closeTime,
+        JsonDateTime $openTime,
+        JsonDateTime $closeTime,
         int $addressId
     ): int;
 
-    /**
-     * @param int buildingId
-     * @param int addressId
-     * @return Building
-     * @throws DomainRecordNotFoundException
-     */
-    public function byIdAndAddressId(int $buildingId, int $addressId): Building;
 }

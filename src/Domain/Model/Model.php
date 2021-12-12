@@ -1,58 +1,57 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Domain\Model;
 
+use App\Utils\JsonDateTime;
 use stdClass;
 use JsonSerializable;
-use DateTime;
-use App\Domain\ModelPropertyNotExistException;
 
 
-abstract class Model implements JsonSerializable{
 
-    public int $id;
-    public DateTime $created;
-    public DateTime $updated;
-
-    abstract public function jsonSerialize():array;
-
-    public function __construct(int $id, DateTime $created, DateTime $updated)
-    {
-        $this->id = $id;
-
-        $this->created = $created;
-        $this->updated = $updated;
+abstract class Model implements JsonSerializable
+{
+    public function __construct(
+        public int $id,
+        public JsonDateTime $created,
+        public JsonDateTime $updated
+    ) {
     }
 
-    public function __set(string $name, $value){
+    /**
+     * @throws ModelPropertyNotExistException
+     */
+    public function __set(string $name, $value)
+    {
         throw new ModelPropertyNotExistException($name);
     }
 
     /**
-     * Updates model properties
-     * @param stdClass $form
-     * @throws TypeError
+     * Updates model properties with form data
      */
     public function update(stdClass $form): void
     {
-        foreach($form as $key => $value) $this->$key = $value;
+        foreach ($form as $key => $value) $this->$key = $value;
     }
 
     /**
-     * optional model object validation rules bfore saving
-     * @return void
+     * Domain object save validation callback.
+     * Any rules checks on each update, can be implemented here.
      */
-    protected function validateCallback():void
-    {}
-
-    /**
-     * validation trigger fo validateCallback
-     * @return void
-     */
-    public function validate():void
+    public function validate(): void
     {
-        $this->validateCallback();
     }
 
+    /**
+     * Specify data which should be serialized to JSON
+     */
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->id,
+            '_created' => $this->created,
+            '_updated' => $this->updated
+        ];
+    }
 }

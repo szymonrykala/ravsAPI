@@ -1,0 +1,13 @@
+{
+	"type": "object",
+	"properties": {
+		"RFIDTag": {
+			"type": "string",
+			"minLength": 5
+		}
+	},
+	"required": [
+		"RFIDTag"
+	],
+	"additionalProperties": false
+}
