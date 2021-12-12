@@ -1,19 +1,6 @@
 <?php
 
-$db = parse_url(getenv("DATABASE_URL"));
-
-$pdo = new PDO(
-    "pgsql:" . sprintf(
-        "host=%s;port=%s;user=%s;password=%s;dbname=%s;sslmode=require",
-        $db["host"],
-        $db["port"],
-        $db["user"],
-        $db["pass"],
-        ltrim($db["path"], "/")
-    ),
-    $db['user'],
-    $db["pass"]
-);
+$pdo = require_once('./dbConnect.php');
 
 $adminPassword = getenv('ADMIN_PASSWORD');
 $adminEmail = getenv('ADMIN_EMAIL');
@@ -25,6 +12,21 @@ if (empty($adminPassword)) {
 if (empty($adminEmail)) {
     throw new Exception('You must specify "ADMIN_EMAIL" to proceed.');
 }
+
+
+$pdo->exec(
+    "DROP TABLE IF EXISTS 
+        configuration,
+        access, 
+        image,
+        request,
+        \"user\",
+        address,
+        building,
+        room,
+        reservation"
+);
+
 
 $pdo->exec("SET TIMEZONE='Europe/Warsaw';");
 
