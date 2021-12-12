@@ -9,15 +9,21 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Opis\JsonSchema\Errors\ErrorFormatter;
-
-use App\Utils\JsonSchemaValidator;
+use Opis\JsonSchema\Validator;
 
 
 
 class SchemaValidationMiddleware extends BaseMiddleware
 {
+
+    /** path to folder with schemas */
+    private const BASE_FOLDER = '../src/Domain/Schema';
+
+    /** base schema uri */
+    private const BASE_URI = 'api://schema/';
+
     /** map of json schemas for each endpoint */
-    private array $loadMap = [
+    private const LOAD_MAP = [
         'POST' => [
             '/v1/users/auth' => '/user/login.json',
             '/v1/users/key' => '/user/generateKey.json',
@@ -53,14 +59,16 @@ class SchemaValidationMiddleware extends BaseMiddleware
 
         if ($this->shouldBeValidated()) {
 
-            $validator = new JsonSchemaValidator();
-            $validator->loadDefaults();
+            $validator = new Validator();
+            $validator->setMaxErrors(4);
+            $validator->resolver()
+                ->registerPrefix($this::BASE_URI, $this::BASE_FOLDER);
 
             $data = $this->request->getParsedBody();
 
             $result = $validator->validate(
                 $data,
-                JsonSchemaValidator::BASE_URI . $this->loadMap[$this->getMethod()][$this->path]
+                $this::BASE_URI . $this::LOAD_MAP[$this->getMethod()][$this->path]
             );
 
             if (!$result->isValid()) {
@@ -76,7 +84,7 @@ class SchemaValidationMiddleware extends BaseMiddleware
      */
     private function shouldBeValidated(): bool
     {
-        return isset($this->loadMap[$this->getMethod()][$this->getProcessURI()]);
+        return isset($this::LOAD_MAP[$this->getMethod()][$this->getProcessURI()]);
     }
 
     /**
