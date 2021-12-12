@@ -144,18 +144,6 @@ final class User extends Model
         $this->metadataShouldBeLoaded = TRUE;
     }
 
-    /**
-     * Modify user object to deleted user state
-     */
-    public function setAsDeleted(): void
-    {
-        $num = (string) time();
-        $this->name = 'User' . substr($num, 0, 5);
-        $this->surname = 'Deleted' . substr($num, 6);
-        $this->deleted = TRUE;
-        $this->email = 'deleted' . $num;
-        $this->imageId = 1; //default user image
-    }
 
     /**
      * {@inheritDoc}
@@ -165,9 +153,6 @@ final class User extends Model
     {
         if ($this->deleted)
             throw new DeletedUserUpdateException();
-
-        if ($this->id === 1 && $this->accessId)
-            throw new DefaultUserAccessUpdateException();
     }
 
     /**

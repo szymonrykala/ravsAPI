@@ -191,8 +191,8 @@ final class UserRepository extends BaseRepository implements IUserRepository
             return;
         }
 
-        $user->setAsDeleted();
 
+        $num = (string) time();
 
         $sql = "UPDATE $this->table SET
                     name = :name,
@@ -204,10 +204,10 @@ final class UserRepository extends BaseRepository implements IUserRepository
 
         $params = [
             ':id' => $user->id,
-            ':name' => $user->name,
-            ':surname' => $user->surname,
-            ':deleted' => $user->deleted,
-            ':email' => $user->email
+            ':name' => 'User' . substr($num, 0, 5),
+            ':surname' => 'Deleted' . substr($num, 6),
+            ':deleted' => TRUE,
+            ':email' => 'deleted' . $num
         ];
 
         $this->db->query($sql, $params);

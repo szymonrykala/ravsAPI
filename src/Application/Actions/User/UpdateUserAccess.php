@@ -8,8 +8,7 @@ use App\Domain\Access\IAccessRepository;
 use App\Domain\Exception\DomainResourceNotFoundException;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
-
-
+use Slim\Exception\HttpForbiddenException;
 
 class UpdateUserAccess extends UserAction
 {
@@ -30,6 +29,12 @@ class UpdateUserAccess extends UserAction
 
         $userId = (int) $this->resolveArg($this::USER_ID);
         $form = $this->getFormData();
+
+        if ($userId === 1)
+            throw new HttpForbiddenException(
+                $this->request,
+                "Nie można zmienić klasy dostępu administratora"
+            );
 
         try {
             $this->accessRepository->byId($form->accessId);
