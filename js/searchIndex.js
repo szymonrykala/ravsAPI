@@ -666,6 +666,11 @@ Search.appendIndex(
             "summary": "\u007B\u0040inheritDoc\u007D",
             "url": "classes/App-Application-Actions-Key-HandOverKey.html#method_action"
         },                {
+            "fqsen": "\\App\\Application\\Actions\\Key\\HandOverKey\u003A\u003AcheckIfAdditionalTimePassed\u0028\u0029",
+            "name": "checkIfAdditionalTimePassed",
+            "summary": "Checks\u0020if\u00202\u0020hours\u0020passed,\u0020if\u0020yes\u0020\u002D\u0020throws\u0020an\u0020error",
+            "url": "classes/App-Application-Actions-Key-HandOverKey.html#method_checkIfAdditionalTimePassed"
+        },                {
             "fqsen": "\\App\\Application\\Actions\\Key\\KeyAction",
             "name": "KeyAction",
             "summary": "",
@@ -2021,46 +2026,6 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/App-Domain-Image-ImageSizeExceededException.html#method___construct"
         },                {
-            "fqsen": "\\App\\Domain\\Key\\Policy\\IssueKeyPolicy",
-            "name": "IssueKeyPolicy",
-            "summary": "",
-            "url": "classes/App-Domain-Key-Policy-IssueKeyPolicy.html"
-        },                {
-            "fqsen": "\\App\\Domain\\Key\\Policy\\IssueKeyPolicy\u003A\u003A__invoke\u0028\u0029",
-            "name": "__invoke",
-            "summary": "",
-            "url": "classes/App-Domain-Key-Policy-IssueKeyPolicy.html#method___invoke"
-        },                {
-            "fqsen": "\\App\\Domain\\Key\\Policy\\KeyPolicy",
-            "name": "KeyPolicy",
-            "summary": "",
-            "url": "classes/App-Domain-Key-Policy-KeyPolicy.html"
-        },                {
-            "fqsen": "\\App\\Domain\\Key\\Policy\\KeyPolicy\u003A\u003A__construct\u0028\u0029",
-            "name": "__construct",
-            "summary": "",
-            "url": "classes/App-Domain-Key-Policy-KeyPolicy.html#method___construct"
-        },                {
-            "fqsen": "\\App\\Domain\\Key\\Policy\\KeyPolicy\u003A\u003A\u0024resevation",
-            "name": "resevation",
-            "summary": "",
-            "url": "classes/App-Domain-Key-Policy-KeyPolicy.html#property_resevation"
-        },                {
-            "fqsen": "\\App\\Domain\\Key\\Policy\\KeyPolicy\u003A\u003A\u0024room",
-            "name": "room",
-            "summary": "",
-            "url": "classes/App-Domain-Key-Policy-KeyPolicy.html#property_room"
-        },                {
-            "fqsen": "\\App\\Domain\\Key\\Policy\\KeyReturnPolicy",
-            "name": "KeyReturnPolicy",
-            "summary": "",
-            "url": "classes/App-Domain-Key-Policy-KeyReturnPolicy.html"
-        },                {
-            "fqsen": "\\App\\Domain\\Key\\Policy\\KeyReturnPolicy\u003A\u003A__invoke\u0028\u0029",
-            "name": "__invoke",
-            "summary": "",
-            "url": "classes/App-Domain-Key-Policy-KeyReturnPolicy.html#method___invoke"
-        },                {
             "fqsen": "\\App\\Domain\\Model\\IRepository",
             "name": "IRepository",
             "summary": "",
@@ -2448,13 +2413,13 @@ Search.appendIndex(
         },                {
             "fqsen": "\\App\\Domain\\Reservation\\Policy\\ReservationUpdatePolicy\u003A\u003AupdateMaxOneDayBefore\u0028\u0029",
             "name": "updateMaxOneDayBefore",
-            "summary": "",
+            "summary": "check\u0020if\u0020update\u0020is\u0020max\u0020day\u0020before\u0020\u002D\u0020disabled",
             "url": "classes/App-Domain-Reservation-Policy-ReservationUpdatePolicy.html#method_updateMaxOneDayBefore"
         },                {
-            "fqsen": "\\App\\Domain\\Reservation\\Policy\\ReservationUpdatePolicy\u003A\u003AreservationIsNotOver\u0028\u0029",
-            "name": "reservationIsNotOver",
-            "summary": "",
-            "url": "classes/App-Domain-Reservation-Policy-ReservationUpdatePolicy.html#method_reservationIsNotOver"
+            "fqsen": "\\App\\Domain\\Reservation\\Policy\\ReservationUpdatePolicy\u003A\u003AreservationHasNotStarted\u0028\u0029",
+            "name": "reservationHasNotStarted",
+            "summary": "chceck\u0020if\u0020reservation\u0020has\u0020already\u0020started",
+            "url": "classes/App-Domain-Reservation-Policy-ReservationUpdatePolicy.html#method_reservationHasNotStarted"
         },                {
             "fqsen": "\\App\\Domain\\Reservation\\Policy\\ReservationUpdatePolicy\u003A\u003A\u0024reservation",
             "name": "reservation",
@@ -3210,11 +3175,6 @@ Search.appendIndex(
             "name": "loadMetadata",
             "summary": "Triggers\u0020loading\u0020metadata\u0020to\u0020User\u0020JSON\u0020representation",
             "url": "classes/App-Domain-User-User.html#method_loadMetadata"
-        },                {
-            "fqsen": "\\App\\Domain\\User\\User\u003A\u003AsetAsDeleted\u0028\u0029",
-            "name": "setAsDeleted",
-            "summary": "Modify\u0020user\u0020object\u0020to\u0020deleted\u0020user\u0020state",
-            "url": "classes/App-Domain-User-User.html#method_setAsDeleted"
         },                {
             "fqsen": "\\App\\Domain\\User\\User\u003A\u003Avalidate\u0028\u0029",
             "name": "validate",
@@ -4605,16 +4565,6 @@ Search.appendIndex(
             "name": "Image",
             "summary": "",
             "url": "namespaces/app-domain-image.html"
-        },                {
-            "fqsen": "\\App\\Domain\\Key\\Policy",
-            "name": "Policy",
-            "summary": "",
-            "url": "namespaces/app-domain-key-policy.html"
-        },                {
-            "fqsen": "\\App\\Domain\\Key",
-            "name": "Key",
-            "summary": "",
-            "url": "namespaces/app-domain-key.html"
         },                {
             "fqsen": "\\App\\Domain\\Model",
             "name": "Model",
