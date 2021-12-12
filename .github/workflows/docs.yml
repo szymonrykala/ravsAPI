@@ -1,21 +1,9 @@
-# This is a basic workflow that is manually triggered
+name: Build docs
 
-name: Manual workflow
-
-# Controls when the action will run. Workflow runs when manually triggered using the UI
-# or API.
 on:
   push:
-    branches:
-    - master
+    branches: [ master ]
 
-  pull_request:
-    branches:
-    - master
-    
-  workflow_dispatch:
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   docs:
     runs-on: ubuntu-latest
@@ -26,14 +14,13 @@ jobs:
         wget https://phpdoc.org/phpDocumentor.phar
         chmod +x phpDocumentor.phar
         mv phpDocumentor.phar /usr/local/bin/phpDocumentor
+        pwd
 
-    - name: generate_docs
-      run: phpDocumentor --config ./phpdoc.xml
+    - name: generate docs
+      run: phpDocumentor --config phpdoc.xml
 
-    - name: Deploy to GitHub Pages
-      uses: crazy-max/ghaction-github-pages@v2
+    - name: Deploy docs to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
       with:
-        target_branch: gh-pages-docs
-        build_dir: ./docs
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+        publish_dir: ./docs
