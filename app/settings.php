@@ -7,38 +7,49 @@ use App\Application\Settings\SettingsInterface;
 use DI\ContainerBuilder;
 
 
+function env(string $name, string|int|bool|null $default = NULL)
+{
+    $val = getenv($name);
+
+    if ($val) return $val;
+    elseif (!$val && $default !== NULL) return $default;
+
+    throw new Exception("You must specify '$name' environment variable");
+}
+
+
 return function (ContainerBuilder $containerBuilder) {
 
     // Global Settings Object
     $containerBuilder->addDefinitions([
         SettingsInterface::class => function () {
             return new Settings([
-                'displayErrorDetails' => boolval(getenv('DISPLAY_ERROR_DETAILS') ?? false), // Should be set to false in production
-                'logError'            => boolval(getenv('LOG_ERROR_DETAILS') ?? false),
-                'logErrorDetails'     => boolval(getenv('LOG_ERROR') ?? false),
+                'displayErrorDetails' => boolval(env('DISPLAY_ERROR_DETAILS', false)), // Should be set to false in production
+                'logError'            => boolval(env('LOG_ERROR_DETAILS', false)),
+                'logErrorDetails'     => boolval(env('LOG_ERROR', false)),
                 'logger' => [
                     'name' => 'ravs_api',
-                    'path' => getenv('LOG_PATH') ?? 'php://stdout',
-                    'level' => getenv('LOGGER_LEVEL'),
+                    'path' => env('LOG_PATH', 'php://stdout'),
+                    'level' => env('LOGGER_LEVEL', 'DEBUG'),
                 ],
-                'databaseUrl' => getenv('DATABASE_URL'),
+                'databaseUrl' => env('DATABASE_URL'),
                 'token' => [
-                    'secret' => getenv('TOKEN_SECRET'),
-                    'expiry' => getenv('TOKEN_EXPIRY') ?? "1",
-                    'encoding' => getenv('TOKEN_SIPHER_ALGORITHM') ?? 'HS512',
+                    'secret' => env('TOKEN_SECRET'),
+                    'expiry' => env('TOKEN_EXPIRY', "1"),
+                    'encoding' => env('TOKEN_SIPHER_ALGORITHM', 'HS512'),
                 ],
                 'smtp' => [
-                    'host' => getenv('SMTP_HOST'),
-                    'port' => getenv('SMTP_PORT'),
-                    'username' => getenv('SMTP_USER'),
-                    'password' => getenv('SMTP_PASSWORD'),
+                    'host' => env('SMTP_HOST'),
+                    'port' => env('SMTP_PORT'),
+                    'username' => env('SMTP_USER'),
+                    'password' => env('SMTP_PASSWORD'),
                     'mailerName' => 'Rav System',
-                    'debug' => (int) getenv('SMTP_DEBUG') ?? 0
+                    'debug' => (int) env('SMTP_DEBUG', 0)
                 ],
                 'cloudinary' => [
-                    'cloudName' => getenv('CLOUDINARY_CLOUD_NAME'),
-                    'secret' => getenv('CLOUDINARY_SECRET'),
-                    'key' => getenv('CLOUDINARY_KEY')
+                    'cloudName' => env('CLOUDINARY_CLOUD_NAME'),
+                    'secret' => env('CLOUDINARY_SECRET'),
+                    'key' => env('CLOUDINARY_KEY')
                 ]
             ]);
         }
