@@ -78,6 +78,14 @@ In addition its configured with following parameters which can be updated:
 
 ## Policies
 
+### Removing objects
+- address - cannot remove if contains buildings
+- building - cannot remove if contains rooms
+- room - while removing all reservations will be deleted
+- reservation - cannot remove if reservation is pending
+- access - cannot remove if there are users assigned to this access class or it's admin or default user class
+- user - if user defetes his account, his data are changed to random strings. To delete account in this state, administrator have to delete such user.
+
 ### Picking up keys
 - if room do not has a key assigned, the key do not have to be provided
 - keys can be piccked up till 1 hour after reservation planned start

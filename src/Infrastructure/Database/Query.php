@@ -34,17 +34,25 @@ class Query
             // var_dump($e->getCode());
             $message = '';
             switch ($e->getCode()) {
-                case '23000':
-                    preg_match('/Duplicate\sentry\s\'(.*)\'\s/', $e->getMessage(), $outputArray);
+                case '23505':
+                    preg_match('/DETAIL:.*=\((.*)\)/', $e->getMessage(), $outputArray);
                     $message = isset($outputArray[1]) ? "'$outputArray[1]'" : 'podana wartość';
-                    $error->message = "Niestesty $message już istnieje.";
+
+                    $error->message = "Konflikt, $message już istnieje.";
                     break;
-                case '42S22':
-                    preg_match('/Unknown\scolumn\s\'(.*)\'\s/', $e->getMessage(), $outputArray);
-                    $message = isset($outputArray[1]) && $outputArray[1];
-                    $error->message = "Właściwość '$message' nie istnieje.";
-                case '22007':
-                    $error->message = 'Błąd składni SQL: ' . $e->getMessage();
+                case '23503':
+                    preg_match('/on\stable\s\"(.*)\"\sviolates/', $e->getMessage(), $outputArray);
+
+                    $tables = [
+                        'building' => 'Budynek',
+                        'room' => 'Sala',
+                        'user' => 'Użytkownik',
+                        'access' => 'Klasa dostępu'
+                    ];
+                    if (isset($outputArray[1], $tables[$outputArray[1]]))
+                        $error->message = 'Nie można usunąć. '
+                            . $tables[$outputArray[1]]
+                            . ' zawiera referencyjne obiekty.';
                     break;
                 default:
                     $error->message = $e->getMessage();
