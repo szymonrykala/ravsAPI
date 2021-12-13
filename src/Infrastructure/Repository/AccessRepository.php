@@ -10,13 +10,22 @@ use App\Domain\Access\{
     Access,
     AccessDeleteException
 };
+use App\Domain\Configuration\IConfigurationRepository;
 use App\Domain\Model\Model;
 use App\Utils\JsonDateTime;
-
+use Psr\Container\ContainerInterface;
 
 final class AccessRepository extends BaseRepository implements IAccessRepository
 {
     protected string $table = '"access"';
+
+
+    public function __construct(
+        ContainerInterface $di,
+        private IConfigurationRepository $config
+    ) {
+        parent::__construct($di);
+    }
 
     /**
      * {@inheritDoc}
@@ -46,7 +55,9 @@ final class AccessRepository extends BaseRepository implements IAccessRepository
      */
     public function delete(Model $access): void
     {
-        if ($access->id === 1) {
+        $defaultAccessId = $this->config->load()->defaultUserAccess;
+
+        if ($access->id === 1 || $access->id === $defaultAccessId) {
             throw new AccessDeleteException();
         }
         parent::delete($access);
