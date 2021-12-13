@@ -1,6 +1,6 @@
 <?php
 
-$pdo = require_once('./dbConnect.php');
+$pdo = require_once(__DIR__ . '/dbConnect.php');
 
 $adminPassword = getenv('ADMIN_PASSWORD');
 $adminEmail = getenv('ADMIN_EMAIL');
@@ -33,7 +33,7 @@ $pdo->exec("SET TIMEZONE='Europe/Warsaw';");
 /* #### T A B L E S #### */
 $pdo->exec(
     "CREATE TABLE IF NOT EXISTS configuration (
-        key text NOT NULL,
+        key TEXT NOT NULL,
         value int NOT NULL,
 
         PRIMARY KEY (key)
@@ -56,18 +56,18 @@ $pdo->exec(
 
 $pdo->exec(
     "CREATE TABLE IF NOT EXISTS access (
-        id nextval('access_id_seq'::regclass) PRIMARY KEY, 
-        name text NOT NULL,
-        owner boolean NOT NULL DEFAULT FALSE,
-        access_admin boolean NOT NULL DEFAULT FALSE,
-        premises_admin boolean NOT NULL DEFAULT FALSE,
-        keys_admin boolean NOT NULL DEFAULT FALSE,
-        reservations_admin boolean NOT NULL DEFAULT FALSE,
-        reservations_ability boolean NOT NULL DEFAULT FALSE,
-        logs_admin boolean NOT NULL DEFAULT FALSE,
-        stats_viewer boolean NOT NULL DEFAULT FALSE,
-        created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        updated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        id SERIAL PRIMARY KEY, 
+        name TEXT NOT NULL,
+        owner BOOLEAN NOT NULL DEFAULT FALSE,
+        access_admin BOOLEAN NOT NULL DEFAULT FALSE,
+        premises_admin BOOLEAN NOT NULL DEFAULT FALSE,
+        keys_admin BOOLEAN NOT NULL DEFAULT FALSE,
+        reservations_admin BOOLEAN NOT NULL DEFAULT FALSE,
+        reservations_ability BOOLEAN NOT NULL DEFAULT FALSE,
+        logs_admin BOOLEAN NOT NULL DEFAULT FALSE,
+        stats_viewer BOOLEAN NOT NULL DEFAULT FALSE,
+        created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
         UNIQUE(name)
     );"
@@ -119,12 +119,12 @@ $pdo->exec("SELECT setval('access_id_seq', 3);");
 /* IMAGE */
 $pdo->exec(
     "CREATE TABLE IF NOT EXISTS image (
-        id nextval('image_id_seq'::regclass) PRIMARY KEY,
-        public_id text NOT NULL,
-        size int NOT NULL,
-        url text DEFAULT NULL,
-        updated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+        id SERIAL PRIMARY KEY,
+        public_id TEXT NOT NULL,
+        size INT NOT NULL,
+        url TEXT DEFAULT NULL,
+        updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
     );"
 );
 
@@ -144,14 +144,14 @@ $pdo->exec("SELECT setval('image_id_seq', 3);");
 /* REQUEST */
 $pdo->exec(
     "CREATE TABLE IF NOT EXISTS request (
-        id serial PRIMARY KEY,
-        method text NOT NULL,
-        endpoint text NOT NULL,
-        user_id int DEFAULT NULL,
-        payload text NOT NULL DEFAULT '{}',
+        id SERIAL PRIMARY KEY,
+        method TEXT NOT NULL,
+        endpoint TEXT NOT NULL,
+        user_id INT DEFAULT NULL,
+        payload TEXT NOT NULL DEFAULT '{}',
         time float DEFAULT 1,
-        created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        updated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+        created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
     );"
 );
 
@@ -159,23 +159,23 @@ $pdo->exec(
 /* USER */
 $pdo->exec(
     "CREATE TABLE IF NOT EXISTS \"user\" (
-        id serial PRIMARY KEY,
-        access int NOT NULL,
-        image int DEFAULT 1,
-        name text NOT NULL,
-        surname text NOT NULL,
-        email text NOT NULL,
-        password text NOT NULL,
-        activated boolean NOT NULL DEFAULT FALSE,
-        login_fails int NOT NULL DEFAULT 0,
-        blocked boolean NOT NULL DEFAULT FALSE,
-        deleted boolean NOT NULL DEFAULT FALSE,
-        unique_key text DEFAULT NULL,
-        last_generated_key_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        metadata text NOT NULL DEFAULT '{}'::text,
-        updated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        last_activity timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        id SERIAL PRIMARY KEY,
+        access INT NOT NULL,
+        image INT DEFAULT 1,
+        name TEXT NOT NULL,
+        surname TEXT NOT NULL,
+        email TEXT NOT NULL,
+        password TEXT NOT NULL,
+        activated BOOLEAN NOT NULL DEFAULT FALSE,
+        login_fails INT NOT NULL DEFAULT 0,
+        blocked BOOLEAN NOT NULL DEFAULT FALSE,
+        deleted BOOLEAN NOT NULL DEFAULT FALSE,
+        unique_key TEXT DEFAULT NULL,
+        last_generated_key_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        metadata TEXT NOT NULL DEFAULT '{}'::TEXT,
+        updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        last_activity TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
         UNIQUE(email),
 
@@ -192,6 +192,7 @@ $pdo->exec(
 
 $sth = $pdo->prepare(
     "INSERT INTO \"user\" (
+        id,
         access, 
         name, 
         surname, 
@@ -199,7 +200,8 @@ $sth = $pdo->prepare(
         password, 
         activated
         ) VALUES(
-            1, 
+            1,
+            1,
             'Ravs', 
             'Admin', 
             :email,
@@ -214,18 +216,20 @@ $sth->execute([
     ':email' => $adminEmail
 ]);
 
+$pdo->exec("SELECT setval('user_id_seq', 2);");
+
 
 /* ADDRESS */
 $pdo->exec(
     "CREATE TABLE IF NOT EXISTS address (
-        id serial PRIMARY KEY,
-        country text NOT NULL,
-        town text NOT NULL,
-        postal_code text NOT NULL,
-        street text NOT NULL,
-        number text NOT NULL,
-        created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        updated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        id SERIAL PRIMARY KEY,
+        country TEXT NOT NULL,
+        town TEXT NOT NULL,
+        postal_code TEXT NOT NULL,
+        street TEXT NOT NULL,
+        number TEXT NOT NULL,
+        created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
         UNIQUE(
             country,
@@ -240,14 +244,14 @@ $pdo->exec(
 
 $pdo->exec(
     "CREATE TABLE IF NOT EXISTS building (
-        id serial PRIMARY KEY,
-        name text NOT NULL,
-        image int NOT NULL DEFAULT 3,
-        address int NOT NULL,
+        id SERIAL PRIMARY KEY,
+        name TEXT NOT NULL,
+        image INT NOT NULL DEFAULT 3,
+        address INT NOT NULL,
         open_time time NOT NULL,
         close_time time NOT NULL,
-        created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        updated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
         UNIQUE(name, address),
 
@@ -264,18 +268,18 @@ $pdo->exec(
 
 $pdo->exec(
     "CREATE TABLE IF NOT EXISTS room (
-        id serial PRIMARY KEY,
-        name text NOT NULL,
-        image int NOT NULL DEFAULT 2,
-        rfid text DEFAULT NULL,
-        building int NOT NULL,
-        room_type text NOT NULL,
-        seats_count int NOT NULL,
-        floor int NOT NULL,
-        blocked boolean NOT NULL DEFAULT TRUE,
-        occupied boolean NOT NULL DEFAULT FALSE,
-        updated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        id SERIAL PRIMARY KEY,
+        name TEXT NOT NULL,
+        image INT NOT NULL DEFAULT 2,
+        rfid TEXT DEFAULT NULL,
+        building INT NOT NULL,
+        room_type TEXT NOT NULL,
+        seats_count INT NOT NULL,
+        floor INT NOT NULL,
+        blocked BOOLEAN NOT NULL DEFAULT TRUE,
+        occupied BOOLEAN NOT NULL DEFAULT FALSE,
+        updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
         UNIQUE(name, building, floor),
 
@@ -292,17 +296,17 @@ $pdo->exec(
 
 $pdo->exec(
     "CREATE TABLE IF NOT EXISTS reservation (
-        id serial PRIMARY KEY,
-        title text NOT NULL,
-        description text NOT NULL DEFAULT 'Brak opisu.'::text,
-        room int NOT NULL,
-        \"user\" int NOT NULL,
-        planned_start timestamp NOT NULL,
-        planned_end timestamp NOT NULL,
-        actual_start timestamp DEFAULT NULL,
-        actual_end timestamp DEFAULT NULL,
-        created timestamp DEFAULT CURRENT_TIMESTAMP,
-        updated timestamp DEFAULT CURRENT_TIMESTAMP,
+        id SERIAL PRIMARY KEY,
+        title TEXT NOT NULL,
+        description TEXT NOT NULL DEFAULT 'Brak opisu.'::TEXT,
+        room INT NOT NULL,
+        \"user\" INT NOT NULL,
+        planned_start TIMESTAMP NOT NULL,
+        planned_end TIMESTAMP NOT NULL,
+        actual_start TIMESTAMP DEFAULT NULL,
+        actual_end TIMESTAMP DEFAULT NULL,
+        created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
         UNIQUE(room, actual_start),
 
