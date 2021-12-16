@@ -30,14 +30,16 @@ class ListAllUsers extends UserAction
         $activated && $params['activated'] =  $this->strToBoolInt($activated);
 
 
-        $deleteVar = $this->strToBoolInt($listDeleted);
-        if ($listDeleted && $deleteVar === FALSE) {
-            $params['deleted'] = $deleteVar;
+        if ($listDeleted) {
+            $deleteVar = $this->strToBoolInt($listDeleted);
+            if ($deleteVar === FALSE) {
+                $params['deleted'] = $deleteVar;
+            }
         }
-        
+
         if ($searchPhrase)
             $this->userRepository->search((string) $searchPhrase);
-        
+
         if (!empty($params)) $this->userRepository->where($params);
 
 

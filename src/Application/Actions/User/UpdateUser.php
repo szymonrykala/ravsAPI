@@ -16,21 +16,12 @@ class UpdateUser extends UserAction
      */
     public function action(): Response
     {
-        $session = $this->request->getAttribute('session');
-
         $userId = (int) $this->resolveArg($this::USER_ID);
 
         $form = $this->getFormData();
 
         /** @var User $user */
         $user = $this->userRepository->byId($userId);
-
-        if ($user->isSessionUser($session) === FALSE) {
-            throw new HttpUnauthorizedException(
-                $this->request,
-                'Nie możesz aktualizować tego użytkownika'
-            );
-        }
 
         $user->update($form);
         $this->userRepository->save($user);
