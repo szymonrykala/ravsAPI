@@ -1,5 +1,3 @@
-php_value upload_max_filesize 8M
-
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
