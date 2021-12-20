@@ -47,7 +47,7 @@
         }
     },
     "scripts": {
-        "start": "php -S localhost:8081 -t public",
+        "start": "export $(cat .env | xargs) && php -S localhost:8081 -t public",
         "generateDocs": "phpDocumentor --config phpdoc.xml",
         "test": "phpunit"
     }
