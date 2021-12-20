@@ -32,12 +32,14 @@ class HandOverKey extends KeyAction
 
         if ($reservation->notStarted()) {
             $this->checkIfAdditionalTimePassed($reservation->plannedStart);
+            $this->checkIfNotTooEarly($reservation->plannedStart);
 
             $reservation->start();
             $reservation->room->occupy();
 
             $message = "Rezerwacja rozpoczęta - wydaj klucz";
         } elseif ($reservation->hasStarted()) {
+            $this->checkIfNotTooEarly($reservation->plannedEnd);
             $reservation->end();
             $reservation->room->release();
 
@@ -58,12 +60,33 @@ class HandOverKey extends KeyAction
         return $this->respondWithData($message);
     }
 
+
     /**
-     * Checks if 2 hours passed, if yes - throws an error
+     * if given date is more than 1 hour before, throws exception
+     * @throws HttpConflictException
      */
-    private function checkIfAdditionalTimePassed(JsonDateTime $start)
+    private function checkIfNotTooEarly(JsonDateTime $plannedDate): void
     {
         $now = new JsonDateTime('now');
+
+        // if now + 1h is still earlier than plannedDate
+        if ($now->add(new \DateInterval('PT1H')) < $plannedDate) {
+            throw new HttpConflictException(
+                $this->request,
+                "Rezerwację można odebrać lub oddać max 1 godzinę wcześniej"
+            );
+        }
+    }
+
+
+    /**
+     * Checks if 2 hours passed, if yes - throws an error
+     * @throws HttpConflictException
+     */
+    private function checkIfAdditionalTimePassed(JsonDateTime $start): void
+    {
+        $now = new JsonDateTime('now');
+        $start = clone $start;
 
         if ($start->add(new \DateInterval('PT1H')) < $now) {
             throw new HttpConflictException(

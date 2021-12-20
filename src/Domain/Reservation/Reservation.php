@@ -84,14 +84,6 @@ final class Reservation extends Model
 
 
     /**
-     * {@inheritDoc}
-     */
-    public function validate(): void
-    {
-        $now = new JsonDateTime('now');
-    }
-
-    /**
      * @return array
      */
     public function jsonSerialize(): array
