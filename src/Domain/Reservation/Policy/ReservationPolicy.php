@@ -146,7 +146,6 @@ abstract class ReservationPolicy
      */
     protected function reservationWhenBuildingIsOpen(): void
     {
-
         $startsAfterOpen = $this->start->getTime() >= $this->building->openTime->getTime();
         $endsBeforeClose = $this->end->getTime() <= $this->building->closeTime->getTime();
 

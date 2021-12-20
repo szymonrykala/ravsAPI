@@ -27,7 +27,7 @@ final class ReservationUpdatePolicy extends ReservationPolicy
 
         // $this->form = $form;
         $this->reservationHasNotStarted();
-        $this->updateMaxOneDayBefore();
+        // $this->updateMaxTimeBefore();
 
         $timeUpdate = isset($form->plannedEnd) || isset($form->plannedStart);
         $placeUpdate = isset($form->roomId);
@@ -59,14 +59,14 @@ final class ReservationUpdatePolicy extends ReservationPolicy
     }
 
     /**
-     * check if update is max day before - disabled
+     * check if update is max 1 hour before - disabled
      */
-    private function updateMaxOneDayBefore(): void
+    private function updateMaxTimeBefore(): void
     {
         /** @var DateInterval $timeDiff*/
         $timeDiff = $this->reservation->plannedStart->diff(new JsonDateTime('now'));
 
-        if ($timeDiff->d === 0 && $timeDiff->h < 24) throw new TooLateReservationUpdateException();
+        if ($timeDiff->d === 0 && $timeDiff->h < 1) throw new TooLateReservationUpdateException();
     }
 
     /**
