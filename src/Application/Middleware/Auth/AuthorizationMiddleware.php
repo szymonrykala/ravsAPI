@@ -42,7 +42,7 @@ class AuthorizationMiddleware extends BaseAuthorizationMiddleware
             'resources', 'image', 'me' => fn () => TRUE,
 
             'requests' => fn () => $this->userAccess->logsAdmin,
-            'access' => fn () => $this->userAccess->accessAdmin,
+            'access', 'accesses' => fn () => $this->userAccess->accessAdmin,
             'stats' => fn () => $this->userAccess->statsViewer,
             'keys' => fn () => $this->userAccess->keysAdmin,
 
