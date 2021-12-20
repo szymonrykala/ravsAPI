@@ -21,6 +21,11 @@ Search.appendIndex(
             "summary": "",
             "url": "namespaces/default.html#function_registerAddresses"
         },                {
+            "fqsen": "\\env\u0028\u0029",
+            "name": "env",
+            "summary": "",
+            "url": "namespaces/default.html#function_env"
+        },                {
             "fqsen": "\\App\\Application\\Actions\\Access\\AccessAction",
             "name": "AccessAction",
             "summary": "",
@@ -665,6 +670,11 @@ Search.appendIndex(
             "name": "action",
             "summary": "\u007B\u0040inheritDoc\u007D",
             "url": "classes/App-Application-Actions-Key-HandOverKey.html#method_action"
+        },                {
+            "fqsen": "\\App\\Application\\Actions\\Key\\HandOverKey\u003A\u003AcheckIfNotTooEarly\u0028\u0029",
+            "name": "checkIfNotTooEarly",
+            "summary": "if\u0020given\u0020date\u0020is\u0020more\u0020than\u00201\u0020hour\u0020before,\u0020throws\u0020exception",
+            "url": "classes/App-Application-Actions-Key-HandOverKey.html#method_checkIfNotTooEarly"
         },                {
             "fqsen": "\\App\\Application\\Actions\\Key\\HandOverKey\u003A\u003AcheckIfAdditionalTimePassed\u0028\u0029",
             "name": "checkIfAdditionalTimePassed",
@@ -2411,10 +2421,10 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/App-Domain-Reservation-Policy-ReservationUpdatePolicy.html#method___invoke"
         },                {
-            "fqsen": "\\App\\Domain\\Reservation\\Policy\\ReservationUpdatePolicy\u003A\u003AupdateMaxOneDayBefore\u0028\u0029",
-            "name": "updateMaxOneDayBefore",
-            "summary": "check\u0020if\u0020update\u0020is\u0020max\u0020day\u0020before\u0020\u002D\u0020disabled",
-            "url": "classes/App-Domain-Reservation-Policy-ReservationUpdatePolicy.html#method_updateMaxOneDayBefore"
+            "fqsen": "\\App\\Domain\\Reservation\\Policy\\ReservationUpdatePolicy\u003A\u003AupdateMaxTimeBefore\u0028\u0029",
+            "name": "updateMaxTimeBefore",
+            "summary": "check\u0020if\u0020update\u0020is\u0020max\u00201\u0020hour\u0020before\u0020\u002D\u0020disabled",
+            "url": "classes/App-Domain-Reservation-Policy-ReservationUpdatePolicy.html#method_updateMaxTimeBefore"
         },                {
             "fqsen": "\\App\\Domain\\Reservation\\Policy\\ReservationUpdatePolicy\u003A\u003AreservationHasNotStarted\u0028\u0029",
             "name": "reservationHasNotStarted",
@@ -2460,11 +2470,6 @@ Search.appendIndex(
             "name": "end",
             "summary": "",
             "url": "classes/App-Domain-Reservation-Reservation.html#method_end"
-        },                {
-            "fqsen": "\\App\\Domain\\Reservation\\Reservation\u003A\u003Avalidate\u0028\u0029",
-            "name": "validate",
-            "summary": "Domain\u0020object\u0020save\u0020validation\u0020callback.",
-            "url": "classes/App-Domain-Reservation-Reservation.html#method_validate"
         },                {
             "fqsen": "\\App\\Domain\\Reservation\\Reservation\u003A\u003AjsonSerialize\u0028\u0029",
             "name": "jsonSerialize",
@@ -3581,6 +3586,11 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/App-Infrastructure-Repository-AccessRepository.html"
         },                {
+            "fqsen": "\\App\\Infrastructure\\Repository\\AccessRepository\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/App-Infrastructure-Repository-AccessRepository.html#method___construct"
+        },                {
             "fqsen": "\\App\\Infrastructure\\Repository\\AccessRepository\u003A\u003AnewItem\u0028\u0029",
             "name": "newItem",
             "summary": "Creates\u0020new\u0020Domain\u0020object\u0020from\u0020provided\u0020data",
@@ -3605,6 +3615,11 @@ Search.appendIndex(
             "name": "table",
             "summary": "Database\u0020table\u0020name",
             "url": "classes/App-Infrastructure-Repository-AccessRepository.html#property_table"
+        },                {
+            "fqsen": "\\App\\Infrastructure\\Repository\\AccessRepository\u003A\u003A\u0024config",
+            "name": "config",
+            "summary": "",
+            "url": "classes/App-Infrastructure-Repository-AccessRepository.html#property_config"
         },                {
             "fqsen": "\\App\\Infrastructure\\Repository\\AddressRepository",
             "name": "AddressRepository",
