@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Application\Actions\Building;
 
+use App\Domain\Building\Validation\UpdateValidator;
 use App\Utils\JsonDateTime;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Exception\HttpNotFoundException;
@@ -32,6 +33,9 @@ class UpdateBuilding extends BuildingAction
         );
 
         $form = $this->getFormData();
+
+        $validator = new UpdateValidator();
+        $validator->validateForm($form);
 
         if(isset($form->closeTime)) $form->closeTime = new JsonDateTime($form->closeTime);
         if(isset($form->openTime)) $form->openTime = new JsonDateTime($form->openTime);
