@@ -8,6 +8,7 @@ use App\Domain\Reservation\Policy\ReservationUpdatePolicy;
 use Psr\Http\Message\ResponseInterface as Response;
 
 use App\Domain\Reservation\Reservation;
+use App\Domain\Reservation\Validation\UpdateValidator;
 use App\Utils\JsonDateTime;
 use Psr\Container\ContainerInterface;
 
@@ -28,6 +29,10 @@ class UpdateReservation extends ReservationAction
     protected function action(): Response
     {
         $form = $this->getFormData();
+
+        $validator = new UpdateValidator();
+        $validator->validateForm($form);
+
         $reservationId = (int) $this->resolveArg($this::RESERVATION_ID);
 
 

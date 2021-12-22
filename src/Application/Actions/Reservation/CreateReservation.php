@@ -6,6 +6,7 @@ namespace App\Application\Actions\Reservation;
 
 use App\Domain\Exception\DomainBadRequestException;
 use App\Domain\Reservation\Policy\ReservationCreatePolicy;
+use App\Domain\Reservation\Validation\CreateValidator;
 use App\Utils\JsonDateTime;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -30,6 +31,10 @@ class CreateReservation extends ReservationAction
     protected function action(): Response
     {
         $form = $this->getFormData();
+
+        $validator = new CreateValidator();
+        $validator->validateForm($form);
+
         $roomId = (int) $this->resolveArg($this::ROOM_ID, FALSE);
         $buildingId = (int) $this->resolveArg($this::BUILDING_ID, FALSE);
 
