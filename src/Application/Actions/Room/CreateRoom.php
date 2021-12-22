@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Application\Actions\Room;
 
 use App\Domain\Building\IBuildingRepository;
+use App\Domain\Room\Validation\CreateValidator;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 
@@ -30,6 +31,9 @@ class CreateRoom extends RoomAction
         $addressId = (int) $this->resolveArg($this::ADDRESS_ID);
 
         $form = $this->getformData();
+
+        $validator = new CreateValidator();
+        $validator->validateForm($form);
 
         $this->buildingRepository->where([
             'id' => $buildingId,

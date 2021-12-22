@@ -6,7 +6,7 @@ namespace App\Application\Actions\Room;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\Room\Room;
-
+use App\Domain\Room\Validation\UpdateValidator;
 use stdClass;
 
 
@@ -26,6 +26,9 @@ class UpdateRoom extends RoomAction
 
         /** @var stdClass $form */
         $form = $this->getFormData();
+
+        $validator = new UpdateValidator();
+        $validator->validateForm($form);
 
         $room->update($form);
 
