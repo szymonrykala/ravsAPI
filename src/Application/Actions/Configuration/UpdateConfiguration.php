@@ -6,6 +6,7 @@ namespace App\Application\Actions\Configuration;
 
 use App\Domain\Access\IAccessRepository;
 use App\Domain\Configuration\IConfigurationRepository;
+use App\Domain\Configuration\Validation\UpdateValidator;
 use App\Domain\Image\IImageRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
@@ -37,6 +38,10 @@ class UpdateConfiguration extends ConfigurationAction
     protected function action(): Response
     {
         $form = clone $this->getFormData(); // copy value to not pass reference into the logging
+
+        $validator = new UpdateValidator();
+        $validator->validateForm($form);
+
         $configs = $this->configurationRepository->load();
 
         // check if the specified accesses exists
