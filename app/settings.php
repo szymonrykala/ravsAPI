@@ -7,7 +7,7 @@ use App\Application\Settings\SettingsInterface;
 use DI\ContainerBuilder;
 
 
-function env(string $name, string|int|bool|null $default = NULL)
+function _env(string $name, string|int|bool|null $default = NULL)
 {
     $val = getenv($name);
 
@@ -24,32 +24,32 @@ return function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
         SettingsInterface::class => function () {
             return new Settings([
-                'displayErrorDetails' => boolval(env('DISPLAY_ERROR_DETAILS', false)), // Should be set to false in production
-                'logError'            => boolval(env('LOG_ERROR_DETAILS', false)),
-                'logErrorDetails'     => boolval(env('LOG_ERROR', false)),
+                'displayErrorDetails' => boolval(_env('DISPLAY_ERROR_DETAILS', false)), // Should be set to false in production
+                'logError'            => boolval(_env('LOG_ERROR_DETAILS', false)),
+                'logErrorDetails'     => boolval(_env('LOG_ERROR', false)),
                 'logger' => [
                     'name' => 'ravs_api',
-                    'path' => env('LOG_PATH', 'php://stdout'),
-                    'level' => env('LOGGER_LEVEL', 'DEBUG'),
+                    'path' => _env('LOG_PATH', 'php://stdout'),
+                    'level' => _env('LOGGER_LEVEL', 'DEBUG'),
                 ],
-                'databaseUrl' => env('DATABASE_URL'),
+                'databaseUrl' => _env('DATABASE_URL'),
                 'token' => [
-                    'secret' => env('TOKEN_SECRET'),
-                    'expiry' => env('TOKEN_EXPIRY', "1"),
-                    'encoding' => env('TOKEN_SIPHER_ALGORITHM', 'HS512'),
+                    'secret' => _env('TOKEN_SECRET'),
+                    'expiry' => _env('TOKEN_EXPIRY', "1"),
+                    'encoding' => _env('TOKEN_SIPHER_ALGORITHM', 'HS512'),
                 ],
                 'smtp' => [
-                    'host' => env('SMTP_HOST'),
-                    'port' => env('SMTP_PORT'),
-                    'username' => env('SMTP_USER'),
-                    'password' => env('SMTP_PASSWORD'),
+                    'host' => _env('SMTP_HOST'),
+                    'port' => _env('SMTP_PORT'),
+                    'username' => _env('SMTP_USER'),
+                    'password' => _env('SMTP_PASSWORD'),
                     'mailerName' => 'Rav System',
-                    'debug' => (int) env('SMTP_DEBUG', 0)
+                    'debug' => (int) _env('SMTP_DEBUG', 0)
                 ],
                 'cloudinary' => [
-                    'cloudName' => env('CLOUDINARY_CLOUD_NAME'),
-                    'secret' => env('CLOUDINARY_SECRET'),
-                    'key' => env('CLOUDINARY_KEY')
+                    'cloudName' => _env('CLOUDINARY_CLOUD_NAME'),
+                    'secret' => _env('CLOUDINARY_SECRET'),
+                    'key' => _env('CLOUDINARY_KEY')
                 ]
             ]);
         }
