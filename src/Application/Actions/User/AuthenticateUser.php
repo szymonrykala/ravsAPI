@@ -6,6 +6,7 @@ namespace App\Application\Actions\User;
 
 use App\Domain\User\Exceptions\BadCredentialsException;
 use App\Domain\User\User;
+use App\Domain\User\Validation\LoginValidator;
 use App\Infrastructure\Mailing\IMailingService;
 use App\Infrastructure\Mailing\MailingService;
 use App\Infrastructure\TokenFactory\ITokenFactory;
@@ -31,6 +32,10 @@ class AuthenticateUser extends UserAction
     public function action(): Response
     {
         $form = $this->getFormData();
+
+        $validator = new LoginValidator();
+        $validator->validateForm($form);
+
         $user = $this->getUserByEmail($form->email);
 
         try {

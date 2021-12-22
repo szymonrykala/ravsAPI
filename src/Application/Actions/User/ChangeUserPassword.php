@@ -1,11 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application\Actions\User;
 
 use Psr\Http\Message\ResponseInterface as Response;
+use App\Domain\User\Validation\PasswordChangeValidator;
 
-use App\Domain\User\User;
 
 
 class ChangeUserPassword extends UserAction
@@ -17,12 +18,15 @@ class ChangeUserPassword extends UserAction
     {
         $form = $this->getFormData();
 
+        $validator = new PasswordChangeValidator();
+        $validator->validateForm($form);
+
         $user = $this->getUserByEmail($form->email);
 
         $user->unblock($form->code);
         $this->logger->info("User id {$user->id} was unblocked");
 
-        
+
         $user->password = password_hash($form->newPassword, PASSWORD_BCRYPT);
         $this->userRepository->save($user);
 

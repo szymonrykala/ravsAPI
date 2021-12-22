@@ -8,6 +8,7 @@ use App\Domain\User\Exceptions\BadCredentialsException;
 use Psr\Http\Message\ResponseInterface as Response;
 
 use App\Domain\User\Exceptions\UserNotActivatedException;
+use App\Domain\User\Validation\ActivateValidator;
 use App\Infrastructure\Mailing\IMailingService;
 use App\Infrastructure\Mailing\MailingService;
 use Psr\Container\ContainerInterface;
@@ -31,6 +32,9 @@ class ActivateUser extends UserAction
     public function action(): Response
     {
         $form = $this->getFormData();
+
+        $validator = new ActivateValidator();
+        $validator->validateForm($form);
 
         $user = $this->getUserByEmail($form->email);
         $this->mailer->setReciever($user);

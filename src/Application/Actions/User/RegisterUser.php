@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Application\Actions\User;
 
+use App\Domain\User\Validation\CreateValidator;
 use App\Infrastructure\Mailing\IMailingService;
 use App\Infrastructure\Mailing\MailingService;
 use Psr\Container\ContainerInterface;
@@ -25,6 +26,9 @@ class RegisterUser extends UserAction
     protected function action(): Response
     {   
         $form = $this->getFormData();
+
+        $validator = new CreateValidator();
+        $validator->validateForm($form);
 
         $userId = $this->userRepository->register(
             $form->name,
