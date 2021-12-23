@@ -30,8 +30,7 @@ class AccessValidation extends SchemaValidator
      */
     protected function defineSchema($validator): void
     {
-        $this->setAsNameString('name', 'Nazwa klasy dostępu niedozwolone znaki');
-
+        $this->setAsType(['name'], 'string');
         $this->setAsType([
             'owner',
             'accessAdmin',
@@ -42,5 +41,7 @@ class AccessValidation extends SchemaValidator
             'logsAdmin',
             'statsViewer',
         ], 'boolean');
+
+        $this->setAsNameString('name', 'Nazwa klasy dostępu niedozwolone znaki');
     }
 }

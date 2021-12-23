@@ -22,10 +22,11 @@ class RoomValidation extends SchemaValidator
      */
     protected function defineSchema($validator): void
     {
-        $this->setAsNameString('name', 'Nazwa sali zawiera niedozwolone znaki');
-
         $this->setAsType(['seatsCount', 'floor', 'buildingId'], 'integer');
         $this->setAsType(['blocked'], 'boolean');
+        $this->setAsType(['name', 'roomType'], 'string');
+
+        $this->setAsNameString('name', 'Nazwa sali zawiera niedozwolone znaki');
 
         $validator
             ->inList(

@@ -23,7 +23,7 @@ class UpdateValidator extends SchemaValidator
      */
     protected function defineSchema(Validator $validator): void
     {
+        $this->setAsType($this->fields, 'string');
         $this->setAsRequired($this->fields);
-        $this->setAsType(['RFIDTag'], 'string');
     }
 }

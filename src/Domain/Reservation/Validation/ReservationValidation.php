@@ -22,13 +22,20 @@ class ReservationValidation extends SchemaValidator
      */
     protected function defineSchema($validator): void
     {
+        $this->setAsType([
+            'title',
+            'description',
+            'plannedStart',
+            'plannedEnd'
+        ], 'string');
+
+        $this->setAsType(['roomId'], 'integer');
+
         $this->setAsNameString('title', 'Tytuł rezerwacji zawiera niedozwolone znaki');
         $validator->maxLength('title', 120, 'Tytuł może mieć maksymalnie 120 znaków');
 
         $this->setAsNameString('description', 'Opis rezerwacji zawiera niedozwolone znaki');
         $validator->maxLength('description', 600, 'Opis rezerwacji może mieć maksymalnie 600 znaków');
-
-        $this->setAsType(['roomId'], 'integer');
 
         $validator
             ->dateTime('plannedStart', ['ymd'], 'Data startu rezerwacji ma zły format')

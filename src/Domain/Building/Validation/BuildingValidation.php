@@ -22,8 +22,10 @@ class BuildingValidation extends SchemaValidator
      */
     protected function defineSchema($validator): void
     {
-        $this->setAsNameString('name', 'Nazwa budynku zawiera niedozwolone znaki');
+        $this->setAsType($this->fields, 'string');
         $this->setAsType(['addressId'], 'integer');
+
+        $this->setAsNameString('name', 'Nazwa budynku zawiera niedozwolone znaki');
 
         $validator
             ->time('openTime', 'Niepoprawny format godziny otwarcia')

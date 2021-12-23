@@ -26,6 +26,8 @@ class AddressValidation extends SchemaValidator
      */
     protected function defineSchema($validator): void
     {
+        $this->setAsType($this->fields, 'string');
+
         $validator
             ->minLength('country', 3, 'Nazwa kraju jest zbyt krótka')
             ->maxLength('country', 60, 'Nazwa kraju jest zbyt długa')
