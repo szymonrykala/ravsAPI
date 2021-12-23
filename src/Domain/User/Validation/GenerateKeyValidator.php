@@ -23,7 +23,7 @@ class GenerateKeyValidator extends UserValidator
      */
     protected function defineSchema(Validator $validator): void
     {
-        $this->setAsRequired(['email' => 'email jest wymagany']);
+        $this->setAsRequired($this->fields);
 
         parent::defineSchema($validator);
     }

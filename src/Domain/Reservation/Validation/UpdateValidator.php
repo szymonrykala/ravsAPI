@@ -13,8 +13,6 @@ final class UpdateValidator extends ReservationValidation
      */
     protected function defineSchema($validator): void
     {
-        array_push($this->fields, 'buildingId', 'blocked');
-
         parent::defineSchema($validator);
     }
 }

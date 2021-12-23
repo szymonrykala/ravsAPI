@@ -13,11 +13,7 @@ final class CreateValidator extends BuildingValidation
      */
     protected function defineSchema($validator): void
     {
-        $this->setAsRequired([
-            'name' => 'Nazwa budynku jest wymagana',
-            'openTime' => 'Godzina otwarcia jest wymagany',
-            'closeTime' => 'Godzina zamknięcia jest wymagany',
-        ]);
+        $this->setAsRequired($this->fields);
 
         parent::defineSchema($validator);
     }

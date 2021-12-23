@@ -14,10 +14,10 @@ final class CreateValidator extends RoomValidation
     protected function defineSchema($validator): void
     {
         $this->setAsRequired([
-            'name' => 'Nazwa sali jest wymagana',
-            'roomType' => 'Typ sali jest wymagany',
-            'seatsCount' => 'Ilość miejsc jest wymagana',
-            'floor' => 'Piętro na którym znajduje się sala jest wymagane'
+            'name',
+            'roomType',
+            'seatsCount',
+            'floor'
         ]);
 
         parent::defineSchema($validator);

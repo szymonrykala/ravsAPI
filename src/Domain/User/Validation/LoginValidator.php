@@ -24,10 +24,7 @@ class LoginValidator extends UserValidator
      */
     protected function defineSchema(Validator $validator): void
     {
-        $this->setAsRequired([
-            'email' => 'email jest wymagany',
-            'password' => 'hasło jest wymagane'
-        ]);
+        $this->setAsRequired($this->fields);
 
         $this->setUpPassword($validator, 'password');
 

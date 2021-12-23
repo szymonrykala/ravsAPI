@@ -26,12 +26,7 @@ class CreateValidator extends UserValidator
      */
     protected function defineSchema(Validator $validator): void
     {
-        $this->setAsRequired([
-            'email' => 'Adres email jest wymagany',
-            'password' => 'Hasło jest wymagane',
-            'name' => 'imię jest wymagane',
-            'surname' => 'nazwisko jest wymagane'
-        ]);
+        $this->setAsRequired($this->fields);
 
         $this->setAsNameString('name', 'Imię ma niepoprawny format');
         $this->setAsNameString('surname', 'Nazwisko ma niepoprawny format');

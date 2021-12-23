@@ -23,7 +23,7 @@ class AccessUpdateValidator extends UserValidator
      */
     protected function defineSchema(Validator $validator): void
     {
-        $this->setAsRequired(['accessId' => 'pole accessId jest wymagane']);
+        $this->setAsRequired($this->fields);
         $this->setAsType(['accessId'], 'integer');
 
         parent::defineSchema($validator);

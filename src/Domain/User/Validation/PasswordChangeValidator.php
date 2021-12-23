@@ -25,11 +25,7 @@ class PasswordChangeValidator extends UserValidator
      */
     protected function defineSchema(Validator $validator): void
     {
-        $this->setAsRequired([
-            'email' => 'email jest wymagany',
-            'newPassword' => 'hasło jest wymagane',
-            'code' => 'kod jest wymagany'
-        ]);
+        $this->setAsRequired($this->fields);
 
         $this->setUpPassword($validator, 'newPassword');
 

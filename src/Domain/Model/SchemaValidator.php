@@ -32,12 +32,12 @@ abstract class SchemaValidator
 
 
     /**
-     * Sets required fields with assigned error messages
+     * Sets fields as required
      */
     protected function setAsRequired(array $fields): void
     {
-        foreach ($fields as $field => $message) {
-            $this->validator->requirePresence($field, true, $message);
+        foreach ($fields as $field) {
+            $this->validator->requirePresence($field, true, "Pole '$field' jest wymagane");
         }
     }
 

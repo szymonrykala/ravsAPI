@@ -14,10 +14,10 @@ final class CreateValidator extends ReservationValidation
     protected function defineSchema($validator): void
     {
         $this->setAsRequired([
-            'title' => 'Tytuł rezerwacji jest wymagany',
-            'description' => 'Opis rezerwacji jest wymagany',
-            'plannedStart' => 'Data początku rezerwacji wymagana',
-            'plannedEnd' => 'Data końca rezerwacji jest wymagana'
+            'title',
+            'description',
+            'plannedStart',
+            'plannedEnd'
         ]);
 
         parent::defineSchema($validator);

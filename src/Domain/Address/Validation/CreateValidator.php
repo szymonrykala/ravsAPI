@@ -13,13 +13,7 @@ final class CreateValidator extends AddressValidation
      */
     protected function defineSchema($validator): void
     {
-        $this->setAsRequired([
-            'country' => 'Nazwa Kraju jest wymagana',
-            'town' => 'Nazwa miasta jest wymagana',
-            'postalCode' => 'Kod pocztowy jest wymagany',
-            'street' => 'Nazwa ulicy jest wymagana',
-            'number' => 'Numer budynku jest wymagany'
-        ]);
+        $this->setAsRequired($this->fields);
 
         parent::defineSchema($validator);
     }

@@ -13,9 +13,7 @@ final class CreateValidator extends AccessValidation
      */
     protected function defineSchema($validator): void
     {
-        $this->setAsRequired([
-            'name' => 'Nazwa klasy dostępu jest wymagana',
-        ]);
+        $this->setAsRequired(['name']);
 
         parent::defineSchema($validator);
     }
