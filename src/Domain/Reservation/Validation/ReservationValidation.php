@@ -35,10 +35,9 @@ class ReservationValidation extends SchemaValidator
         $validator->maxLength('title', 120, 'Tytuł może mieć maksymalnie 120 znaków');
 
         $this->setAsNameString('description', 'Opis rezerwacji zawiera niedozwolone znaki');
-        $validator->maxLength('description', 600, 'Opis rezerwacji może mieć maksymalnie 600 znaków');
+        $validator->maxLength('description', 600, 'Opis rezerwacji może mieć maksymalnie 600 znaków')
 
-        $validator
-            ->dateTime('plannedStart', ['ymd'], 'Data startu rezerwacji ma zły format')
-            ->dateTime('plannedEnd', ['ymd'], 'Data końca rezerwacji ma zły format');
+            ->dateTime('plannedStart', ['dmy'], 'Data startu rezerwacji ma zły format', )
+            ->dateTime('plannedEnd', ['dmy'], 'Data końca rezerwacji ma zły format');
     }
 }
