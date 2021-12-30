@@ -26,8 +26,6 @@ class LoginValidator extends UserValidator
     {
         $this->setAsRequired($this->fields);
 
-        $this->setUpPassword($validator, 'password');
-
         parent::defineSchema($validator);
     }
 }
