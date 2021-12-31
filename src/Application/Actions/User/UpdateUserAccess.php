@@ -6,6 +6,7 @@ namespace App\Application\Actions\User;
 
 use App\Domain\Access\IAccessRepository;
 use App\Domain\Exception\DomainResourceNotFoundException;
+use App\Domain\User\Validation\AccessUpdateValidator;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Exception\HttpForbiddenException;
@@ -29,6 +30,9 @@ class UpdateUserAccess extends UserAction
 
         $userId = (int) $this->resolveArg($this::USER_ID);
         $form = $this->getFormData();
+
+        $validator = new AccessUpdateValidator();
+        $validator->validateForm($form);
 
         if ($userId === 1)
             throw new HttpForbiddenException(

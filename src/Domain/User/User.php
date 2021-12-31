@@ -8,7 +8,6 @@ use App\Domain\Image\Image;
 use App\Domain\Access\Access;
 use App\Domain\Model\Model;
 use App\Domain\User\Exceptions\BadCredentialsException;
-use App\Domain\User\Exceptions\DefaultUserAccessUpdateException;
 use App\Domain\User\Exceptions\DeletedUserUpdateException;
 use App\Domain\User\Exceptions\InvalidUserCodeException;
 use App\Domain\User\Exceptions\UserBlockedException;

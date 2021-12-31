@@ -25,7 +25,6 @@ use App\Application\Actions\{
 use App\Application\Middleware\Auth\AuthorizationMiddleware;
 use App\Application\Middleware\BodyParsingMiddleware;
 use App\Application\Middleware\RequestLoggingMiddleware;
-use App\Application\Middleware\SchemaValidationMiddleware;
 use App\Application\Middleware\SessionMiddleware;
 use App\Application\Middleware\UserActivityMiddleware;
 
@@ -189,11 +188,9 @@ return function (App $app) {
 
             // appends /addresses; /buildings; /rooms; /reservations
             registerAddresses($protected);
-
         })->add(AuthorizationMiddleware::class)
             ->add(RequestLoggingMiddleware::class)
             ->add(UserActivityMiddleware::class)
             ->add(SessionMiddleware::class);
-    })->add(SchemaValidationMiddleware::class)
-        ->add(BodyParsingMiddleware::class);
+    })->add(BodyParsingMiddleware::class);
 };

@@ -1,8 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application\Actions\Building;
 
+use App\Domain\Building\Validation\CreateValidator;
 use App\Utils\JsonDateTime;
 use Psr\Http\Message\ResponseInterface as Response;
 
@@ -18,6 +20,8 @@ class CreateBuilding extends BuildingAction
 
         $form = $this->getFormData();
 
+        $validator = new CreateValidator();
+        $validator->validateForm($form);
 
         $createdBuildingId = $this->buildingRepository->create(
             $form->name,

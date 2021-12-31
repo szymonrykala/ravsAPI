@@ -1,8 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application\Actions\Access;
 
+use App\Domain\Access\Validation\CreateValidator;
 use Psr\Http\Message\ResponseInterface as Response;
 
 
@@ -14,17 +16,20 @@ class CreateAccess extends AccessAction
     protected function action(): Response
     {
         $form = $this->getFormData();
- 
+
+        $validator = new CreateValidator();
+        $validator->validateForm($form);
+
         $accessId = $this->accessRepository->create(
             $form->name,
-            $form->owner,
-            $form->accessAdmin,
-            $form->premisesAdmin,
-            $form->keysAdmin,
-            $form->reservationsAdmin,
-            $form->reservationsAbility,
-            $form->logsAdmin,
-            $form->statsViewer
+            $form->owner ?? FALSE,
+            $form->accessAdmin ?? FALSE,
+            $form->premisesAdmin ?? FALSE,
+            $form->keysAdmin ?? FALSE,
+            $form->reservationsAdmin ?? FALSE,
+            $form->reservationsAbility ?? FALSE,
+            $form->logsAdmin ?? FALSE,
+            $form->statsViewer ?? FALSE
         );
 
         $this->logger->info("Access id=${accessId} has been created.");

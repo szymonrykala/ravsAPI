@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace App\Application\Actions\Key;
 
+use App\Domain\Key\Validation\UpdateValidator;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\Room\Room;
 use Slim\Exception\HttpBadRequestException;
+
+
 
 class AssignKey extends KeyAction
 {
@@ -21,12 +24,15 @@ class AssignKey extends KeyAction
 
         $form = $this->getFormData();
 
+        $validator = new UpdateValidator();
+        $validator->validateForm($form);
+
         /** @var Room */
         $room = $this->roomRepository->withBuilding()->byId($roomId);
 
-        if($buildingId !== $room->building->id || $room->building->addressId !== $addressId)
+        if ($buildingId !== $room->building->id || $room->building->addressId !== $addressId)
             throw new HttpBadRequestException(
-                $this->request, 
+                $this->request,
                 "Dane pokoju są nieprawidłowe."
             );
 

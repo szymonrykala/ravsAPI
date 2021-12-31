@@ -1,5 +1,0 @@
-{
-    "type": "string",
-    "minLength": 5,
-    "pattern": "^\\d{2}-\\d{3}$"
-}

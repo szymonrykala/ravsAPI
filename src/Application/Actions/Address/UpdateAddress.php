@@ -6,6 +6,8 @@ namespace App\Application\Actions\Address;
 use Psr\Http\Message\ResponseInterface as Response;
 
 use App\Domain\Address\Address;
+use App\Domain\Address\Validation\UpdateValidator;
+
 
 class UpdateAddress extends AddressAction
 {
@@ -15,6 +17,9 @@ class UpdateAddress extends AddressAction
     protected function action(): Response
     {
         $form = $this->getFormData();
+
+        $validator = new UpdateValidator();
+        $validator->validateForm($form);
 
         $id = (int) $this->resolveArg($this::ADDRESS_ID);
 

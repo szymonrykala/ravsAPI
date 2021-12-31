@@ -23,8 +23,8 @@ final class RequestRepository extends BaseRepository implements IRequestReposito
     public function whereLIKE(array $searchParams): IRequestRepository
     {
         foreach ($searchParams as $key => $value) {
-            $this->SQLwhere .= " AND $this->table.$key LIKE :$key";
-            $this->params[":$key"] = $value . '%';
+            $this->SQLwhere .= " AND CAST($this->table.$key as TEXT) LIKE :$key";
+            $this->params[":$key"] = $value.'%' ;
         }
 
         return $this;

@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Application\Actions\User;
 
+use App\Application\Exception\HttpConflictException;
 use App\Domain\User\Exceptions\BadCredentialsException;
 use Psr\Http\Message\ResponseInterface as Response;
 
 use App\Domain\User\Exceptions\UserNotActivatedException;
+use App\Domain\User\Validation\ActivateValidator;
 use App\Infrastructure\Mailing\IMailingService;
 use App\Infrastructure\Mailing\MailingService;
 use Psr\Container\ContainerInterface;
@@ -32,6 +34,9 @@ class ActivateUser extends UserAction
     {
         $form = $this->getFormData();
 
+        $validator = new ActivateValidator();
+        $validator->validateForm($form);
+
         $user = $this->getUserByEmail($form->email);
         $this->mailer->setReciever($user);
 
@@ -41,7 +46,8 @@ class ActivateUser extends UserAction
 
         try {
             $user->login($form->password);
-            $message = "Użytkownik jest już aktywowany.";
+
+            throw new HttpConflictException($this->request, 'Użytkownik jest już aktywny.');
         } catch (BadCredentialsException $ex) {
 
             // if user could not authenticate to activate account

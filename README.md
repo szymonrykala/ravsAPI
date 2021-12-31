@@ -110,3 +110,4 @@ Policies which each new reservation have to meet:
 
 ## Endpoints
 
+Postman docs: <https://documenter.getpostman.com/view/13316422/UUxtEWFW>

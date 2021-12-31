@@ -499,7 +499,7 @@ final class StatsRepository implements IStatsRepository
         $sql = "SELECT 
                     method, 
                     COUNT(id) as calls,
-                    REGEXP_REPLACE(endpoint, '/\d+', '/id') as general_endpoint , 
+                    REGEXP_REPLACE(endpoint, '/\d+', '/id', 'g') as general_endpoint , 
                     AVG(time) as avg_time,
                     SUM(time) as time_for_endpoint
                 FROM {$this->requests} 
