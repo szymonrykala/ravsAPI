@@ -21,10 +21,10 @@ Search.appendIndex(
             "summary": "",
             "url": "namespaces/default.html#function_registerAddresses"
         },                {
-            "fqsen": "\\env\u0028\u0029",
-            "name": "env",
+            "fqsen": "\\_env\u0028\u0029",
+            "name": "_env",
             "summary": "",
-            "url": "namespaces/default.html#function_env"
+            "url": "namespaces/default.html#function__env"
         },                {
             "fqsen": "\\App\\Application\\Actions\\Access\\AccessAction",
             "name": "AccessAction",
@@ -1411,46 +1411,6 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/App-Application-Middleware-RequestLoggingMiddleware.html#property_requestRepository"
         },                {
-            "fqsen": "\\App\\Application\\Middleware\\SchemaValidationMiddleware",
-            "name": "SchemaValidationMiddleware",
-            "summary": "",
-            "url": "classes/App-Application-Middleware-SchemaValidationMiddleware.html"
-        },                {
-            "fqsen": "\\App\\Application\\Middleware\\SchemaValidationMiddleware\u003A\u003AprocessRequest\u0028\u0029",
-            "name": "processRequest",
-            "summary": "Process\u0020an\u0020incoming\u0020server\u0020request",
-            "url": "classes/App-Application-Middleware-SchemaValidationMiddleware.html#method_processRequest"
-        },                {
-            "fqsen": "\\App\\Application\\Middleware\\SchemaValidationMiddleware\u003A\u003AshouldBeValidated\u0028\u0029",
-            "name": "shouldBeValidated",
-            "summary": "decide\u0020wether\u0020request\u0020body\u0020be\u0020validated\u0020or\u0020not",
-            "url": "classes/App-Application-Middleware-SchemaValidationMiddleware.html#method_shouldBeValidated"
-        },                {
-            "fqsen": "\\App\\Application\\Middleware\\SchemaValidationMiddleware\u003A\u003AgetProcessURI\u0028\u0029",
-            "name": "getProcessURI",
-            "summary": "returns\u0020parsed\u0020request\u0020path\u0020string\nie.\u003A\u0020\/user\/2\u0020\u003D\u003E\u0020\/user\/id",
-            "url": "classes/App-Application-Middleware-SchemaValidationMiddleware.html#method_getProcessURI"
-        },                {
-            "fqsen": "\\App\\Application\\Middleware\\SchemaValidationMiddleware\u003A\u003AcombineResult\u0028\u0029",
-            "name": "combineResult",
-            "summary": "Combines\u0020error\u0020results\u0020from\u0020validation",
-            "url": "classes/App-Application-Middleware-SchemaValidationMiddleware.html#method_combineResult"
-        },                {
-            "fqsen": "\\App\\Application\\Middleware\\SchemaValidationMiddleware\u003A\u003ABASE_FOLDER",
-            "name": "BASE_FOLDER",
-            "summary": "path\u0020to\u0020folder\u0020with\u0020schemas",
-            "url": "classes/App-Application-Middleware-SchemaValidationMiddleware.html#constant_BASE_FOLDER"
-        },                {
-            "fqsen": "\\App\\Application\\Middleware\\SchemaValidationMiddleware\u003A\u003ABASE_URI",
-            "name": "BASE_URI",
-            "summary": "base\u0020schema\u0020uri",
-            "url": "classes/App-Application-Middleware-SchemaValidationMiddleware.html#constant_BASE_URI"
-        },                {
-            "fqsen": "\\App\\Application\\Middleware\\SchemaValidationMiddleware\u003A\u003ALOAD_MAP",
-            "name": "LOAD_MAP",
-            "summary": "map\u0020of\u0020json\u0020schemas\u0020for\u0020each\u0020endpoint",
-            "url": "classes/App-Application-Middleware-SchemaValidationMiddleware.html#constant_LOAD_MAP"
-        },                {
             "fqsen": "\\App\\Application\\Middleware\\SessionMiddleware",
             "name": "SessionMiddleware",
             "summary": "Reads\u0020data\u0020from\u0020token\u0020provided\u0020from\u0020user\nand\u0020passes\u0020it\u0020as\u0020a\u0020session\u0020to\u0020the\u0020request\u0020context",
@@ -1651,6 +1611,41 @@ Search.appendIndex(
             "summary": "\u007B\u0040inheritDoc\u007D",
             "url": "classes/App-Domain-Access-IAccessRepository.html#method_create"
         },                {
+            "fqsen": "\\App\\Domain\\Access\\Validation\\AccessValidation",
+            "name": "AccessValidation",
+            "summary": "",
+            "url": "classes/App-Domain-Access-Validation-AccessValidation.html"
+        },                {
+            "fqsen": "\\App\\Domain\\Access\\Validation\\AccessValidation\u003A\u003AdefineSchema\u0028\u0029",
+            "name": "defineSchema",
+            "summary": "Performs\u0020schmea\u0020definition\u0020on\u0020giver\u0020validator",
+            "url": "classes/App-Domain-Access-Validation-AccessValidation.html#method_defineSchema"
+        },                {
+            "fqsen": "\\App\\Domain\\Access\\Validation\\AccessValidation\u003A\u003A\u0024fields",
+            "name": "fields",
+            "summary": "set\u0020of\u0020fields\u0020that\u0020form\u0020can\u0020contain",
+            "url": "classes/App-Domain-Access-Validation-AccessValidation.html#property_fields"
+        },                {
+            "fqsen": "\\App\\Domain\\Access\\Validation\\CreateValidator",
+            "name": "CreateValidator",
+            "summary": "",
+            "url": "classes/App-Domain-Access-Validation-CreateValidator.html"
+        },                {
+            "fqsen": "\\App\\Domain\\Access\\Validation\\CreateValidator\u003A\u003AdefineSchema\u0028\u0029",
+            "name": "defineSchema",
+            "summary": "Performs\u0020schmea\u0020definition\u0020on\u0020giver\u0020validator",
+            "url": "classes/App-Domain-Access-Validation-CreateValidator.html#method_defineSchema"
+        },                {
+            "fqsen": "\\App\\Domain\\Access\\Validation\\UpdateValidator",
+            "name": "UpdateValidator",
+            "summary": "",
+            "url": "classes/App-Domain-Access-Validation-UpdateValidator.html"
+        },                {
+            "fqsen": "\\App\\Domain\\Access\\Validation\\UpdateValidator\u003A\u003AdefineSchema\u0028\u0029",
+            "name": "defineSchema",
+            "summary": "Performs\u0020schmea\u0020definition\u0020on\u0020giver\u0020validator",
+            "url": "classes/App-Domain-Access-Validation-UpdateValidator.html#method_defineSchema"
+        },                {
             "fqsen": "\\App\\Domain\\Address\\Address",
             "name": "Address",
             "summary": "",
@@ -1720,6 +1715,41 @@ Search.appendIndex(
             "name": "create",
             "summary": "",
             "url": "classes/App-Domain-Address-IAddressRepository.html#method_create"
+        },                {
+            "fqsen": "\\App\\Domain\\Address\\Validation\\AddressValidation",
+            "name": "AddressValidation",
+            "summary": "",
+            "url": "classes/App-Domain-Address-Validation-AddressValidation.html"
+        },                {
+            "fqsen": "\\App\\Domain\\Address\\Validation\\AddressValidation\u003A\u003AdefineSchema\u0028\u0029",
+            "name": "defineSchema",
+            "summary": "Performs\u0020schmea\u0020definition\u0020on\u0020giver\u0020validator",
+            "url": "classes/App-Domain-Address-Validation-AddressValidation.html#method_defineSchema"
+        },                {
+            "fqsen": "\\App\\Domain\\Address\\Validation\\AddressValidation\u003A\u003A\u0024fields",
+            "name": "fields",
+            "summary": "set\u0020of\u0020fields\u0020that\u0020form\u0020can\u0020contain",
+            "url": "classes/App-Domain-Address-Validation-AddressValidation.html#property_fields"
+        },                {
+            "fqsen": "\\App\\Domain\\Address\\Validation\\CreateValidator",
+            "name": "CreateValidator",
+            "summary": "",
+            "url": "classes/App-Domain-Address-Validation-CreateValidator.html"
+        },                {
+            "fqsen": "\\App\\Domain\\Address\\Validation\\CreateValidator\u003A\u003AdefineSchema\u0028\u0029",
+            "name": "defineSchema",
+            "summary": "Performs\u0020schmea\u0020definition\u0020on\u0020giver\u0020validator",
+            "url": "classes/App-Domain-Address-Validation-CreateValidator.html#method_defineSchema"
+        },                {
+            "fqsen": "\\App\\Domain\\Address\\Validation\\UpdateValidator",
+            "name": "UpdateValidator",
+            "summary": "",
+            "url": "classes/App-Domain-Address-Validation-UpdateValidator.html"
+        },                {
+            "fqsen": "\\App\\Domain\\Address\\Validation\\UpdateValidator\u003A\u003AdefineSchema\u0028\u0029",
+            "name": "defineSchema",
+            "summary": "Performs\u0020schmea\u0020definition\u0020on\u0020giver\u0020validator",
+            "url": "classes/App-Domain-Address-Validation-UpdateValidator.html#method_defineSchema"
         },                {
             "fqsen": "\\App\\Domain\\Building\\Building",
             "name": "Building",
@@ -1811,6 +1841,41 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/App-Domain-Building-IBuildingRepository.html#method_create"
         },                {
+            "fqsen": "\\App\\Domain\\Building\\Validation\\BuildingValidation",
+            "name": "BuildingValidation",
+            "summary": "",
+            "url": "classes/App-Domain-Building-Validation-BuildingValidation.html"
+        },                {
+            "fqsen": "\\App\\Domain\\Building\\Validation\\BuildingValidation\u003A\u003AdefineSchema\u0028\u0029",
+            "name": "defineSchema",
+            "summary": "Performs\u0020schmea\u0020definition\u0020on\u0020giver\u0020validator",
+            "url": "classes/App-Domain-Building-Validation-BuildingValidation.html#method_defineSchema"
+        },                {
+            "fqsen": "\\App\\Domain\\Building\\Validation\\BuildingValidation\u003A\u003A\u0024fields",
+            "name": "fields",
+            "summary": "set\u0020of\u0020fields\u0020that\u0020form\u0020can\u0020contain",
+            "url": "classes/App-Domain-Building-Validation-BuildingValidation.html#property_fields"
+        },                {
+            "fqsen": "\\App\\Domain\\Building\\Validation\\CreateValidator",
+            "name": "CreateValidator",
+            "summary": "",
+            "url": "classes/App-Domain-Building-Validation-CreateValidator.html"
+        },                {
+            "fqsen": "\\App\\Domain\\Building\\Validation\\CreateValidator\u003A\u003AdefineSchema\u0028\u0029",
+            "name": "defineSchema",
+            "summary": "Performs\u0020schmea\u0020definition\u0020on\u0020giver\u0020validator",
+            "url": "classes/App-Domain-Building-Validation-CreateValidator.html#method_defineSchema"
+        },                {
+            "fqsen": "\\App\\Domain\\Building\\Validation\\UpdateValidator",
+            "name": "UpdateValidator",
+            "summary": "",
+            "url": "classes/App-Domain-Building-Validation-UpdateValidator.html"
+        },                {
+            "fqsen": "\\App\\Domain\\Building\\Validation\\UpdateValidator\u003A\u003AdefineSchema\u0028\u0029",
+            "name": "defineSchema",
+            "summary": "Performs\u0020schmea\u0020definition\u0020on\u0020giver\u0020validator",
+            "url": "classes/App-Domain-Building-Validation-UpdateValidator.html#method_defineSchema"
+        },                {
             "fqsen": "\\App\\Domain\\Configuration\\Configuration",
             "name": "Configuration",
             "summary": "",
@@ -1890,6 +1955,21 @@ Search.appendIndex(
             "name": "save",
             "summary": "saves\u0020state\u0020of\u0020configuration\u0020object",
             "url": "classes/App-Domain-Configuration-IConfigurationRepository.html#method_save"
+        },                {
+            "fqsen": "\\App\\Domain\\Configuration\\Validation\\UpdateValidator",
+            "name": "UpdateValidator",
+            "summary": "",
+            "url": "classes/App-Domain-Configuration-Validation-UpdateValidator.html"
+        },                {
+            "fqsen": "\\App\\Domain\\Configuration\\Validation\\UpdateValidator\u003A\u003AdefineSchema\u0028\u0029",
+            "name": "defineSchema",
+            "summary": "Performs\u0020schmea\u0020definition\u0020on\u0020giver\u0020validator",
+            "url": "classes/App-Domain-Configuration-Validation-UpdateValidator.html#method_defineSchema"
+        },                {
+            "fqsen": "\\App\\Domain\\Configuration\\Validation\\UpdateValidator\u003A\u003A\u0024fields",
+            "name": "fields",
+            "summary": "set\u0020of\u0020fields\u0020that\u0020form\u0020can\u0020contain",
+            "url": "classes/App-Domain-Configuration-Validation-UpdateValidator.html#property_fields"
         },                {
             "fqsen": "\\App\\Domain\\Exception\\DomainBadRequestException",
             "name": "DomainBadRequestException",
@@ -2036,6 +2116,21 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/App-Domain-Image-ImageSizeExceededException.html#method___construct"
         },                {
+            "fqsen": "\\App\\Domain\\Key\\Validation\\UpdateValidator",
+            "name": "UpdateValidator",
+            "summary": "",
+            "url": "classes/App-Domain-Key-Validation-UpdateValidator.html"
+        },                {
+            "fqsen": "\\App\\Domain\\Key\\Validation\\UpdateValidator\u003A\u003AdefineSchema\u0028\u0029",
+            "name": "defineSchema",
+            "summary": "Performs\u0020schmea\u0020definition\u0020on\u0020giver\u0020validator",
+            "url": "classes/App-Domain-Key-Validation-UpdateValidator.html#method_defineSchema"
+        },                {
+            "fqsen": "\\App\\Domain\\Key\\Validation\\UpdateValidator\u003A\u003A\u0024fields",
+            "name": "fields",
+            "summary": "set\u0020of\u0020fields\u0020that\u0020form\u0020can\u0020contain",
+            "url": "classes/App-Domain-Key-Validation-UpdateValidator.html#property_fields"
+        },                {
             "fqsen": "\\App\\Domain\\Model\\IRepository",
             "name": "IRepository",
             "summary": "",
@@ -2130,6 +2225,51 @@ Search.appendIndex(
             "name": "__construct",
             "summary": "",
             "url": "classes/App-Domain-Model-ModelPropertyNotExistException.html#method___construct"
+        },                {
+            "fqsen": "\\App\\Domain\\Model\\SchemaValidator",
+            "name": "SchemaValidator",
+            "summary": "",
+            "url": "classes/App-Domain-Model-SchemaValidator.html"
+        },                {
+            "fqsen": "\\App\\Domain\\Model\\SchemaValidator\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/App-Domain-Model-SchemaValidator.html#method___construct"
+        },                {
+            "fqsen": "\\App\\Domain\\Model\\SchemaValidator\u003A\u003AdefineSchema\u0028\u0029",
+            "name": "defineSchema",
+            "summary": "Performs\u0020schmea\u0020definition\u0020on\u0020giver\u0020validator",
+            "url": "classes/App-Domain-Model-SchemaValidator.html#method_defineSchema"
+        },                {
+            "fqsen": "\\App\\Domain\\Model\\SchemaValidator\u003A\u003AsetAsRequired\u0028\u0029",
+            "name": "setAsRequired",
+            "summary": "Sets\u0020fields\u0020as\u0020required",
+            "url": "classes/App-Domain-Model-SchemaValidator.html#method_setAsRequired"
+        },                {
+            "fqsen": "\\App\\Domain\\Model\\SchemaValidator\u003A\u003AsetAsNameString\u0028\u0029",
+            "name": "setAsNameString",
+            "summary": "Declares\u0020given\u0020field\u0020as\u0020name\u0020string\u0020with\u0020regex\u003A\u0020\u005E\u005B\\\\w\\\\s\\\\.\u002D\u005D\u002B\u0024",
+            "url": "classes/App-Domain-Model-SchemaValidator.html#method_setAsNameString"
+        },                {
+            "fqsen": "\\App\\Domain\\Model\\SchemaValidator\u003A\u003AsetAsType\u0028\u0029",
+            "name": "setAsType",
+            "summary": "Declares\u0020a\u0020filed\u0020in\u0020list\u0020to\u0020be\u0020a\u0020specific\u0020type",
+            "url": "classes/App-Domain-Model-SchemaValidator.html#method_setAsType"
+        },                {
+            "fqsen": "\\App\\Domain\\Model\\SchemaValidator\u003A\u003AvalidateForm\u0028\u0029",
+            "name": "validateForm",
+            "summary": "Executes\u0020validation\u0020rules",
+            "url": "classes/App-Domain-Model-SchemaValidator.html#method_validateForm"
+        },                {
+            "fqsen": "\\App\\Domain\\Model\\SchemaValidator\u003A\u003A\u0024validator",
+            "name": "validator",
+            "summary": "CakePHP\u0020validator",
+            "url": "classes/App-Domain-Model-SchemaValidator.html#property_validator"
+        },                {
+            "fqsen": "\\App\\Domain\\Model\\SchemaValidator\u003A\u003A\u0024fields",
+            "name": "fields",
+            "summary": "set\u0020of\u0020fields\u0020that\u0020form\u0020can\u0020contain",
+            "url": "classes/App-Domain-Model-SchemaValidator.html#property_fields"
         },                {
             "fqsen": "\\App\\Domain\\Request\\IRequestRepository",
             "name": "IRequestRepository",
@@ -2571,6 +2711,41 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/App-Domain-Reservation-StartedReservationDeleteException.html#property_message"
         },                {
+            "fqsen": "\\App\\Domain\\Reservation\\Validation\\CreateValidator",
+            "name": "CreateValidator",
+            "summary": "",
+            "url": "classes/App-Domain-Reservation-Validation-CreateValidator.html"
+        },                {
+            "fqsen": "\\App\\Domain\\Reservation\\Validation\\CreateValidator\u003A\u003AdefineSchema\u0028\u0029",
+            "name": "defineSchema",
+            "summary": "Performs\u0020schmea\u0020definition\u0020on\u0020giver\u0020validator",
+            "url": "classes/App-Domain-Reservation-Validation-CreateValidator.html#method_defineSchema"
+        },                {
+            "fqsen": "\\App\\Domain\\Reservation\\Validation\\ReservationValidation",
+            "name": "ReservationValidation",
+            "summary": "",
+            "url": "classes/App-Domain-Reservation-Validation-ReservationValidation.html"
+        },                {
+            "fqsen": "\\App\\Domain\\Reservation\\Validation\\ReservationValidation\u003A\u003AdefineSchema\u0028\u0029",
+            "name": "defineSchema",
+            "summary": "Performs\u0020schmea\u0020definition\u0020on\u0020giver\u0020validator",
+            "url": "classes/App-Domain-Reservation-Validation-ReservationValidation.html#method_defineSchema"
+        },                {
+            "fqsen": "\\App\\Domain\\Reservation\\Validation\\ReservationValidation\u003A\u003A\u0024fields",
+            "name": "fields",
+            "summary": "set\u0020of\u0020fields\u0020that\u0020form\u0020can\u0020contain",
+            "url": "classes/App-Domain-Reservation-Validation-ReservationValidation.html#property_fields"
+        },                {
+            "fqsen": "\\App\\Domain\\Reservation\\Validation\\UpdateValidator",
+            "name": "UpdateValidator",
+            "summary": "",
+            "url": "classes/App-Domain-Reservation-Validation-UpdateValidator.html"
+        },                {
+            "fqsen": "\\App\\Domain\\Reservation\\Validation\\UpdateValidator\u003A\u003AdefineSchema\u0028\u0029",
+            "name": "defineSchema",
+            "summary": "Performs\u0020schmea\u0020definition\u0020on\u0020giver\u0020validator",
+            "url": "classes/App-Domain-Reservation-Validation-UpdateValidator.html#method_defineSchema"
+        },                {
             "fqsen": "\\App\\Domain\\Room\\IRoomRepository",
             "name": "IRoomRepository",
             "summary": "",
@@ -2730,6 +2905,41 @@ Search.appendIndex(
             "name": "message",
             "summary": "",
             "url": "classes/App-Domain-Room-RoomAlreadyOccupiedException.html#property_message"
+        },                {
+            "fqsen": "\\App\\Domain\\Room\\Validation\\CreateValidator",
+            "name": "CreateValidator",
+            "summary": "",
+            "url": "classes/App-Domain-Room-Validation-CreateValidator.html"
+        },                {
+            "fqsen": "\\App\\Domain\\Room\\Validation\\CreateValidator\u003A\u003AdefineSchema\u0028\u0029",
+            "name": "defineSchema",
+            "summary": "Performs\u0020schmea\u0020definition\u0020on\u0020giver\u0020validator",
+            "url": "classes/App-Domain-Room-Validation-CreateValidator.html#method_defineSchema"
+        },                {
+            "fqsen": "\\App\\Domain\\Room\\Validation\\RoomValidation",
+            "name": "RoomValidation",
+            "summary": "",
+            "url": "classes/App-Domain-Room-Validation-RoomValidation.html"
+        },                {
+            "fqsen": "\\App\\Domain\\Room\\Validation\\RoomValidation\u003A\u003AdefineSchema\u0028\u0029",
+            "name": "defineSchema",
+            "summary": "Performs\u0020schmea\u0020definition\u0020on\u0020giver\u0020validator",
+            "url": "classes/App-Domain-Room-Validation-RoomValidation.html#method_defineSchema"
+        },                {
+            "fqsen": "\\App\\Domain\\Room\\Validation\\RoomValidation\u003A\u003A\u0024fields",
+            "name": "fields",
+            "summary": "set\u0020of\u0020fields\u0020that\u0020form\u0020can\u0020contain",
+            "url": "classes/App-Domain-Room-Validation-RoomValidation.html#property_fields"
+        },                {
+            "fqsen": "\\App\\Domain\\Room\\Validation\\UpdateValidator",
+            "name": "UpdateValidator",
+            "summary": "",
+            "url": "classes/App-Domain-Room-Validation-UpdateValidator.html"
+        },                {
+            "fqsen": "\\App\\Domain\\Room\\Validation\\UpdateValidator\u003A\u003AdefineSchema\u0028\u0029",
+            "name": "defineSchema",
+            "summary": "Performs\u0020schmea\u0020definition\u0020on\u0020giver\u0020validator",
+            "url": "classes/App-Domain-Room-Validation-UpdateValidator.html#method_defineSchema"
         },                {
             "fqsen": "\\App\\Domain\\Stats\\IncorrectDateFormatException",
             "name": "IncorrectDateFormatException",
@@ -3290,6 +3500,126 @@ Search.appendIndex(
             "name": "accessId",
             "summary": "",
             "url": "classes/App-Domain-User-User.html#property_accessId"
+        },                {
+            "fqsen": "\\App\\Domain\\User\\Validation\\AccessUpdateValidator",
+            "name": "AccessUpdateValidator",
+            "summary": "",
+            "url": "classes/App-Domain-User-Validation-AccessUpdateValidator.html"
+        },                {
+            "fqsen": "\\App\\Domain\\User\\Validation\\AccessUpdateValidator\u003A\u003AdefineSchema\u0028\u0029",
+            "name": "defineSchema",
+            "summary": "Performs\u0020schmea\u0020definition\u0020on\u0020giver\u0020validator",
+            "url": "classes/App-Domain-User-Validation-AccessUpdateValidator.html#method_defineSchema"
+        },                {
+            "fqsen": "\\App\\Domain\\User\\Validation\\AccessUpdateValidator\u003A\u003A\u0024fields",
+            "name": "fields",
+            "summary": "\u007B\u0040inheritDoc\u007D",
+            "url": "classes/App-Domain-User-Validation-AccessUpdateValidator.html#property_fields"
+        },                {
+            "fqsen": "\\App\\Domain\\User\\Validation\\ActivateValidator",
+            "name": "ActivateValidator",
+            "summary": "",
+            "url": "classes/App-Domain-User-Validation-ActivateValidator.html"
+        },                {
+            "fqsen": "\\App\\Domain\\User\\Validation\\ActivateValidator\u003A\u003AdefineSchema\u0028\u0029",
+            "name": "defineSchema",
+            "summary": "Performs\u0020schmea\u0020definition\u0020on\u0020giver\u0020validator",
+            "url": "classes/App-Domain-User-Validation-ActivateValidator.html#method_defineSchema"
+        },                {
+            "fqsen": "\\App\\Domain\\User\\Validation\\ActivateValidator\u003A\u003A\u0024fields",
+            "name": "fields",
+            "summary": "\u007B\u0040inheritDoc\u007D",
+            "url": "classes/App-Domain-User-Validation-ActivateValidator.html#property_fields"
+        },                {
+            "fqsen": "\\App\\Domain\\User\\Validation\\CreateValidator",
+            "name": "CreateValidator",
+            "summary": "",
+            "url": "classes/App-Domain-User-Validation-CreateValidator.html"
+        },                {
+            "fqsen": "\\App\\Domain\\User\\Validation\\CreateValidator\u003A\u003AdefineSchema\u0028\u0029",
+            "name": "defineSchema",
+            "summary": "Performs\u0020schmea\u0020definition\u0020on\u0020giver\u0020validator",
+            "url": "classes/App-Domain-User-Validation-CreateValidator.html#method_defineSchema"
+        },                {
+            "fqsen": "\\App\\Domain\\User\\Validation\\CreateValidator\u003A\u003A\u0024fields",
+            "name": "fields",
+            "summary": "\u007B\u0040inheritDoc\u007D",
+            "url": "classes/App-Domain-User-Validation-CreateValidator.html#property_fields"
+        },                {
+            "fqsen": "\\App\\Domain\\User\\Validation\\GenerateKeyValidator",
+            "name": "GenerateKeyValidator",
+            "summary": "",
+            "url": "classes/App-Domain-User-Validation-GenerateKeyValidator.html"
+        },                {
+            "fqsen": "\\App\\Domain\\User\\Validation\\GenerateKeyValidator\u003A\u003AdefineSchema\u0028\u0029",
+            "name": "defineSchema",
+            "summary": "Performs\u0020schmea\u0020definition\u0020on\u0020giver\u0020validator",
+            "url": "classes/App-Domain-User-Validation-GenerateKeyValidator.html#method_defineSchema"
+        },                {
+            "fqsen": "\\App\\Domain\\User\\Validation\\GenerateKeyValidator\u003A\u003A\u0024fields",
+            "name": "fields",
+            "summary": "\u007B\u0040inheritDoc\u007D",
+            "url": "classes/App-Domain-User-Validation-GenerateKeyValidator.html#property_fields"
+        },                {
+            "fqsen": "\\App\\Domain\\User\\Validation\\LoginValidator",
+            "name": "LoginValidator",
+            "summary": "",
+            "url": "classes/App-Domain-User-Validation-LoginValidator.html"
+        },                {
+            "fqsen": "\\App\\Domain\\User\\Validation\\LoginValidator\u003A\u003AdefineSchema\u0028\u0029",
+            "name": "defineSchema",
+            "summary": "Performs\u0020schmea\u0020definition\u0020on\u0020giver\u0020validator",
+            "url": "classes/App-Domain-User-Validation-LoginValidator.html#method_defineSchema"
+        },                {
+            "fqsen": "\\App\\Domain\\User\\Validation\\LoginValidator\u003A\u003A\u0024fields",
+            "name": "fields",
+            "summary": "\u007B\u0040inheritDoc\u007D",
+            "url": "classes/App-Domain-User-Validation-LoginValidator.html#property_fields"
+        },                {
+            "fqsen": "\\App\\Domain\\User\\Validation\\PasswordChangeValidator",
+            "name": "PasswordChangeValidator",
+            "summary": "",
+            "url": "classes/App-Domain-User-Validation-PasswordChangeValidator.html"
+        },                {
+            "fqsen": "\\App\\Domain\\User\\Validation\\PasswordChangeValidator\u003A\u003AdefineSchema\u0028\u0029",
+            "name": "defineSchema",
+            "summary": "Performs\u0020schmea\u0020definition\u0020on\u0020giver\u0020validator",
+            "url": "classes/App-Domain-User-Validation-PasswordChangeValidator.html#method_defineSchema"
+        },                {
+            "fqsen": "\\App\\Domain\\User\\Validation\\PasswordChangeValidator\u003A\u003A\u0024fields",
+            "name": "fields",
+            "summary": "\u007B\u0040inheritDoc\u007D",
+            "url": "classes/App-Domain-User-Validation-PasswordChangeValidator.html#property_fields"
+        },                {
+            "fqsen": "\\App\\Domain\\User\\Validation\\UpdateValidator",
+            "name": "UpdateValidator",
+            "summary": "",
+            "url": "classes/App-Domain-User-Validation-UpdateValidator.html"
+        },                {
+            "fqsen": "\\App\\Domain\\User\\Validation\\UpdateValidator\u003A\u003AdefineSchema\u0028\u0029",
+            "name": "defineSchema",
+            "summary": "Performs\u0020schmea\u0020definition\u0020on\u0020giver\u0020validator",
+            "url": "classes/App-Domain-User-Validation-UpdateValidator.html#method_defineSchema"
+        },                {
+            "fqsen": "\\App\\Domain\\User\\Validation\\UpdateValidator\u003A\u003A\u0024fields",
+            "name": "fields",
+            "summary": "\u007B\u0040inheritDoc\u007D",
+            "url": "classes/App-Domain-User-Validation-UpdateValidator.html#property_fields"
+        },                {
+            "fqsen": "\\App\\Domain\\User\\Validation\\UserValidator",
+            "name": "UserValidator",
+            "summary": "",
+            "url": "classes/App-Domain-User-Validation-UserValidator.html"
+        },                {
+            "fqsen": "\\App\\Domain\\User\\Validation\\UserValidator\u003A\u003AdefineSchema\u0028\u0029",
+            "name": "defineSchema",
+            "summary": "Performs\u0020schmea\u0020definition\u0020on\u0020giver\u0020validator",
+            "url": "classes/App-Domain-User-Validation-UserValidator.html#method_defineSchema"
+        },                {
+            "fqsen": "\\App\\Domain\\User\\Validation\\UserValidator\u003A\u003AsetUpPassword\u0028\u0029",
+            "name": "setUpPassword",
+            "summary": "sets\u0020up\u0020password\u0020validation\u0020for\u0020given\u0020key",
+            "url": "classes/App-Domain-User-Validation-UserValidator.html#method_setUpPassword"
         },                {
             "fqsen": "\\App\\Infrastructure\\Database\\DatabaseConnectionError",
             "name": "DatabaseConnectionError",
@@ -4556,20 +4886,40 @@ Search.appendIndex(
             "summary": "",
             "url": "namespaces/app-domain.html"
         },                {
+            "fqsen": "\\App\\Domain\\Access\\Validation",
+            "name": "Validation",
+            "summary": "",
+            "url": "namespaces/app-domain-access-validation.html"
+        },                {
             "fqsen": "\\App\\Domain\\Address",
             "name": "Address",
             "summary": "",
             "url": "namespaces/app-domain-address.html"
+        },                {
+            "fqsen": "\\App\\Domain\\Address\\Validation",
+            "name": "Validation",
+            "summary": "",
+            "url": "namespaces/app-domain-address-validation.html"
         },                {
             "fqsen": "\\App\\Domain\\Building",
             "name": "Building",
             "summary": "",
             "url": "namespaces/app-domain-building.html"
         },                {
+            "fqsen": "\\App\\Domain\\Building\\Validation",
+            "name": "Validation",
+            "summary": "",
+            "url": "namespaces/app-domain-building-validation.html"
+        },                {
             "fqsen": "\\App\\Domain\\Configuration",
             "name": "Configuration",
             "summary": "",
             "url": "namespaces/app-domain-configuration.html"
+        },                {
+            "fqsen": "\\App\\Domain\\Configuration\\Validation",
+            "name": "Validation",
+            "summary": "",
+            "url": "namespaces/app-domain-configuration-validation.html"
         },                {
             "fqsen": "\\App\\Domain\\Exception",
             "name": "Exception",
@@ -4580,6 +4930,16 @@ Search.appendIndex(
             "name": "Image",
             "summary": "",
             "url": "namespaces/app-domain-image.html"
+        },                {
+            "fqsen": "\\App\\Domain\\Key\\Validation",
+            "name": "Validation",
+            "summary": "",
+            "url": "namespaces/app-domain-key-validation.html"
+        },                {
+            "fqsen": "\\App\\Domain\\Key",
+            "name": "Key",
+            "summary": "",
+            "url": "namespaces/app-domain-key.html"
         },                {
             "fqsen": "\\App\\Domain\\Model",
             "name": "Model",
@@ -4606,10 +4966,20 @@ Search.appendIndex(
             "summary": "",
             "url": "namespaces/app-domain-reservation-policy.html"
         },                {
+            "fqsen": "\\App\\Domain\\Reservation\\Validation",
+            "name": "Validation",
+            "summary": "",
+            "url": "namespaces/app-domain-reservation-validation.html"
+        },                {
             "fqsen": "\\App\\Domain\\Room",
             "name": "Room",
             "summary": "",
             "url": "namespaces/app-domain-room.html"
+        },                {
+            "fqsen": "\\App\\Domain\\Room\\Validation",
+            "name": "Validation",
+            "summary": "",
+            "url": "namespaces/app-domain-room-validation.html"
         },                {
             "fqsen": "\\App\\Domain\\Stats",
             "name": "Stats",
@@ -4625,6 +4995,11 @@ Search.appendIndex(
             "name": "User",
             "summary": "",
             "url": "namespaces/app-domain-user.html"
+        },                {
+            "fqsen": "\\App\\Domain\\User\\Validation",
+            "name": "Validation",
+            "summary": "",
+            "url": "namespaces/app-domain-user-validation.html"
         },                {
             "fqsen": "\\App\\Infrastructure\\Database",
             "name": "Database",
