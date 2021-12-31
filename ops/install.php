@@ -327,7 +327,7 @@ $pdo->exec(
     DELETE FROM
         request
     where
-        ( EXTRACT( EPOCH FROM (CURRENT_TIMESTAMP - created) ) / 60 ) > (SELECT value FROM configuration WHERE key = 'REQUEST_HISTORY');
+        ( EXTRACT( EPOCH FROM (CURRENT_TIMESTAMP - created) ) / 86400 ) > (SELECT value FROM configuration WHERE key = 'REQUEST_HISTORY');
     $$;"
 );
 
@@ -337,7 +337,7 @@ $pdo->exec(
     DELETE FROM
         reservation
     WHERE
-        (EXTRACT( EPOCH FROM (CURRENT_TIMESTAMP - created) ) / 60) > (SELECT value FROM configuration WHERE key = 'RESERVATION_HISTORY');
+        (EXTRACT( EPOCH FROM (CURRENT_TIMESTAMP - created) ) / 86400) > (SELECT value FROM configuration WHERE key = 'RESERVATION_HISTORY');
     $$;"
 );
 
