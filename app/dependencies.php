@@ -12,7 +12,7 @@ use Psr\Log\LoggerInterface;
 use App\Infrastructure\Database;
 
 use App\Domain\Reservation\Policy\ReservationCreatePolicy;
-use App\Infrastructure\Database\PostgreSQL;
+use App\Infrastructure\Database\MySQL;
 use App\Infrastructure\Mailing\{IMailingService, MailingService};
 use App\Infrastructure\TokenFactory\{ITokenFactory, JWTFactory};
 use Cloudinary\Cloudinary;
@@ -36,7 +36,7 @@ return function (ContainerBuilder $containerBuilder) {
             return $logger;
         },
 
-        Database\IDatabase::class => autowire(PostgreSQL::class),
+        Database\IDatabase::class => autowire(MySQL::class),
 
         ITokenFactory::class => autowire(JWTFactory::class),
 
