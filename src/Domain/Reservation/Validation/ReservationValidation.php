@@ -31,13 +31,13 @@ class ReservationValidation extends SchemaValidator
 
         $this->setAsType(['roomId'], 'integer');
 
-        $this->setAsNameString('title', 'Tytuł rezerwacji zawiera niedozwolone znaki');
-        $validator->maxLength('title', 120, 'Tytuł może mieć maksymalnie 120 znaków');
+        $validator->regex('title', '/^[\w\s\.\,\'\"\(\)\!\?\-\<\>\;\:\/]+$/u', 'Tytuł rezerwacji zawiera niedozwolone znaki')
+            ->maxLength('title', 120, 'Tytuł może mieć maksymalnie 120 znaków')
 
-        $this->setAsNameString('description', 'Opis rezerwacji zawiera niedozwolone znaki');
-        $validator->maxLength('description', 600, 'Opis rezerwacji może mieć maksymalnie 600 znaków')
+            ->regex('description',  '/^[\w\s\.\,\'\"\(\)\!\?\-\<\>\;\:\@]+$/u', "Opis rezerwacji zawiera niedozwolone znaki")
+            ->maxLength('description', 600, 'Opis rezerwacji może mieć maksymalnie 600 znaków')
 
-            ->dateTime('plannedStart', ['dmy'], 'Data startu rezerwacji ma zły format', )
+            ->dateTime('plannedStart', ['dmy'], 'Data startu rezerwacji ma zły format',)
             ->dateTime('plannedEnd', ['dmy'], 'Data końca rezerwacji ma zły format');
     }
 }
