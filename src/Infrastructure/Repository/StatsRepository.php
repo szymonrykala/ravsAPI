@@ -28,17 +28,17 @@ final class StatsRepository implements IStatsRepository
     private string $between;
     private array $params;
 
-    private string $reservations = '"reservation"';
-    private string $rooms = '"room"';
-    private string $buildings = '"building"';
-    private string $users = '"user"';
-    private string $requests = '"request"';
+    private string $reservations = '`reservation`';
+    private string $rooms = '`room`';
+    private string $buildings = '`building`';
+    private string $users = '`user`';
+    private string $requests = '`request`';
 
 
     private string $avgTimeFileds = "
-    ROUND(AVG(extract(epoch  from  (select res.planned_end - res.planned_start)))/60) as avg_planned_time_minutes,
-    ROUND(AVG(extract(epoch  from  (select res.actual_end - res.actual_start)))/60) as avg_actual_time_minutes,
-    SUM(ROUND(extract(epoch  from  (select res.actual_end - res.actual_start))/60)) as all_time_minutes
+    ROUND(AVG(TIME_TO_SEC(TIMEDIFF(res.planned_end, res.planned_start)))/60) as 'avg_planned_time_minutes',
+    ROUND(AVG(TIME_TO_SEC(TIMEDIFF(res.actual_end, res.actual_start)))/60) as 'avg_actual_time_minutes',
+    SUM(ROUND(TIME_TO_SEC(TIMEDIFF(res.actual_end, res.actual_start))/60)) as 'all_time_minutes'
     ";
 
     public function __construct(
@@ -52,7 +52,7 @@ final class StatsRepository implements IStatsRepository
 
     private function setBetween(JsonDateTime $from, JsonDateTime $to): void
     {
-        $this->between = " planned_start BETWEEN DATE(:from) AND DATE(:to)";
+        $this->between = " `planned_start` BETWEEN DATE(:from) AND DATE(:to)";
         $this->params[':from'] = $from->getDate();
         $this->params[':to'] = $to->getDate();
     }
@@ -145,7 +145,7 @@ final class StatsRepository implements IStatsRepository
     {
         $sql = "SELECT r.id, 
                         r.name,
-                        COUNT(res.id) as reservations_count,
+                        COUNT(res.id) as 'reservations_count',
                         {$this->avgTimeFileds}
                     FROM {$this->rooms} r join {$this->reservations} res ON res.room = r.id 
                     WHERE {$this->between}
@@ -177,8 +177,8 @@ final class StatsRepository implements IStatsRepository
 
         // Reservations for specific room groupped by day of week
         {
-            $sql = "SELECT COUNT(res.id) as reservations_count,
-                            date_part('dow', res.planned_start) AS day,
+            $sql = "SELECT COUNT(res.id) as 'reservations_count',
+                            DAYOFWEEK(res.planned_start) AS 'day',
                             {$this->avgTimeFileds}
                         FROM {$this->rooms} r 
                             INNER JOIN {$this->reservations} res ON res.room = r.id
@@ -203,8 +203,8 @@ final class StatsRepository implements IStatsRepository
         }
         // Reservations for specific room groupped by day of month
         {
-            $sql = "SELECT COUNT(res.id) as reservations_count,
-                            date_part('day', res.planned_start) AS day,
+            $sql = "SELECT COUNT(res.id) as 'reservations_count',
+                            DAYOFMONTH(res.planned_start) AS 'day',
                             {$this->avgTimeFileds}
                         FROM {$this->rooms} r 
                             INNER JOIN {$this->reservations} res ON res.room = r.id
@@ -230,7 +230,7 @@ final class StatsRepository implements IStatsRepository
         {
             $sql = "SELECT u.id, 
                             u.email, 
-                            COUNT(res.id) as reservations_count, 
+                            COUNT(res.id) as 'reservations_count', 
                             {$this->avgTimeFileds}
                         FROM {$this->rooms} r 
                             INNER JOIN {$this->reservations} res ON res.room = r.id 
@@ -263,7 +263,7 @@ final class StatsRepository implements IStatsRepository
     {
         $sql = "SELECT u.id, 
                         u.email, 
-                        COUNT(res.id) as reservations_count,
+                        COUNT(res.id) as 'reservations_count',
                         {$this->avgTimeFileds}
                     FROM {$this->reservations} res 
                         INNER JOIN {$this->users} u ON res.user = u.id 
@@ -296,8 +296,8 @@ final class StatsRepository implements IStatsRepository
         // Reservations of specific User groupped by day of week
         {
             $sql = "SELECT 
-                            COUNT(res.id) as reservations_count, 
-                            date_part('dow', res.planned_start) AS day, 
+                            COUNT(res.id) as 'reservations_count', 
+                            DAYOFWEEK(res.planned_start) AS 'day', 
                             {$this->avgTimeFileds}
                         FROM {$this->users} u 
                             INNER JOIN {$this->reservations} res ON res.user = u.id 
@@ -321,8 +321,8 @@ final class StatsRepository implements IStatsRepository
         // Reservations of specific room groupped by day of month
         {
             $sql = "SELECT 
-                            COUNT(res.id) as reservations_count,
-                            date_part('day', res.planned_start) AS day,
+                            COUNT(res.id) as 'reservations_count',
+                            DAYOFMONTH(res.planned_start) AS 'day',
                             {$this->avgTimeFileds}
                         FROM {$this->users} u 
                             INNER JOIN {$this->reservations} res ON res.user = u.id 
@@ -346,9 +346,9 @@ final class StatsRepository implements IStatsRepository
         // Rooms reserved by specific User
         {
             $sql = "SELECT 
-                            COUNT(res.id) as reservations_count, 
-                            r.name as room_name,
-                            b.name as building_name,
+                            COUNT(res.id) as 'reservations_count', 
+                            r.name as 'room_name',
+                            b.name as 'building_name',
                             {$this->avgTimeFileds}
                         FROM {$this->users} u 
                             INNER JOIN {$this->reservations} res ON res.user = u.id 
@@ -381,7 +381,7 @@ final class StatsRepository implements IStatsRepository
     {
         $sql = "SELECT b.id, 
                         b.name,
-                        COUNT(res.id) as reservations_count,
+                        COUNT(res.id) as 'reservations_count',
                         {$this->avgTimeFileds}
                     FROM {$this->reservations} res 
                         INNER JOIN {$this->rooms} r ON r.id = res.room
@@ -414,8 +414,8 @@ final class StatsRepository implements IStatsRepository
         $this->params[':buildingId'] = $id;
         // Reservations for specific room groupped by day of week
         {
-            $sql = "SELECT COUNT(res.id) as reservations_count,
-                            date_part('dow', res.planned_start) AS day,
+            $sql = "SELECT COUNT(res.id) as 'reservations_count',
+                            DAYOFWEEK(res.planned_start) AS 'day',
                             {$this->avgTimeFileds}
                         FROM {$this->reservations} res 
                             INNER JOIN {$this->rooms} r ON r.id = res.room
@@ -438,8 +438,8 @@ final class StatsRepository implements IStatsRepository
         }
         // Reservations for specific room groupped by day of month
         {
-            $sql = "SELECT COUNT(res.id) as reservations_count,
-                            date_part('day', res.planned_start) AS day,
+            $sql = "SELECT COUNT(res.id) as 'reservations_count',
+                            DAYOFMONTH(res.planned_start) AS 'day',
                             {$this->avgTimeFileds}
                         FROM {$this->reservations} res 
                             INNER JOIN {$this->rooms} r ON r.id = res.room
@@ -463,7 +463,7 @@ final class StatsRepository implements IStatsRepository
         {
             $sql = "SELECT u.id, 
                             u.email, 
-                            COUNT(res.id) as reservations_count, 
+                            COUNT(res.id) as 'reservations_count', 
                             {$this->avgTimeFileds}
                         FROM {$this->reservations} res 
                             INNER JOIN {$this->rooms} r ON r.id = res.room
@@ -498,10 +498,10 @@ final class StatsRepository implements IStatsRepository
 
         $sql = "SELECT 
                     method, 
-                    COUNT(id) as calls,
-                    REGEXP_REPLACE(endpoint, '/\d+', '/id', 'g') as general_endpoint , 
-                    AVG(time) as avg_time,
-                    SUM(time) as time_for_endpoint
+                    COUNT(id) as 'calls',
+                    REGEXP_REPLACE(endpoint, '/\\d+', '/id') as 'general_endpoint' , 
+                    AVG(time) as 'avg_time',
+                    SUM(time) as 'time_for_endpoint'
                 FROM {$this->requests} 
                 GROUP BY general_endpoint, method 
                 ORDER BY general_endpoint ASC;

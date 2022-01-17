@@ -20,12 +20,12 @@ abstract class BaseRepository implements IRepository
     protected IDatabase $db;
     private Pagination $pagination;
     protected RepositoryCache $cache;
-    protected string $configTable = 'configuration';
+    protected string $configTable = '`configuration`';
 
     protected string $SQL;
     protected string $SQLwhere = ' WHERE 1=1';
     protected string $SQLlimit = '';
-    protected string $SQLorder = ' ORDER BY created DESC';
+    protected string $SQLorder = ' ORDER BY `created` DESC';
 
     protected array $params = [];
 
@@ -57,7 +57,7 @@ abstract class BaseRepository implements IRepository
     public function where(array $searchParams): IRepository
     {
         foreach ($searchParams as $key => $value) {
-            $this->SQLwhere .= " AND $this->table.$key=:$key";
+            $this->SQLwhere .= " AND $this->table.`$key`=:$key";
             $this->params[":$key"] = $value;
         }
 
@@ -69,7 +69,7 @@ abstract class BaseRepository implements IRepository
      */
     public function orderBy(string $name, string $direction = 'DESC'): IRepository
     {
-        $this->SQLorder = " ORDER BY ${name} ${direction}";
+        $this->SQLorder = " ORDER BY `${name}` ${direction}";
 
         return $this;
     }
@@ -84,7 +84,7 @@ abstract class BaseRepository implements IRepository
         /** @var string localSQL */
         $localSQL = $this->SQL . $this->SQLwhere;
 
-        $localSQL = preg_replace('/SELECT(.*)FROM\s(["\w"]+)(.*)/i', 'SELECT COUNT($2.id) as items_count FROM $2 $3', $localSQL);;
+        $localSQL = preg_replace('/SELECT(.*)FROM\s([`\w`]+)(.*)/i', "SELECT COUNT($2.id) as 'items_count' FROM $2 $3", $localSQL);
         // print_r($localSQL."\n");
 
         $result = $this->db->query($localSQL, $this->params)[0];
@@ -141,7 +141,7 @@ abstract class BaseRepository implements IRepository
     public function byId(int $id): Model
     {
         $result = $this->db->query(
-            "SELECT * FROM $this->table WHERE id=:id",
+            "SELECT * FROM $this->table WHERE `id`=:id",
             [':id' => $id]
         );
 
@@ -164,7 +164,7 @@ abstract class BaseRepository implements IRepository
     public function delete(Model $object): void
     {
         $this->db->query(
-            "DELETE FROM $this->table WHERE id = :id",
+            "DELETE FROM $this->table WHERE `id` = :id",
             [':id' => $object->id]
         );
     }

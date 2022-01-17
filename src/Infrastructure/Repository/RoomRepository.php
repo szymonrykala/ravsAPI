@@ -18,7 +18,7 @@ use Psr\Container\ContainerInterface;
 
 final class RoomRepository extends BaseRepository implements IRoomRepository
 {
-    protected string $table = '"room"';
+    protected string $table = '`room`';
     private bool $buildingLoading = FALSE;
 
     public function __construct(
@@ -67,7 +67,7 @@ final class RoomRepository extends BaseRepository implements IRoomRepository
 
     public function byIdAndBuildingId(int $roomId, int $buildingId): Room
     {
-        $sql = "SELECT * FROM $this->table WHERE id = :id AND building = :buildingId";
+        $sql = "SELECT * FROM $this->table WHERE `id` = :id AND `building` = :buildingId";
         $params = [':id' => $roomId, ':buildingId' => $buildingId];
         $result = $this->db->query($sql, $params);
         $roomData = array_pop($result);
@@ -85,7 +85,7 @@ final class RoomRepository extends BaseRepository implements IRoomRepository
     public function setDefaultImage(Room $room): void
     {
         $this->db->query(
-            "UPDATE $this->table SET image = DEFAULT WHERE id = :id",
+            "UPDATE $this->table SET `image` = 2 WHERE `id` = :id",
             [':id' => $room->id]
         );
     }
@@ -97,16 +97,16 @@ final class RoomRepository extends BaseRepository implements IRoomRepository
     {
         $room->validate();
         $sql = "UPDATE $this->table SET
-                    name = :name,
-                    image = :imageId,
-                    building = :buildingId,
-                    rfid = :rfid,
-                    room_type = :roomType,
-                    seats_count = :seatsCount,
-                    floor = :floor,
-                    blocked = :blocked,
-                    occupied = :occupied
-                WHERE id = :id";
+                    `name` = :name,
+                    `image` = :imageId,
+                    `building` = :buildingId,
+                    `rfid` = :rfid,
+                    `room_type` = :roomType,
+                    `seats_count` = :seatsCount,
+                    `floor` = :floor,
+                    `blocked` = :blocked,
+                    `occupied` = :occupied
+                WHERE `id` = :id";
 
         $params = [
             ':id' => $room->id,
@@ -138,7 +138,7 @@ final class RoomRepository extends BaseRepository implements IRoomRepository
         int     $seatsCount,
         int     $floor
     ): int {
-        $sql = "INSERT INTO $this->table(name, building, room_type, seats_count, image, floor)
+        $sql = "INSERT INTO $this->table(`name`, `building`, `room_type`, `seats_count`, `image`, `floor`)
                 VALUES(:name, :buildingId, :roomType, :seatsCount, DEFAULT, :floor)";
 
         $params =  [
