@@ -9,5 +9,5 @@ use Exception;
 class MailingServiceException extends Exception
 {
     public $code = 503;
-    public $message = 'Serwis mailingowy napotkał niespodziewany błąd.';
+    public $message = 'Serwis mailowy napotkał błąd. Skontaktuj się z administratorem.';
 }

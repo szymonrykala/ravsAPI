@@ -104,9 +104,11 @@ class MailingService implements IMailingService
         $this->mailer->Subject = $this->template->getTitle();
         $this->mailer->msgHTML($this->template->render());
 
-        if (!$this->mailer->send())
+        try {
+            if (!$this->mailer->send())
+                throw new MailingServiceException();
+        } catch (\Exception $e) {
             throw new MailingServiceException();
-
-        // var_dump($this->mailer);
+        }
     }
 }
