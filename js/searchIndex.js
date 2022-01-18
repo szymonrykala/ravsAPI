@@ -3661,40 +3661,40 @@ Search.appendIndex(
             "summary": "returns\u0020id\u0020of\u0020last\u0020inserted\u0020row",
             "url": "classes/App-Infrastructure-Database-IDatabase.html#method_lastInsertId"
         },                {
-            "fqsen": "\\App\\Infrastructure\\Database\\PostgreSQL",
-            "name": "PostgreSQL",
+            "fqsen": "\\App\\Infrastructure\\Database\\MySQL",
+            "name": "MySQL",
             "summary": "",
-            "url": "classes/App-Infrastructure-Database-PostgreSQL.html"
+            "url": "classes/App-Infrastructure-Database-MySQL.html"
         },                {
-            "fqsen": "\\App\\Infrastructure\\Database\\PostgreSQL\u003A\u003A__construct\u0028\u0029",
+            "fqsen": "\\App\\Infrastructure\\Database\\MySQL\u003A\u003A__construct\u0028\u0029",
             "name": "__construct",
             "summary": "",
-            "url": "classes/App-Infrastructure-Database-PostgreSQL.html#method___construct"
+            "url": "classes/App-Infrastructure-Database-MySQL.html#method___construct"
         },                {
-            "fqsen": "\\App\\Infrastructure\\Database\\PostgreSQL\u003A\u003Aconnect\u0028\u0029",
+            "fqsen": "\\App\\Infrastructure\\Database\\MySQL\u003A\u003Aconnect\u0028\u0029",
             "name": "connect",
             "summary": "connects\u0020instance\u0020to\u0020database",
-            "url": "classes/App-Infrastructure-Database-PostgreSQL.html#method_connect"
+            "url": "classes/App-Infrastructure-Database-MySQL.html#method_connect"
         },                {
-            "fqsen": "\\App\\Infrastructure\\Database\\PostgreSQL\u003A\u003Aquery\u0028\u0029",
+            "fqsen": "\\App\\Infrastructure\\Database\\MySQL\u003A\u003Aquery\u0028\u0029",
             "name": "query",
             "summary": "implements\u0020logic\u0020to\u0020query\u0020database",
-            "url": "classes/App-Infrastructure-Database-PostgreSQL.html#method_query"
+            "url": "classes/App-Infrastructure-Database-MySQL.html#method_query"
         },                {
-            "fqsen": "\\App\\Infrastructure\\Database\\PostgreSQL\u003A\u003AlastInsertId\u0028\u0029",
+            "fqsen": "\\App\\Infrastructure\\Database\\MySQL\u003A\u003AlastInsertId\u0028\u0029",
             "name": "lastInsertId",
             "summary": "returns\u0020id\u0020of\u0020last\u0020inserted\u0020row",
-            "url": "classes/App-Infrastructure-Database-PostgreSQL.html#method_lastInsertId"
+            "url": "classes/App-Infrastructure-Database-MySQL.html#method_lastInsertId"
         },                {
-            "fqsen": "\\App\\Infrastructure\\Database\\PostgreSQL\u003A\u003A\u0024conn",
+            "fqsen": "\\App\\Infrastructure\\Database\\MySQL\u003A\u003A\u0024conn",
             "name": "conn",
             "summary": "PDO\u0020database\u0020connection",
-            "url": "classes/App-Infrastructure-Database-PostgreSQL.html#property_conn"
+            "url": "classes/App-Infrastructure-Database-MySQL.html#property_conn"
         },                {
-            "fqsen": "\\App\\Infrastructure\\Database\\PostgreSQL\u003A\u003A\u0024settings",
+            "fqsen": "\\App\\Infrastructure\\Database\\MySQL\u003A\u003A\u0024settings",
             "name": "settings",
             "summary": "",
-            "url": "classes/App-Infrastructure-Database-PostgreSQL.html#property_settings"
+            "url": "classes/App-Infrastructure-Database-MySQL.html#property_settings"
         },                {
             "fqsen": "\\App\\Infrastructure\\Database\\Query",
             "name": "Query",

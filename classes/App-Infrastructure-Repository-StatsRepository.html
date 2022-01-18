@@ -357,7 +357,7 @@
     <span class="phpdocumentor-signature__visibility">private</span>
         <span class="phpdocumentor-signature__type">string</span>
     <span class="phpdocumentor-signature__name">$avgTimeFileds</span>
-     = <span class="phpdocumentor-signature__default-value">&quot;\n    ROUND(AVG(extract(epoch  from  (select res.planned_end - res.planned_start)))/60) as avg_planned_time_minutes,\n    ROUND(AVG(extract(epoch  from  (select res.actual_end - res.actual_start)))/60) as avg_actual_time_minutes,\n    SUM(ROUND(extract(epoch  from  (select res.actual_end - res.actual_start))/60)) as all_time_minutes\n    &quot;</span></code>
+     = <span class="phpdocumentor-signature__default-value">&quot;\n    ROUND(AVG(TIME_TO_SEC(TIMEDIFF(res.planned_end, res.planned_start)))/60) as &#039;avg_planned_time_minutes&#039;,\n    ROUND(AVG(TIME_TO_SEC(TIMEDIFF(res.actual_end, res.actual_start)))/60) as &#039;avg_actual_time_minutes&#039;,\n    SUM(ROUND(TIME_TO_SEC(TIMEDIFF(res.actual_end, res.actual_start))/60)) as &#039;all_time_minutes&#039;\n    &quot;</span></code>
 
         <section class="phpdocumentor-description"></section>
 
@@ -425,7 +425,7 @@
     <span class="phpdocumentor-signature__visibility">private</span>
         <span class="phpdocumentor-signature__type">string</span>
     <span class="phpdocumentor-signature__name">$buildings</span>
-     = <span class="phpdocumentor-signature__default-value">&#039;&quot;building&quot;&#039;</span></code>
+     = <span class="phpdocumentor-signature__default-value">&#039;`building`&#039;</span></code>
 
         <section class="phpdocumentor-description"></section>
 
@@ -527,7 +527,7 @@
     <span class="phpdocumentor-signature__visibility">private</span>
         <span class="phpdocumentor-signature__type">string</span>
     <span class="phpdocumentor-signature__name">$requests</span>
-     = <span class="phpdocumentor-signature__default-value">&#039;&quot;request&quot;&#039;</span></code>
+     = <span class="phpdocumentor-signature__default-value">&#039;`request`&#039;</span></code>
 
         <section class="phpdocumentor-description"></section>
 
@@ -561,7 +561,7 @@
     <span class="phpdocumentor-signature__visibility">private</span>
         <span class="phpdocumentor-signature__type">string</span>
     <span class="phpdocumentor-signature__name">$reservations</span>
-     = <span class="phpdocumentor-signature__default-value">&#039;&quot;reservation&quot;&#039;</span></code>
+     = <span class="phpdocumentor-signature__default-value">&#039;`reservation`&#039;</span></code>
 
         <section class="phpdocumentor-description"></section>
 
@@ -595,7 +595,7 @@
     <span class="phpdocumentor-signature__visibility">private</span>
         <span class="phpdocumentor-signature__type">string</span>
     <span class="phpdocumentor-signature__name">$rooms</span>
-     = <span class="phpdocumentor-signature__default-value">&#039;&quot;room&quot;&#039;</span></code>
+     = <span class="phpdocumentor-signature__default-value">&#039;`room`&#039;</span></code>
 
         <section class="phpdocumentor-description"></section>
 
@@ -663,7 +663,7 @@
     <span class="phpdocumentor-signature__visibility">private</span>
         <span class="phpdocumentor-signature__type">string</span>
     <span class="phpdocumentor-signature__name">$users</span>
-     = <span class="phpdocumentor-signature__default-value">&#039;&quot;user&quot;&#039;</span></code>
+     = <span class="phpdocumentor-signature__default-value">&#039;`user`&#039;</span></code>
 
         <section class="phpdocumentor-description"></section>
 
