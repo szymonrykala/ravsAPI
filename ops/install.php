@@ -13,36 +13,38 @@ if (empty($adminEmail)) {
     throw new Exception('You must specify "ADMIN_EMAIL" to proceed.');
 }
 
+$foot = 'ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8';
 
 $pdo->exec(
     "DROP TABLE IF EXISTS 
         configuration,
+        reservation,
+        user,
         access, 
-        image,
-        request,
-        \"user\",
-        address,
-        building,
         room,
-        reservation"
+        building,
+        address,
+        request,
+        image
+        "
 );
 
 
-$pdo->exec("SET TIMEZONE='Europe/Warsaw';");
+$pdo->exec("SET time_zone='Europe/Warsaw';");
 
 /* #### T A B L E S #### */
 $pdo->exec(
     "CREATE TABLE IF NOT EXISTS configuration (
-        key TEXT NOT NULL,
-        value int NOT NULL,
+        `key` VARCHAR(255) NOT NULL,
+        `value` int(11) NOT NULL,
 
-        PRIMARY KEY (key)
-    );"
+        UNIQUE KEY `unique_config_key` (`key`)
+    ) $foot;"
 );
 
 $pdo->exec(
     "INSERT INTO
-        configuration (key, value)
+        configuration (`key`, `value`)
     VALUES
         ('DEFAULT_USER_ACCESS', 2),
         ('MAX_IMAGE_SIZE', 500000),
@@ -56,21 +58,22 @@ $pdo->exec(
 
 $pdo->exec(
     "CREATE TABLE IF NOT EXISTS access (
-        id SERIAL PRIMARY KEY, 
-        name TEXT NOT NULL,
-        owner BOOLEAN NOT NULL DEFAULT FALSE,
-        access_admin BOOLEAN NOT NULL DEFAULT FALSE,
-        premises_admin BOOLEAN NOT NULL DEFAULT FALSE,
-        keys_admin BOOLEAN NOT NULL DEFAULT FALSE,
-        reservations_admin BOOLEAN NOT NULL DEFAULT FALSE,
-        reservations_ability BOOLEAN NOT NULL DEFAULT FALSE,
-        logs_admin BOOLEAN NOT NULL DEFAULT FALSE,
-        stats_viewer BOOLEAN NOT NULL DEFAULT FALSE,
-        created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        `id` int(11) NOT NULL auto_increment, 
+        `name` VARCHAR(255) NOT NULL,
+        `owner` boolean NOT NULL DEFAULT FALSE,
+        `access_admin` boolean NOT NULL DEFAULT FALSE,
+        `premises_admin` boolean NOT NULL DEFAULT FALSE,
+        `keys_admin` boolean NOT NULL DEFAULT FALSE,
+        `reservations_admin` boolean NOT NULL DEFAULT FALSE,
+        `reservations_ability` boolean NOT NULL DEFAULT FALSE,
+        `logs_admin` boolean NOT NULL DEFAULT FALSE,
+        `stats_viewer` boolean NOT NULL DEFAULT FALSE,
+        `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-        UNIQUE(name)
-    );"
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `unique_access_name`(`name`)
+    ) $foot;"
 );
 
 
@@ -113,19 +116,20 @@ $pdo->exec(
         FALSE
     );"
 );
-$pdo->exec("SELECT setval('access_id_seq', 3);");
 
 
 /* IMAGE */
 $pdo->exec(
     "CREATE TABLE IF NOT EXISTS image (
-        id SERIAL PRIMARY KEY,
-        public_id TEXT NOT NULL,
-        size INT NOT NULL,
-        url TEXT DEFAULT NULL,
-        updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-    );"
+        `id` int(11) NOT NULL auto_increment,
+        `public_id` tinytext NOT NULL,
+        `size` int(11) NOT NULL,
+        `url` tinytext DEFAULT NULL,
+        `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+        PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;"
 );
 
 $pdo->exec(
@@ -138,67 +142,70 @@ $pdo->exec(
     ;"
 );
 
-$pdo->exec("SELECT setval('image_id_seq', 3);");
 
 
 /* REQUEST */
 $pdo->exec(
     "CREATE TABLE IF NOT EXISTS request (
-        id SERIAL PRIMARY KEY,
-        method TEXT NOT NULL,
-        endpoint TEXT NOT NULL,
-        user_id INT DEFAULT NULL,
-        payload TEXT NOT NULL DEFAULT '{}',
-        time float DEFAULT 1,
-        created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-    );"
+        `id` int(11) NOT NULL auto_increment,
+        `method` tinytext NOT NULL,
+        `endpoint` tinytext NOT NULL,
+        `user_id` int(11) DEFAULT NULL,
+        `payload` mediumtext,
+        `time` float DEFAULT 1,
+        `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+        PRIMARY KEY (`id`)
+    ) $foot;"
 );
 
 
 /* USER */
 $pdo->exec(
-    "CREATE TABLE IF NOT EXISTS \"user\" (
-        id SERIAL PRIMARY KEY,
-        access INT NOT NULL,
-        image INT DEFAULT 1,
-        name TEXT NOT NULL,
-        surname TEXT NOT NULL,
-        email TEXT NOT NULL,
-        password TEXT NOT NULL,
-        activated BOOLEAN NOT NULL DEFAULT FALSE,
-        login_fails INT NOT NULL DEFAULT 0,
-        blocked BOOLEAN NOT NULL DEFAULT FALSE,
-        deleted BOOLEAN NOT NULL DEFAULT FALSE,
-        unique_key TEXT DEFAULT NULL,
-        last_generated_key_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        metadata TEXT NOT NULL DEFAULT '{}'::TEXT,
-        updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        last_activity TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "CREATE TABLE IF NOT EXISTS user (
+        `id` int(11) NOT NULL auto_increment,
+        `access` int(11) NOT NULL,
+        `image` int(11) DEFAULT 1,
+        `name` tinytext NOT NULL,
+        `surname` tinytext NOT NULL,
+        `email` VARCHAR(255) NOT NULL,
+        `password` TEXT NOT NULL,
+        `activated` boolean NOT NULL DEFAULT FALSE,
+        `login_fails` int(11) NOT NULL DEFAULT 0,
+        `blocked` boolean NOT NULL DEFAULT FALSE,
+        `deleted` boolean NOT NULL DEFAULT FALSE,
+        `unique_key` tinytext DEFAULT NULL,
+        `last_generated_key_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        `metadata` mediumtext,
+        `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        `last_activity` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-        UNIQUE(email),
-
-        CONSTRAINT user_image FOREIGN key (image) REFERENCES image(id) 
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `unique_user_email`(`email`),
+        
+        CONSTRAINT `user_image` FOREIGN key (`image`) REFERENCES `image`(`id`)
             ON UPDATE CASCADE 
-            ON DELETE SET DEFAULT, /* set default image when deleting old one */
-
-        CONSTRAINT user_acceses FOREIGN KEY (access) REFERENCES access(id) 
+            ON DELETE RESTRICT, /* set default image when deleting old one */
+        
+        CONSTRAINT `user_acceses` FOREIGN KEY (`access`) REFERENCES `access`(`id`)
             ON UPDATE cascade 
             ON DELETE RESTRICT -- do not let to delete access when users are still there
-    );"
+    ) $foot;"
 );
 
 
 $sth = $pdo->prepare(
-    "INSERT INTO \"user\" (
+    "INSERT INTO user (
         id,
         access, 
         name, 
         surname, 
         email, 
         password, 
-        activated
+        activated,
+        metadata
         ) VALUES(
             1,
             1,
@@ -206,7 +213,8 @@ $sth = $pdo->prepare(
             'Admin', 
             :email,
             :password,
-            TRUE
+            TRUE,
+            '{}'
         );
     "
 );
@@ -216,135 +224,145 @@ $sth->execute([
     ':email' => $adminEmail
 ]);
 
-$pdo->exec("SELECT setval('user_id_seq', 2);");
-
 
 /* ADDRESS */
 $pdo->exec(
     "CREATE TABLE IF NOT EXISTS address (
-        id SERIAL PRIMARY KEY,
-        country TEXT NOT NULL,
-        town TEXT NOT NULL,
-        postal_code TEXT NOT NULL,
-        street TEXT NOT NULL,
-        number TEXT NOT NULL,
-        created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        `id` int(11) NOT NULL auto_increment,
+        `country` VARCHAR(255) NOT NULL,
+        `town` VARCHAR(150) NOT NULL,
+        `postal_code` VARCHAR(25) NOT NULL,
+        `street` VARCHAR(20) NOT NULL,
+        `number` VARCHAR(25) NOT NULL,
+        `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-        UNIQUE(
-            country,
-            town,
-            postal_code,
-            street,
-            number
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `unique_address`(
+            `country`,
+            `town`,
+            `postal_code`,
+            `street`,
+            `number`
         )
-    );"
+    ) $foot;"
 );
 
 
 $pdo->exec(
     "CREATE TABLE IF NOT EXISTS building (
-        id SERIAL PRIMARY KEY,
-        name TEXT NOT NULL,
-        image INT NOT NULL DEFAULT 3,
-        address INT NOT NULL,
-        open_time time NOT NULL,
-        close_time time NOT NULL,
-        created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        `id` int(11) NOT NULL auto_increment,
+        `name` VARCHAR(100) NOT NULL,
+        `image` int(11) NOT NULL DEFAULT 3,
+        `address` int(11) NOT NULL,
+        `open_time` time NOT NULL,
+        `close_time` time NOT NULL,
+        `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-        UNIQUE(name, address),
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `unique_building_in_address` (`name`, `address`),
 
-        CONSTRAINT building_image FOREIGN KEY (image) REFERENCES image(id) 
-            ON UPDATE CASCADE 
-            ON DELETE SET DEFAULT,
+        CONSTRAINT `building_image` FOREIGN KEY (`image`) REFERENCES `image`(`id`)
+            ON UPDATE CASCADE
+            ON DELETE RESTRICT,
 
-        CONSTRAINT buildings_to_addresses FOREIGN KEY (address) REFERENCES address(id) 
-            ON UPDATE CASCADE 
+        CONSTRAINT `buildings_to_addresses` FOREIGN KEY (`address`) REFERENCES `address`(`id`)
+            ON UPDATE CASCADE
             ON DELETE RESTRICT
-    );"
+    ) $foot;"
 );
 
 
 $pdo->exec(
     "CREATE TABLE IF NOT EXISTS room (
-        id SERIAL PRIMARY KEY,
-        name TEXT NOT NULL,
-        image INT NOT NULL DEFAULT 2,
-        rfid TEXT DEFAULT NULL,
-        building INT NOT NULL,
-        room_type TEXT NOT NULL,
-        seats_count INT NOT NULL,
-        floor INT NOT NULL,
-        blocked BOOLEAN NOT NULL DEFAULT TRUE,
-        occupied BOOLEAN NOT NULL DEFAULT FALSE,
-        updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        `id` int(11) auto_increment PRIMARY KEY,
+        `name` VARCHAR(100) NOT NULL,
+        `image` int(11) NOT NULL DEFAULT 2,
+        `rfid` tinytext DEFAULT NULL,
+        `building` int(11) NOT NULL,
+        `room_type` tinytext NOT NULL,
+        `seats_count` int(11) NOT NULL,
+        `floor` int(11) NOT NULL,
+        `blocked` boolean NOT NULL DEFAULT TRUE,
+        `occupied` boolean NOT NULL DEFAULT FALSE,
+        `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-        UNIQUE(name, building, floor),
+        CONSTRAINT unique_room_in_building UNIQUE KEY (`name`, `building`, `floor`),
 
-        CONSTRAINT room_image FOREIGN KEY (image) REFERENCES image(id) 
+        CONSTRAINT `room_image` FOREIGN KEY (`image`) REFERENCES `image`(`id`) 
             ON UPDATE CASCADE 
-            ON DELETE SET DEFAULT,
+            ON DELETE RESTRICT,
 
-        CONSTRAINT rooms_to_buildings FOREIGN KEY (building) REFERENCES building(id) 
+        CONSTRAINT `rooms_to_buildings` FOREIGN KEY (`building`) REFERENCES `building`(`id`) 
             ON UPDATE CASCADE
             ON DELETE RESTRICT
-    );"
+    ) $foot;"
 );
 
 
 $pdo->exec(
     "CREATE TABLE IF NOT EXISTS reservation (
-        id SERIAL PRIMARY KEY,
-        title TEXT NOT NULL,
-        description TEXT NOT NULL DEFAULT 'Brak opisu.'::TEXT,
-        room INT NOT NULL,
-        \"user\" INT NOT NULL,
-        planned_start TIMESTAMP NOT NULL,
-        planned_end TIMESTAMP NOT NULL,
-        actual_start TIMESTAMP DEFAULT NULL,
-        actual_end TIMESTAMP DEFAULT NULL,
-        created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        `id` int(11) auto_increment PRIMARY KEY,
+        `title` mediumtext NOT NULL,
+        `description` mediumtext,
+        `room` int(11) NOT NULL,
+        `user` int(11) NOT NULL,
+        `planned_start` timestamp NOT NULL,
+        `planned_end` timestamp NOT NULL DEFAULT NOW(),
+        `actual_start` timestamp DEFAULT NULL NULL,
+        `actual_end` timestamp DEFAULT NULL NULL,
+        `created` timestamp DEFAULT CURRENT_TIMESTAMP,
+        `updated` timestamp DEFAULT CURRENT_TIMESTAMP,
 
-        UNIQUE(room, actual_start),
+        CONSTRAINT unique_room_reservation_start UNIQUE KEY (`room`, `actual_start`),
 
-        CONSTRAINT reserved_room FOREIGN KEY (room) REFERENCES room(id) 
+        KEY `reserved_room` (`room`),
+        CONSTRAINT `reserved_room` FOREIGN KEY (`room`) REFERENCES `room`(`id`) 
             ON UPDATE CASCADE 
             ON DELETE CASCADE,
 
-        CONSTRAINT reserving_user FOREIGN KEY (\"user\") REFERENCES \"user\"(id) 
+        KEY `reserving_user` (`user`),
+        CONSTRAINT `reserving_user` FOREIGN KEY (`user`) REFERENCES `user`(`id`) 
             ON UPDATE CASCADE 
             ON DELETE CASCADE
-    );"
+    ) $foot;"
 );
 
 
 /* #### P R O C E D U R E S #### */
+
+$pdo->exec("DROP PROCEDURE IF EXISTS clean_requests;");
 $pdo->exec(
-    "CREATE OR REPLACE PROCEDURE clean_requests() LANGUAGE SQL AS $$
-    DELETE FROM
-        request
-    where
-        ( EXTRACT( EPOCH FROM (CURRENT_TIMESTAMP - created) ) / 86400 ) > (SELECT value FROM configuration WHERE key = 'REQUEST_HISTORY');
-    $$;"
+    "CREATE PROCEDURE clean_requests()
+    BEGIN
+	    DELETE FROM
+                request
+            where
+                ( TIME_TO_SEC( TIMEDIFF( NOW(), `created`) ) / 60) > (SELECT `value` FROM configuration WHERE `key` = 'REQUEST_HISTORY');
+    END;"
 );
 
 
+$pdo->exec("DROP PROCEDURE IF EXISTS clean_reservations;");
 $pdo->exec(
-    "CREATE OR REPLACE PROCEDURE clean_reservations() LANGUAGE SQL AS $$
-    DELETE FROM
-        reservation
-    WHERE
-        (EXTRACT( EPOCH FROM (CURRENT_TIMESTAMP - created) ) / 86400) > (SELECT value FROM configuration WHERE key = 'RESERVATION_HISTORY');
-    $$;"
+    "CREATE PROCEDURE clean_reservations()
+    BEGIN
+        DELETE FROM
+            reservation
+        WHERE
+            `actual_end` < NOW() AND
+            ( TIME_TO_SEC( TIMEDIFF( NOW(), `actual_end`) ) / 60) > (SELECT `value` FROM configuration WHERE `key` = 'RESERVATION_HISTORY');
+    END;"
 );
 
 
+$pdo->exec("DROP PROCEDURE IF EXISTS cleaning;");
 $pdo->exec(
-    "CREATE OR REPLACE PROCEDURE cleaning() LANGUAGE SQL AS $$ 
+    "CREATE PROCEDURE cleaning()
+    BEGIN
         CALL clean_requests();
         CALL clean_reservations();
-    $$;"
+    END;"
 );

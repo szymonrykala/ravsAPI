@@ -32,7 +32,7 @@ return function (ContainerBuilder $containerBuilder) {
                     'path' => _env('LOG_PATH', 'php://stdout'),
                     'level' => _env('LOGGER_LEVEL', 'DEBUG'),
                 ],
-                'databaseUrl' => _env('DATABASE_URL'),
+                'databaseUrl' => _env('CLEARDB_DATABASE_URL'),
                 'token' => [
                     'secret' => _env('TOKEN_SECRET'),
                     'expiry' => _env('TOKEN_EXPIRY', "1"),

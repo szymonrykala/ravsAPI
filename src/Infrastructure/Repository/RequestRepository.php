@@ -15,7 +15,7 @@ use Psr\Http\Message\ServerRequestInterface;
 final class RequestRepository extends BaseRepository implements IRequestRepository
 {
 
-    protected string $table = '"request"';
+    protected string $table = '`request`';
 
     /**
      * {@inheritDoc}
@@ -23,7 +23,7 @@ final class RequestRepository extends BaseRepository implements IRequestReposito
     public function whereLIKE(array $searchParams): IRequestRepository
     {
         foreach ($searchParams as $key => $value) {
-            $this->SQLwhere .= " AND CAST($this->table.$key as TEXT) LIKE :$key";
+            $this->SQLwhere .= " AND $this->table.`$key` LIKE :$key";
             $this->params[":$key"] = $value.'%' ;
         }
 
@@ -52,7 +52,7 @@ final class RequestRepository extends BaseRepository implements IRequestReposito
      */
     public function create(ServerRequestInterface $request): void
     {
-        $sql = "INSERT INTO $this->table(method, endpoint, user_id, payload, time)
+        $sql = "INSERT INTO $this->table(`method`, `endpoint`, `user_id`, `payload`, `time`)
             VALUES(:method, :endpoint, :userId, :payload, :time)";
 
         $params = [

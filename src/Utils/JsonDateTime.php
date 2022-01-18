@@ -14,6 +14,7 @@ final class JsonDateTime extends DateTime implements JsonSerializable
 
     public function __construct($dateString)
     {
+        // print_r($dateString.PHP_EOL);
         try {
             parent::__construct($dateString);
         } catch (\Exception $ex) {
@@ -34,7 +35,7 @@ final class JsonDateTime extends DateTime implements JsonSerializable
      */
     public function __toString(): string
     {
-        return $this->format('c');//DateTime::ISO8601
+        return $this->format('Y-m-d H:i:s');
     }
 
     /** returns time in format H:i:s */
