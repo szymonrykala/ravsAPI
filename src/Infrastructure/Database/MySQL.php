@@ -11,7 +11,7 @@ use PDOException;
 use App\Infrastructure\Database\Query;
 
 
-class PostgreSQL implements IDatabase
+class MySQL implements IDatabase
 {
     /** PDO database connection */
     private PDO $conn;
@@ -30,10 +30,10 @@ class PostgreSQL implements IDatabase
         $db = parse_url($this->settings->get('databaseUrl'));
         try {
             $this->conn = new PDO(
-                "pgsql:" . sprintf(
+                "mysql:" . sprintf(
                     "host=%s;port=%s;user=%s;password=%s;dbname=%s;sslmode=require",
                     $db["host"],
-                    $db["port"],
+                    $db["port"] ?? 3306,
                     $db["user"],
                     $db["pass"],
                     ltrim($db["path"], "/")

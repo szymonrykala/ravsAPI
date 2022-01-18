@@ -28,8 +28,6 @@ class UpdateValidator extends UserValidator
         $this->setAsNameString('name', 'Imię ma niepoprawny format');
         $this->setAsNameString('surname', 'Nazwisko ma niepoprawny format');
 
-        $validator->addNested('metadata', $validator);
-
         parent::defineSchema($validator);
     }
 }

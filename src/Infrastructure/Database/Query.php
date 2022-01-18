@@ -34,25 +34,28 @@ class Query
             // var_dump($e->getCode());
             $message = '';
             switch ($e->getCode()) {
-                case '23505':
-                    preg_match('/DETAIL:.*=\((.*)\)/', $e->getMessage(), $outputArray);
-                    $message = isset($outputArray[1]) ? "'$outputArray[1]'" : 'podana wartość';
+                case '23000':
+                    $message = "Nie można obecnie wykonać tej operacji."; {
+                        preg_match('/Duplicate\sentry\s\'(.*)\'\sfor\s/', $e->getMessage(), $outputArray);
+                        if (isset($outputArray[1])) {
+                            $message = "Spróbuj innych danych, '$outputArray[1]' już istnieje.";
+                        }
+                    } {
+                        preg_match('/FOREIGN\sKEY\s\(\`(.*)`\)\sREFERENCES/', $e->getMessage(), $outputArray);
 
-                    $error->message = "Konflikt, $message już istnieje.";
-                    break;
-                case '23503':
-                    preg_match('/on\stable\s\"(.*)\"\sviolates/', $e->getMessage(), $outputArray);
-
-                    $tables = [
-                        'building' => 'Budynek',
-                        'room' => 'Sala',
-                        'user' => 'Użytkownik',
-                        'access' => 'Klasa dostępu'
-                    ];
-                    if (isset($outputArray[1], $tables[$outputArray[1]]))
-                        $error->message = 'Nie można usunąć. '
-                            . $tables[$outputArray[1]]
-                            . ' zawiera referencyjne obiekty.';
+                        $tables = [
+                            'building' => 'Budynek',
+                            'room' => 'Sala',
+                            'user' => 'Użytkownik',
+                            'access' => 'Klasa dostępu',
+                            'address' => 'Adres'
+                        ];
+                        // print_r()
+                        if (isset($outputArray[1], $tables[$outputArray[1]])) {
+                            $message = 'Nie można usunąć. ' . $tables[$outputArray[1]] . ' zawiera referencyjne obiekty.';
+                        }
+                    }
+                    $error->message = $message;
                     break;
                 default:
                     $error->message = $e->getMessage();

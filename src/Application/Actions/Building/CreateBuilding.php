@@ -33,6 +33,6 @@ class CreateBuilding extends BuildingAction
 
         $this->logger->info("Building id $createdBuildingId was created.");
 
-        return $this->respondWithData($createdBuildingId);
+        return $this->respondWithData($createdBuildingId, 201);
     }
 }

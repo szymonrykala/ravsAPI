@@ -18,7 +18,7 @@ use Psr\Container\ContainerInterface;
 
 final class UserRepository extends BaseRepository implements IUserRepository
 {
-    protected string $table = '"user"';
+    protected string $table = '`user`';
     private bool $accessLoading = FALSE;
 
     public function __construct(
@@ -76,7 +76,7 @@ final class UserRepository extends BaseRepository implements IUserRepository
     public function registerActivity(int $userId): void
     {
         $this->db->query(
-            "UPDATE $this->table SET last_activity = NOW() WHERE id = :userId",
+            "UPDATE $this->table SET `last_activity` = NOW() WHERE `id` = :userId",
             [':userId' => $userId]
         );
     }
@@ -87,7 +87,7 @@ final class UserRepository extends BaseRepository implements IUserRepository
     public function setDefaultImage(User $user): void
     {
         $this->db->query(
-            "UPDATE $this->table SET image = DEFAULT WHERE id = :id",
+            "UPDATE $this->table SET `image` = 1 WHERE `id` = :id",
             [':id' => $user->id]
         );
     }
@@ -99,18 +99,18 @@ final class UserRepository extends BaseRepository implements IUserRepository
     {
         $user->validate();
         $sql = "UPDATE $this->table SET
-                    name = :name,
-                    surname = :surname,
-                    password = :password,
-                    activated = :activated,
-                    login_fails = :loginFails,
-                    blocked = :blocked,
-                    unique_key = :uniqueKey,
-                    last_generated_key_date = :lastGeneratedKeyDate,
-                    access = :accessId,
-                    image = :imageId,
-                    metadata = :metadata
-                WHERE id = :id";
+                    `name` = :name,
+                    `surname` = :surname,
+                    `password` = :password,
+                    `activated` = :activated,
+                    `login_fails` = :loginFails,
+                    `blocked` = :blocked,
+                    `unique_key` = :uniqueKey,
+                    `last_generated_key_date` = :lastGeneratedKeyDate,
+                    `access` = :accessId,
+                    `image` = :imageId,
+                    `metadata` = :metadata
+                WHERE `id` = :id";
 
         $params = [
             ':id' => $user->id,
@@ -141,9 +141,10 @@ final class UserRepository extends BaseRepository implements IUserRepository
     ): int {
 
         $sql = "INSERT INTO $this->table
-                        (name, surname, email, password,unique_key, image, access) 
+                        (`name`, `surname`, `email`, `password`, `unique_key`, `image`, `access`, `metadata`) 
                 VALUES (:name, :surname, :email, :password, :uniqueKey, DEFAULT,
-                    (SELECT value FROM $this->configTable WHERE key='DEFAULT_USER_ACCESS')
+                    (SELECT `value` FROM $this->configTable WHERE `key`='DEFAULT_USER_ACCESS'),
+                    '{}'
                 )";
 
         $params = [
@@ -165,9 +166,9 @@ final class UserRepository extends BaseRepository implements IUserRepository
     public function search(string $phrase): UserRepository
     {
         $this->SQLwhere = " WHERE 
-                        (email LIKE :phrase
-                        OR name LIKE :phrase
-                        OR surname LIKE :phrase) ";
+                        (`email` LIKE :phrase
+                        OR `name` LIKE :phrase
+                        OR `surname` LIKE :phrase) ";
         $this->params[':phrase'] = '%' . str_replace(' ', '%', $phrase) . '%';
 
         return $this;
@@ -195,12 +196,12 @@ final class UserRepository extends BaseRepository implements IUserRepository
         $num = (string) time();
 
         $sql = "UPDATE $this->table SET
-                    name = :name,
-                    surname = :surname,
-                    deleted = :deleted,
-                    email = :email,
-                    image = DEFAULT
-                WHERE id = :id";
+                    `name` = :name,
+                    `surname` = :surname,
+                    `deleted` = :deleted,
+                    `email` = :email,
+                    `image` = DEFAULT
+                WHERE `id` = :id";
 
         $params = [
             ':id' => $user->id,
