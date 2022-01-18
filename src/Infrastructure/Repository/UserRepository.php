@@ -87,7 +87,7 @@ final class UserRepository extends BaseRepository implements IUserRepository
     public function setDefaultImage(User $user): void
     {
         $this->db->query(
-            "UPDATE $this->table SET `image` = 1 WHERE `id` = :id",
+            "UPDATE $this->table SET `image` = DEFAULT WHERE `id` = :id",
             [':id' => $user->id]
         );
     }

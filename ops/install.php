@@ -187,7 +187,7 @@ $pdo->exec(
         
         CONSTRAINT `user_image` FOREIGN key (`image`) REFERENCES `image`(`id`)
             ON UPDATE CASCADE 
-            ON DELETE RESTRICT, /* set default image when deleting old one */
+            ON DELETE SET DEFAULT, /* set default image when deleting old one */
         
         CONSTRAINT `user_acceses` FOREIGN KEY (`access`) REFERENCES `access`(`id`)
             ON UPDATE cascade 
@@ -265,7 +265,7 @@ $pdo->exec(
 
         CONSTRAINT `building_image` FOREIGN KEY (`image`) REFERENCES `image`(`id`)
             ON UPDATE CASCADE
-            ON DELETE RESTRICT,
+            ON DELETE SET DEFAULT, /* set default image when deleting old one */
 
         CONSTRAINT `buildings_to_addresses` FOREIGN KEY (`address`) REFERENCES `address`(`id`)
             ON UPDATE CASCADE
@@ -293,7 +293,7 @@ $pdo->exec(
 
         CONSTRAINT `room_image` FOREIGN KEY (`image`) REFERENCES `image`(`id`) 
             ON UPDATE CASCADE 
-            ON DELETE RESTRICT,
+            ON DELETE SET DEFAULT, /* set default image when deleting old one */
 
         CONSTRAINT `rooms_to_buildings` FOREIGN KEY (`building`) REFERENCES `building`(`id`) 
             ON UPDATE CASCADE

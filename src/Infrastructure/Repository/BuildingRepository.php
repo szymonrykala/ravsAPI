@@ -95,7 +95,7 @@ final class BuildingRepository extends BaseRepository implements IBuildingReposi
     public function setDefaultImage(Building $building): void
     {
         $this->db->query(
-            "UPDATE $this->table SET `image` = 3 WHERE `id` = :id",
+            "UPDATE $this->table SET `image` = DEFAULT WHERE `id` = :id",
             [':id' => $building->id]
         );
     }
