@@ -1,6 +1,6 @@
 <?php
 
-$db = parse_url(getenv("CLEARDB_DATABASE_URL"));
+$db = parse_url(getenv("JAWSDB_URL"));
 
 $pdo = new PDO(
     "mysql:" . sprintf(

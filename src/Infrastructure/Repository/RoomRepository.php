@@ -85,7 +85,7 @@ final class RoomRepository extends BaseRepository implements IRoomRepository
     public function setDefaultImage(Room $room): void
     {
         $this->db->query(
-            "UPDATE $this->table SET `image` = 2 WHERE `id` = :id",
+            "UPDATE $this->table SET `image` = DEFAULT WHERE `id` = :id",
             [':id' => $room->id]
         );
     }
