@@ -1411,6 +1411,11 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/App-Application-Middleware-RequestLoggingMiddleware.html#property_requestRepository"
         },                {
+            "fqsen": "\\App\\Application\\Middleware\\RequestLoggingMiddleware\u003A\u003A\u0024settings",
+            "name": "settings",
+            "summary": "",
+            "url": "classes/App-Application-Middleware-RequestLoggingMiddleware.html#property_settings"
+        },                {
             "fqsen": "\\App\\Application\\Middleware\\SessionMiddleware",
             "name": "SessionMiddleware",
             "summary": "Reads\u0020data\u0020from\u0020token\u0020provided\u0020from\u0020user\nand\u0020passes\u0020it\u0020as\u0020a\u0020session\u0020to\u0020the\u0020request\u0020context",
