@@ -27,6 +27,7 @@ return function (ContainerBuilder $containerBuilder) {
                 'displayErrorDetails' => boolval(_env('DISPLAY_ERROR_DETAILS', false)), // Should be set to false in production
                 'logError'            => boolval(_env('LOG_ERROR_DETAILS', false)),
                 'logErrorDetails'     => boolval(_env('LOG_ERROR', false)),
+                'collectGetRequests' => boolval(_env('COLLECT_GET_REQUESTS', false)),
                 'logger' => [
                     'name' => 'ravs_api',
                     'path' => _env('LOG_PATH', 'php://stdout'),
