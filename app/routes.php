@@ -134,7 +134,7 @@ return function (App $app) {
 
 
         $v1->group('', function (Group $protected) {
-
+            $protected->get('/requests', RequestActions\ListRequests::class);
             $protected->get('/{request_subject:.*}/requests', RequestActions\ListRequests::class);
             $protected->get('/requests/stats', Stats\ViewRequestStats::class);
 

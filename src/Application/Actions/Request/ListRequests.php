@@ -21,14 +21,15 @@ class ListRequests extends RequestAction
 
         $fields = [
             'user_id' => 'userId',
-            'method' => 'method'
+            'method' => 'method',
+            'endpoint' => 'endpoint'
         ];
 
         foreach ($fields as $param => $field) {
             $value = $this->resolveQueryArg($field, FALSE);
 
             if ($value) {
-                $searchParams[$param] = $_GET[$field];
+                $searchParams[$param] = urldecode($_GET[$field]);
             }
         }
 
