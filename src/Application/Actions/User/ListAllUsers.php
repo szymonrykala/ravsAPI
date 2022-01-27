@@ -38,7 +38,7 @@ class ListAllUsers extends UserAction
         }
 
         if ($searchPhrase)
-            $this->userRepository->search((string) $searchPhrase);
+            $this->userRepository->search((string) urldecode($searchPhrase));
 
         if (!empty($params)) $this->userRepository->where($params);
 
