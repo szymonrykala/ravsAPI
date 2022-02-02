@@ -1,11 +1,14 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application\Actions\User;
 
+use App\Domain\User\User;
 use App\Domain\User\Validation\CreateValidator;
 use App\Infrastructure\Mailing\IMailingService;
 use App\Infrastructure\Mailing\MailingService;
+use App\Infrastructure\Mailing\MailingServiceException;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 
@@ -24,7 +27,7 @@ class RegisterUser extends UserAction
      * {@inheritDoc}
      */
     protected function action(): Response
-    {   
+    {
         $form = $this->getFormData();
 
         $validator = new CreateValidator();
@@ -38,14 +41,26 @@ class RegisterUser extends UserAction
         );
         $this->logger->info("User id `${userId}` was registered.");
 
+        /** @var User $user */
         $user = $this->userRepository->byId($userId);
 
         $this->mailer->setReciever($user);
         $this->mailer->setMessageType(MailingService::NEW_ACCOUNT);
-        $this->mailer->send();
+
+        $message = 'Pomyślnie zarejestrowano';
+
+        try {
+            $this->mailer->send();
+        } catch (MailingServiceException $e) {
+            $user->activate($user->uniqueKey);
+            $this->userRepository->save($user);
+
+            $this->logger->error('Mailing service error while registering a user.');
+            $message = 'Zarejestrowano bez potrzeby aktywacji - serwis mailowy niedostępny';
+        }
 
         $this->logger->info("Mail to user id `${userId}` was send.");
 
-        return $this->respondWithData($userId, 201);
+        return $this->respondWithData($message, 201);
     }
 }
