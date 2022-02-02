@@ -96,7 +96,7 @@ class AuthorizationMiddleware extends BaseAuthorizationMiddleware
             /** @var User $modifiedUser */
             $modifiedUser = $this->userRepository->byId($this->subjectId);
 
-            return ((int) $this->getSession()->userId) === $modifiedUser;
+            return ((int) $this->getSession()->userId) === $modifiedUser->id;
         }
         return TRUE;
     }
