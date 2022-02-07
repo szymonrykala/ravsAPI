@@ -340,7 +340,7 @@ $pdo->exec(
 	    DELETE FROM
                 request
             where
-                ( TIME_TO_SEC( TIMEDIFF( NOW(), `created`) ) / 60) > (SELECT `value` FROM configuration WHERE `key` = 'REQUEST_HISTORY');
+                ( TIME_TO_SEC( TIMEDIFF( NOW(), `created`) ) / 86400) > (SELECT `value` FROM configuration WHERE `key` = 'REQUEST_HISTORY');
     END;"
 );
 
@@ -350,10 +350,15 @@ $pdo->exec(
     "CREATE PROCEDURE clean_reservations()
     BEGIN
         DELETE FROM
-            reservation
-        WHERE
-            `actual_end` < NOW() AND
-            ( TIME_TO_SEC( TIMEDIFF( NOW(), `actual_end`) ) / 60) > (SELECT `value` FROM configuration WHERE `key` = 'RESERVATION_HISTORY');
+                reservation
+            WHERE
+                (
+                    `actual_end` < NOW() AND
+                    ( TIME_TO_SEC( TIMEDIFF( NOW(), `actual_end`) ) / 86400) > (SELECT `value` FROM configuration WHERE `key` = 'RESERVATION_HISTORY')
+                ) OR (
+                    `planned_end`  < NOW() AND
+                            ( TIME_TO_SEC( TIMEDIFF( NOW(), `planned_end`) ) / 86400) > (SELECT `value` FROM configuration WHERE `key` = 'RESERVATION_HISTORY')
+                );
     END;"
 );
 
