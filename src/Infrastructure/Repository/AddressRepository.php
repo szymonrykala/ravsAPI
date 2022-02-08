@@ -81,7 +81,7 @@ final class AddressRepository extends BaseRepository implements IAddressReposito
             ':country' => ucfirst($country),
             ':town' => ucfirst($town),
             ':postalCode' => $postalCode,
-            ':street' => ucfirst($street),
+            ':street' => $street,
             ':number' => $number
         ];
 
