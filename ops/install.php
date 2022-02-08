@@ -94,7 +94,7 @@ $pdo->exec(
     VALUES
     (
         1,
-        'Admin',
+        'Predefined Owner',
         TRUE,
         TRUE,
         TRUE,
