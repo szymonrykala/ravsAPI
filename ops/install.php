@@ -94,7 +94,7 @@ $pdo->exec(
     VALUES
     (
         1,
-        'Admin',
+        'Predefined Owner',
         TRUE,
         TRUE,
         TRUE,
@@ -232,7 +232,7 @@ $pdo->exec(
         `country` VARCHAR(255) NOT NULL,
         `town` VARCHAR(150) NOT NULL,
         `postal_code` VARCHAR(25) NOT NULL,
-        `street` VARCHAR(20) NOT NULL,
+        `street` VARCHAR(150) NOT NULL,
         `number` VARCHAR(25) NOT NULL,
         `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
         `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -252,7 +252,7 @@ $pdo->exec(
 $pdo->exec(
     "CREATE TABLE IF NOT EXISTS building (
         `id` int(11) NOT NULL auto_increment,
-        `name` VARCHAR(100) NOT NULL,
+        `name` VARCHAR(150) NOT NULL,
         `image` int(11) NOT NULL DEFAULT 3,
         `address` int(11) NOT NULL,
         `open_time` time NOT NULL,
@@ -277,7 +277,7 @@ $pdo->exec(
 $pdo->exec(
     "CREATE TABLE IF NOT EXISTS room (
         `id` int(11) auto_increment PRIMARY KEY,
-        `name` VARCHAR(100) NOT NULL,
+        `name` VARCHAR(150) NOT NULL,
         `image` int(11) NOT NULL DEFAULT 2,
         `rfid` tinytext DEFAULT NULL,
         `building` int(11) NOT NULL,

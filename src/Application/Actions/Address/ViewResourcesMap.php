@@ -36,7 +36,7 @@ class ViewResourcesMap extends AddressAction
     {
         $map = [];
 
-        $map = $this->addressRepository->all();
+        $map = $this->addressRepository->orderBy('street', 'ASC')->all();
 
         foreach ($map as &$address) {
             $address = [
@@ -45,6 +45,7 @@ class ViewResourcesMap extends AddressAction
                 'href' => '/addresses/'.$address->id,
                 'buildings' => $this->buildingRepository
                     ->where(['address' => $address->id])
+                    ->orderBy('name', 'ASC')
                     ->all()
             ];
 
@@ -55,6 +56,7 @@ class ViewResourcesMap extends AddressAction
                     'href' => $address['href'].'/buildings/'.$building->id,
                     'rooms' => $this->roomRepository
                         ->where(['building' => $building->id])
+                        ->orderBy('name', 'ASC')
                         ->all()
                 ];
 

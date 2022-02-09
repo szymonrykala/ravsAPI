@@ -14,7 +14,7 @@ class ListAllAccesses extends AccessAction
      */
     protected function action(): Response
     {
-        $items = $this->accessRepository->all();
+        $items = $this->accessRepository->orderBy('id')->all();
 
         $this->logger->info("All Accesses has been viewed.");
 

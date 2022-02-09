@@ -69,7 +69,7 @@ abstract class BaseRepository implements IRepository
      */
     public function orderBy(string $name, string $direction = 'DESC'): IRepository
     {
-        $this->SQLorder = " ORDER BY `${name}` ${direction}";
+        $this->SQLorder = " ORDER BY ${name} ${direction}";
 
         return $this;
     }
