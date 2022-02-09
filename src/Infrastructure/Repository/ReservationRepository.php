@@ -199,7 +199,7 @@ final class ReservationRepository extends BaseRepository implements IReservation
      */
     public function deleteAllFutureUserReservations(int $deletedUserId): void
     {
-        $sql = "DELETE FROM$this->tableWHERE
+        $sql = "DELETE FROM $this->table WHERE
                     `planned_start` > NOW()
                     AND `user` = :userId";
         $params = [':userId' => $deletedUserId];
