@@ -32,7 +32,7 @@ class ListAllUsers extends UserAction
 
         if ($listDeleted) {
             $deleteVar = $this->strToBoolInt($listDeleted);
-            if ($deleteVar === FALSE) {
+            if ($deleteVar === 0) {
                 $params['deleted'] = $deleteVar;
             }
         }
@@ -46,6 +46,7 @@ class ListAllUsers extends UserAction
 
         $users = $this->userRepository
             ->setPagination($pagination)
+            ->orderBy('deleted, name, surname, email', 'ASC')
             ->all();
 
         $this->logger->info("Users list was viewed.");
