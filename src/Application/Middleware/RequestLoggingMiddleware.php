@@ -30,9 +30,11 @@ class RequestLoggingMiddleware extends BaseMiddleware
     {
         $response = $handler->handle($this->request);
 
+        $method = $this->getMethod();
 
         if (
-            $this->getMethod() !== 'GET' || $this->settings->get('collectGetRequests')
+            $method !== 'GET' ||
+            ($method === 'GET' && $this->settings->get('collectGetRequests'))
         ) {
             $this->requestRepository->create($this->request);
         }
