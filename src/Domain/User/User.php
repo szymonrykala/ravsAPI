@@ -48,9 +48,9 @@ final class User extends Model
     /** 
      * generates unique key
      */
-    public static function generateUniqueKey(int $length = 10): string
+    public static function generateUniqueKey(int $length = 6): string
     {
-        return strtoupper(substr(uniqid(), 0, $length));
+        return strtoupper(substr(uniqid(), 5, $length));
     }
 
 
