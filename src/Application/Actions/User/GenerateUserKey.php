@@ -47,15 +47,14 @@ class GenerateUserKey extends UserAction
             "Kod może być generowany w odstępie 5 minut."
         );
 
-
         $user->assignUniqueKey();
-
-        $this->userRepository->save($user);
-        $this->logger->info("User with id {$user->id} has generated key");
-
+        
         $this->mailer->setReciever($user);
         $this->mailer->setMessageType(MailingService::NEW_CODE_REQUEST);
         $this->mailer->send();
+        
+        $this->userRepository->save($user);
+        $this->logger->info("User with id {$user->id} has generated key");
 
         return $this->respondWithData("Kod został wysłany na adres email.", 201);
     }
