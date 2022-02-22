@@ -68,15 +68,18 @@ final class StatsRepository implements IStatsRepository
      */
     private function fillDaysOfWeek(array $data): array
     {
+        // 1 - sunday 2 - monday 7 - saturday
+
         $temp = [];
         $filledData = [];
 
         foreach ($data as &$obj) $temp[$obj['day']] = $obj;
+        // print_r($temp);
 
-        for ($i = 1; $i < 7; $i++) {
+        for ($i = 1; $i <= 7; $i++) {
             if (isset($temp[$i])) {
                 $tempObj = $temp[$i];
-
+                $tempObj['day'] -= 1;
                 array_push($filledData, $tempObj);
             } else {
                 array_push($filledData, [
@@ -84,7 +87,7 @@ final class StatsRepository implements IStatsRepository
                     'avg_actual_time_minutes' => 0,
                     'avg_planned_time_minutes' => 0,
                     'all_time_minutes' => 0,
-                    'day' => $i,
+                    'day' => $i - 1,
                 ]);
             }
         }
