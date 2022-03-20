@@ -23,10 +23,7 @@ abstract class ImageAction extends Action
     protected IRoomRepository $roomRepository;
     protected Configuration $configuration;
 
-    /**
-     * @param LoggerInterface $logger
-     * @param IImageRepository $imageRepository
-     */
+
     public function __construct(ContainerInterface $di)
     {
         parent::__construct($di->get(LoggerInterface::class));
@@ -47,7 +44,7 @@ abstract class ImageAction extends Action
         $buildingId = $this->resolveArg($this::BUILDING_ID, FALSE);
         $userId = $this->resolveArg($this::USER_ID, FALSE);
 
-
+        // matching set of repository and resourec id for updateing image
         $set = match ('string') {
             gettype($roomId) => [$this->roomRepository, $roomId],
             gettype($userId) => [$this->userRepository, $userId],

@@ -35,7 +35,7 @@ final class Reservation extends Model
     }
 
     /**
-     * @return bool
+     * Checks if reservation has not stared yet
      */
     public function notStarted(): bool
     {
@@ -43,7 +43,7 @@ final class Reservation extends Model
     }
 
     /**
-     * @return bool
+     * checks if reservation has started
      */
     public function hasStarted(): bool
     {
@@ -51,7 +51,7 @@ final class Reservation extends Model
     }
 
     /**
-     * @return bool
+     * checks if reservation has ended
      */
     public function hasEnded(): bool
     {
@@ -59,7 +59,7 @@ final class Reservation extends Model
     }
 
     /**
-     * @return void
+     * Starts the reservation
      * @throws ReservationAlreadyStartedException
      */
     public function start(): void
@@ -71,7 +71,7 @@ final class Reservation extends Model
     }
 
     /**
-     * @return void
+     * Ends the reservation
      * @throws ReservationAlreadyEndedException
      */
     public function end(): void
@@ -84,7 +84,7 @@ final class Reservation extends Model
 
 
     /**
-     * @return array
+     * {@inheritDoc}
      */
     public function jsonSerialize(): array
     {

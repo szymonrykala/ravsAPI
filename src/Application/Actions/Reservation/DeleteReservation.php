@@ -21,6 +21,8 @@ class DeleteReservation extends ReservationAction
         $item = $this->reservations->byId($reservationId);
         $this->reservations->delete($item);
 
+        $this->logger->info("Reservation id=${reservationId} has been deleted");
+
         return $this->respondWithData($item);
     }
 }

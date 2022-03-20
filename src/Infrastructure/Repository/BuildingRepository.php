@@ -6,12 +6,10 @@ namespace App\Infrastructure\Repository;
 
 use App\Domain\Address\IAddressRepository;
 use App\Infrastructure\Repository\BaseRepository;
-
 use App\Domain\Building\{
     IBuildingRepository,
     Building
 };
-
 use App\Domain\Image\IImageRepository;
 use App\Domain\Model\Model;
 use App\Utils\JsonDateTime;
@@ -21,7 +19,9 @@ use Psr\Container\ContainerInterface;
 
 final class BuildingRepository extends BaseRepository implements IBuildingRepository
 {
+    /** {@inheritDoc} */
     protected string $table = '`building`';
+
     private bool $addressLoading = FALSE;
 
     public function __construct(
@@ -124,7 +124,6 @@ final class BuildingRepository extends BaseRepository implements IBuildingReposi
 
     /**
      * {@inheritDoc}
-     * @param Building
      */
     public function delete(Model $building): void
     {

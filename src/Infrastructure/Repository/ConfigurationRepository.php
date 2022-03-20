@@ -11,7 +11,7 @@ use App\Infrastructure\Database\IDatabase;
 
 final class ConfigurationRepository implements IConfigurationRepository
 {
-
+    /** {@inheritDoc} */
     private string $table = '`configuration`';
 
 

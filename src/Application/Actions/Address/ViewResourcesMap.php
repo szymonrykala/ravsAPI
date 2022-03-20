@@ -8,24 +8,19 @@ use App\Domain\Address\IAddressRepository;
 use App\Domain\Building\IBuildingRepository;
 use App\Domain\Room\IRoomRepository;
 use Psr\Http\Message\ResponseInterface as Response;
-
 use Psr\Log\LoggerInterface;
+
 
 class ViewResourcesMap extends AddressAction
 {
 
-    private IBuildingRepository $buildingRepository;
-    private IRoomRepository $roomRepository;
-
     public function __construct(
         LoggerInterface $logger,
         IAddressRepository $addressRepository,
-        IBuildingRepository $buildingRepository,
-        IRoomRepository $roomRepository
+        private IBuildingRepository $buildingRepository,
+        private IRoomRepository $roomRepository
     ) {
         parent::__construct($logger, $addressRepository);
-        $this->roomRepository = $roomRepository;
-        $this->buildingRepository = $buildingRepository;
     }
 
 
@@ -38,6 +33,21 @@ class ViewResourcesMap extends AddressAction
 
         $map = $this->addressRepository->orderBy('street', 'ASC')->all();
 
+        /**
+         * building block like:
+         * [
+         *      - address:
+         *          - building:
+         *              - room,
+         *              - room,
+         *              - ...
+         *          - building
+         *              - ...
+         *          - ...
+         *      - address:
+         *          - ...
+         * ]
+         */
         foreach ($map as &$address) {
             $address = [
                 'id' => $address->id,

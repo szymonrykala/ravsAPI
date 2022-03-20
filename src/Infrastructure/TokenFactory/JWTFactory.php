@@ -32,14 +32,17 @@ class JWTFactory implements ITokenFactory
         $this->settings = (object) $settings->get('token');
     }
 
+    /** {@inheritDoc} */
     public function generateToken(User $user): string
     {
         $now = new DateTime('now');
+
+        // data carried by each issued token
         $data = [
             'userId' => $user->id,
             'accessId' => $user->accessId,
-            'iat' => $now->getTimestamp(),                        // timestamp token issuing
-            'iss' => $this->domain_identity,                 // domain indentifier
+            'iat' => $now->getTimestamp(),         // timestamp token issuing
+            'iss' => $this->domain_identity,       // domain indentifier
             'exp' => $now->modify("+{$this->settings->expiry} days")->getTimestamp()    // expiration timestamp
         ];
 
@@ -49,6 +52,7 @@ class JWTFactory implements ITokenFactory
             $this->settings->encoding
         );
 
+        // if no errors occured
         if ($jwt !== false) {
             return $jwt;
         }

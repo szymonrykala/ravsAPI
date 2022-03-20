@@ -209,6 +209,7 @@ final class ReservationRepository extends BaseRepository implements IReservation
     /**
      * {@inheritDoc}
      * @param Reservation $reservation
+     * @throws StartedReservationDeleteException
      */
     public function delete(Model $reservation): void
     {

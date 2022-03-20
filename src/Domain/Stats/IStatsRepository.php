@@ -9,7 +9,10 @@ namespace App\Domain\Stats;
 interface IStatsRepository
 {
 
-    /** Sets Time span of statistics */
+    /** 
+     * Sets Time span of statistics
+     * @throws IncorrectDateFormatException
+     */
     public function setTimeSpan(string $from = 'month ago', string $to = 'now'): IStatsRepository;
 
     /** Statistics for all Users */

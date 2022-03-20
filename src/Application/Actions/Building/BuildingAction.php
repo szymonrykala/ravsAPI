@@ -6,24 +6,16 @@ namespace App\Application\Actions\Building;
 
 use App\Application\Actions\Action;
 use App\Domain\Building\IBuildingRepository;
-
 use Psr\Log\LoggerInterface;
 
 
 abstract class BuildingAction extends Action
 {
-    protected IBuildingRepository $buildingRepository;      
 
-    /**
-     * @param LoggerInterface logger
-     * @param IBuildingRepository buildingRepository
-     */
     public function __construct(
         LoggerInterface $logger,
-        IBuildingRepository $buildingRepository
+        protected IBuildingRepository $buildingRepository
     ) {
         parent::__construct($logger);
-
-        $this->buildingRepository = $buildingRepository;
     }
 }

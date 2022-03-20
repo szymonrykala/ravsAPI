@@ -12,15 +12,11 @@ use Psr\Log\LoggerInterface;
 
 abstract class ConfigurationAction extends Action
 {
-    protected IConfigurationRepository $configurationRepository;
-
 
     public function __construct(
         LoggerInterface $logger,
-        IConfigurationRepository $configurationRepository
+        protected IConfigurationRepository $configurationRepository
     ) {
         parent::__construct($logger);
-
-        $this->configurationRepository = $configurationRepository;
     }
 }

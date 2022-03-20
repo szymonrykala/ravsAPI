@@ -18,6 +18,7 @@ use Psr\Container\ContainerInterface;
 
 final class UserRepository extends BaseRepository implements IUserRepository
 {
+    /** {@inheritDoc} */
     protected string $table = '`user`';
     private bool $accessLoading = FALSE;
 
@@ -40,7 +41,6 @@ final class UserRepository extends BaseRepository implements IUserRepository
 
     /**
      * {@inheritDoc}
-     * @return User
      */
     protected function newItem(array $data): User
     {

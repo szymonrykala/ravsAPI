@@ -26,7 +26,9 @@ use Psr\Container\ContainerInterface;
 
 final class ImageRepository extends BaseRepository implements IImageRepository
 {
+    /** {@inheritDoc} */
     protected string $table = '`image`';
+
     protected Configuration $configuration;
     private Cloudinary $cloudinary;
 

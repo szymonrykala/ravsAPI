@@ -11,17 +11,11 @@ use App\Domain\Access\IAccessRepository;
 
 abstract class AccessAction extends Action
 {
-    protected IAccessRepository $accessRepository;
 
-    /**
-     * @param LoggerInterface $logger
-     * @param IAccessRepository $imageRepository
-     */
     public function __construct(
         LoggerInterface $logger,
-        IAccessRepository $repository
+        protected IAccessRepository $accessRepository
     ) {
         parent::__construct($logger);
-        $this->accessRepository = $repository;
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+// database installation script
+
 $pdo = require_once(__DIR__ . '/dbConnect.php');
 
 $adminPassword = getenv('ADMIN_PASSWORD');
@@ -42,6 +44,7 @@ $pdo->exec(
     ) $foot;"
 );
 
+// setting default platform settings
 $pdo->exec(
     "INSERT INTO
         configuration (`key`, `value`)
@@ -76,7 +79,7 @@ $pdo->exec(
     ) $foot;"
 );
 
-
+// defualt access classes
 $pdo->exec(
     "INSERT INTO
     access (
@@ -132,6 +135,7 @@ $pdo->exec(
     ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;"
 );
 
+// default images
 $pdo->exec(
     "INSERT INTO
         image ( id, public_id, size )
@@ -195,7 +199,7 @@ $pdo->exec(
     ) $foot;"
 );
 
-
+// default admin user
 $sth = $pdo->prepare(
     "INSERT INTO user (
         id,

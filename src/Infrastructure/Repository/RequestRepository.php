@@ -14,7 +14,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class RequestRepository extends BaseRepository implements IRequestRepository
 {
-
+    /** {@inheritDoc} */
     protected string $table = '`request`';
 
     /**

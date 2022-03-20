@@ -32,6 +32,7 @@ class SessionMiddleware extends BaseMiddleware
 
     /**
      * {@inheritDoc}
+     * @throws HttpUnauthorizedException
      */
     public function processRequest(RequestHandler $handler): Response
     {
@@ -49,6 +50,11 @@ class SessionMiddleware extends BaseMiddleware
         return $handler->handle($this->request);
     }
 
+
+    /**
+     * Gets token from authorization header
+     * @throws HttpUnauthorizedException
+     */
     private function getToken(): string
     {
         $auth = $this->request->getHeader('Authorization');

@@ -29,6 +29,7 @@ class ListRequests extends RequestAction
             $value = $this->resolveQueryArg($field, FALSE);
 
             if ($value) {
+                // decoding query string values
                 $searchParams[$param] = urldecode($_GET[$field]);
             }
         }

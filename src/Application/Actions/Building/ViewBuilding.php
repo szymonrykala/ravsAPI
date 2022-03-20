@@ -27,7 +27,6 @@ class ViewBuilding extends BuildingAction
             ->one();
 
 
-
         $this->logger->info("Building id " . $building->id . " was viewed.");
 
         return $this->respondWithData($building);

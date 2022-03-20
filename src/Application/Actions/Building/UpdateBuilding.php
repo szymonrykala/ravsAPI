@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application\Actions\Building;
@@ -19,26 +20,33 @@ class UpdateBuilding extends BuildingAction
         $addressId = (int) $this->resolveArg($this::ADDRESS_ID);
         $buildingId = (int) $this->resolveArg($this::BUILDING_ID);
 
-        $buildingParam = ['id' => $buildingId ];
+        $buildingParam = ['id' => $buildingId];
 
-        if(isset($addressId)) $buildingParam['address'] = $addressId;
+        if (isset($addressId))
+            $buildingParam['address'] = $addressId;
 
         $result = $this->buildingRepository->where($buildingParam)->all();
-        $building = array_pop($result);
+        $building = array_pop($result); // first result 
 
+        // it there is not such building - query result is empty
+        if (!isset($building)) {
+            $this->logger->warning("No building found (address=${addressId}, building=${buildingId}) to update");
 
-        if(! isset($building)) throw new HttpNotFoundException(
-            $this->request,
-            "Specified building '${buildingId}' is not exist in given address '${addressId}'"
-        );
+            throw new HttpNotFoundException(
+                $this->request,
+                "Specified building '${buildingId}' is not exist in given address '${addressId}'"
+            );
+        }
 
         $form = $this->getFormData();
+
 
         $validator = new UpdateValidator();
         $validator->validateForm($form);
 
-        if(isset($form->closeTime)) $form->closeTime = new JsonDateTime($form->closeTime);
-        if(isset($form->openTime)) $form->openTime = new JsonDateTime($form->openTime);
+        // assign proper type for time objects
+        if (isset($form->closeTime)) $form->closeTime = new JsonDateTime($form->closeTime);
+        if (isset($form->openTime)) $form->openTime = new JsonDateTime($form->openTime);
 
         $building->update($form);
 

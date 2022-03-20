@@ -9,11 +9,11 @@ use App\Domain\User\User;
 use App\Infrastructure\Mailing\Templates\AccountActivatedTemplate;
 use App\Infrastructure\Mailing\Templates\AccountBlockedTemplate;
 use App\Infrastructure\Mailing\Templates\NewAccountTemplate;
-use App\Infrastructure\Mailing\Templates\NewCode;
 use App\Infrastructure\Mailing\Templates\NewCodeTemplate;
 use App\Infrastructure\Mailing\Templates\Template;
 use PHPMailer\PHPMailer\PHPMailer;
 use RuntimeException;
+
 
 class MailingService implements IMailingService
 {
@@ -71,6 +71,7 @@ class MailingService implements IMailingService
         $context['user'] = $this->reciever;
         $templateClass = '';
 
+        // assigning template class
         switch ($type) {
             case MailingService::NEW_ACCOUNT:
                 $templateClass = NewAccountTemplate::class;
@@ -93,11 +94,15 @@ class MailingService implements IMailingService
                 break;
         }
 
-        $this->template = new $templateClass($context);
+        // creating template with context values
+        $this->template = new $templateClass($context); 
     }
 
 
-    /** {@inheritDoc}  */
+    /** 
+     * {@inheritDoc}
+     * @throws MailingServiceException
+     */
     public function send(): void
     {
         $this->mailer->addAddress($this->reciever->email, $this->reciever->name . ' ' . $this->reciever->surname);

@@ -11,13 +11,13 @@ interface IBuildingRepository extends IRepository
 {
 
     /**
-     * enable address loading
+     * enable address object loading
      * @return IBuildingRepository
      */
     public function withAddress(): IBuildingRepository;
     
     /**
-     * @param Building building
+     * Saves building state
      */
     public function save(Building $building): void;
 
@@ -25,9 +25,7 @@ interface IBuildingRepository extends IRepository
     public function setDefaultImage(Building $building): void;
 
     /**
-     * @param string name
-     * @param int imageId
-     * @param int addressId
+     * Creates new building
      */
     public function create(
         string $name,

@@ -50,6 +50,9 @@ final class StatsRepository implements IStatsRepository
         $this->setTimeSpan();
     }
 
+    /**
+     * sets sql query params to search reservation between dates
+     */
     private function setBetween(JsonDateTime $from, JsonDateTime $to): void
     {
         $this->between = " `planned_start` BETWEEN DATE(:from) AND DATE(:to)";
@@ -57,6 +60,9 @@ final class StatsRepository implements IStatsRepository
         $this->params[':to'] = $to->getDate();
     }
 
+    /**
+     * executes the SQL request
+     */
     private function execute(string $sql = ''): array
     {
         return $this->db->query($sql, $this->params);
@@ -74,7 +80,6 @@ final class StatsRepository implements IStatsRepository
         $filledData = [];
 
         foreach ($data as &$obj) $temp[$obj['day']] = $obj;
-        // print_r($temp);
 
         for ($i = 1; $i <= 7; $i++) {
             if (isset($temp[$i])) {
@@ -120,7 +125,9 @@ final class StatsRepository implements IStatsRepository
     }
 
 
-    /** {@inheritDoc} */
+    /** 
+     * {@inheritDoc}
+     */
     public function setTimeSpan(?string $from = NULL, string $to = 'now'): IStatsRepository
     {
         if ($from === NULL) {

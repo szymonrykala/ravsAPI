@@ -11,6 +11,6 @@ class DataIntegrityException extends DomainConflictException
 {
     public function __construct(string $message)
     {
-        $this->message = "Niestety '".$message."' już istnieje.";
+        $this->message = "Niestety '$message' już istnieje.";
     }
 }

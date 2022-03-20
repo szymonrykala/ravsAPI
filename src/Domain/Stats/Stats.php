@@ -18,6 +18,9 @@ final class Stats extends Model
         $item && $this->addStatsItem($item);
     }
 
+    /**
+     * adds item to the stats array
+     */
     public function addStatsItem(?StatsArray $item): void
     {
         $this->data = array_merge($this->data, $item->toArray());

@@ -10,11 +10,7 @@ use PDOException;
 
 class Query
 {
-    /**
-     * @param PDO $database connection
-     * @param string $sql
-     * @param array $sql params
-     */
+
     public function __construct(PDO $conn, string $sql, array $params = [])
     {
         $this->statement = $conn->prepare($sql);
@@ -22,7 +18,7 @@ class Query
     }
 
     /**
-     * @return array
+     * Executes sql query and handle errors
      */
     public function execute(): array
     {
@@ -30,8 +26,7 @@ class Query
             $this->statement->execute($this->params);
         } catch (PDOException $e) {
             $error = new DataIntegrityException('');
-            // var_dump($e->getMessage());
-            // var_dump($e->getCode());
+
             $message = '';
             switch ($e->getCode()) {
                 case '23000':
@@ -50,7 +45,7 @@ class Query
                             'access' => 'Klasa dostępu',
                             'address' => 'Adres'
                         ];
-                        // print_r()
+
                         if (isset($outputArray[1], $tables[$outputArray[1]])) {
                             $message = 'Nie można usunąć. ' . $tables[$outputArray[1]] . ' zawiera referencyjne obiekty.';
                         }

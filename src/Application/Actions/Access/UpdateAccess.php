@@ -18,6 +18,7 @@ class UpdateAccess extends AccessAction
     {
         $form = $this->getFormData();
 
+        // update data validation
         $validator = new UpdateValidator();
         $validator->validateForm($form);
 

@@ -15,21 +15,14 @@ use Psr\Log\LoggerInterface;
 
 class UpdateConfiguration extends ConfigurationAction
 {
-    protected IImageRepository $imageRepository;
-    protected IAccessRepository $accessRepository;
-
 
     public function __construct(
         LoggerInterface $logger,
         IConfigurationRepository $configurationRepository,
-        IImageRepository $imageRepository,
-        IAccessRepository $accessRepository
+        protected IImageRepository $imageRepository,
+        protected IAccessRepository $accessRepository
     ) {
         parent::__construct($logger, $configurationRepository);
-
-        $this->configurationRepository = $configurationRepository;
-        $this->imageRepository = $imageRepository;
-        $this->accessRepository = $accessRepository;
     }
 
     /**
@@ -53,6 +46,9 @@ class UpdateConfiguration extends ConfigurationAction
         $configs->update($form);
 
         $this->configurationRepository->save($configs);
+
+        $this->logger->info('Configuration has been updated');
+
         return $this->respondWithData();
     }
 }

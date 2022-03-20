@@ -15,8 +15,10 @@ use App\Domain\Model\Model;
 use App\Utils\JsonDateTime;
 use Psr\Container\ContainerInterface;
 
+
 final class AccessRepository extends BaseRepository implements IAccessRepository
 {
+    /** {@inheritDoc} */
     protected string $table = '`access`';
 
 
@@ -29,7 +31,6 @@ final class AccessRepository extends BaseRepository implements IAccessRepository
 
     /**
      * {@inheritDoc}
-     * @return Access
      */
     protected function newItem(array $data): Access
     {

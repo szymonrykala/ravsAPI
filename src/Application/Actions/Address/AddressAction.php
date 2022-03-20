@@ -10,15 +10,12 @@ use Psr\Log\LoggerInterface;
 
 abstract class AddressAction extends Action
 {
-    protected IAddressRepository $addressRepository;
-
 
     public function __construct(
         LoggerInterface $logger,
-        IAddressRepository $addressRepository
+        protected IAddressRepository $addressRepository
     ) {
         parent::__construct($logger);
-        $this->addressRepository = $addressRepository;
     }
 }
 

@@ -30,11 +30,13 @@ class AuthorizationMiddleware extends BaseAuthorizationMiddleware
     protected function resolveAccess(): bool
     {
         $resolve = $this->getResolver();
+
+        // true, if user is owner or has permissions defined by the resolver function
         return $this->userAccess->owner || $resolve();
     }
 
     /**
-     * returns user access resolver function for the user
+     * returns access resolver function for the current user
      */
     private function getResolver(): callable
     {

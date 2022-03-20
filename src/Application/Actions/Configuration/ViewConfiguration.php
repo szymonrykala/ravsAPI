@@ -15,6 +15,9 @@ class ViewConfiguration extends ConfigurationAction
     protected function action(): Response
     {
         $configs = $this->configurationRepository->load();
+
+        $this->logger->info('configuration has been fieved');
+
         return $this->respondWithData($configs);
     }
 }

@@ -39,11 +39,15 @@ abstract class Action
     protected const FROM_DATE = 'from';
     protected const TO_DATE = 'to';
 
+    /** HTTP request */
     protected Request $request;
+
+    /** HTTP response */
     protected Response $response;
 
     protected ?Pagination $pagination = NULL;
 
+    /** HTTP query args and params */
     protected array $args;
 
 
@@ -53,6 +57,11 @@ abstract class Action
 
     /**
      * Called to handle request
+     * @throws HttpNotFoundException
+     * @throws HttpConflictException
+     * @throws HttpForbiddenException
+     * @throws HttpBadRequestException
+     * @throws HttpUnauthorizedException
      */
     public function __invoke(Request $request, Response $response, array $args): Response
     {
