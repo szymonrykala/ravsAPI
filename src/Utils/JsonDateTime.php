@@ -14,7 +14,6 @@ final class JsonDateTime extends DateTime implements JsonSerializable
 
     public function __construct($dateString)
     {
-        // print_r($dateString.PHP_EOL);
         try {
             parent::__construct($dateString);
         } catch (\Exception $ex) {

@@ -18,7 +18,9 @@ use Psr\Container\ContainerInterface;
 
 final class RoomRepository extends BaseRepository implements IRoomRepository
 {
+    /** {@inheritDoc} */
     protected string $table = '`room`';
+
     private bool $buildingLoading = FALSE;
 
     public function __construct(
@@ -40,8 +42,7 @@ final class RoomRepository extends BaseRepository implements IRoomRepository
 
 
     /**
-     * @param array $data from database
-     * @return Room
+     * {@inheritDoc}
      */
     protected function newItem(array $data): Room
     {
@@ -65,6 +66,7 @@ final class RoomRepository extends BaseRepository implements IRoomRepository
         );
     }
 
+    /** {@inheritDoc} */
     public function byIdAndBuildingId(int $roomId, int $buildingId): Room
     {
         $sql = "SELECT * FROM $this->table WHERE `id` = :id AND `building` = :buildingId";
@@ -91,7 +93,7 @@ final class RoomRepository extends BaseRepository implements IRoomRepository
     }
 
     /**
-     * @param Room room
+     * {@inheritDoc}
      */
     public function save(Room $room): void
     {
@@ -125,11 +127,7 @@ final class RoomRepository extends BaseRepository implements IRoomRepository
     }
 
     /**
-     * @param string  name
-     * @param int     buildingId
-     * @param string  roomType
-     * @param int     seatsCount
-     * @param int     floor
+     * {@inheritDoc}
      */
     public function create(
         string  $name,

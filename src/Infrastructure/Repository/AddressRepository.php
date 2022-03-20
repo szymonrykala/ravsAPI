@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Infrastructure\Repository;
 
 use App\Infrastructure\Repository\BaseRepository;
-
 use App\Domain\Address\IAddressRepository;
 use App\Domain\Address\Address;
 
@@ -15,11 +14,11 @@ use App\Utils\JsonDateTime;
 
 final class AddressRepository extends BaseRepository implements IAddressRepository
 {
+    /** {@inheritDoc} */
     protected string $table = '`address`';
 
     /**
      * {@inheritDoc}
-     * @return Address
      */
     protected function newItem(array $data): Address
     {

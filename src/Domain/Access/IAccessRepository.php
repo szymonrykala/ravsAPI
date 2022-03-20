@@ -12,7 +12,7 @@ interface IAccessRepository extends IRepository
 {
 
     /**
-     * {@inheritDoc}
+     * Saves access calss state
      * @throws AccessUpdateException
      */
     public function save(Access $access): void;

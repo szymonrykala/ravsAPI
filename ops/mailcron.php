@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * scrpit is created beacouse of long time without connectiong to SMTP server
+ *  may occur with login error while sending emails.
+ * This script may be lunched with cron job to prevent this issue
+ */
+
 declare(strict_types=1);
 
 require __DIR__ . '/../vendor/autoload.php';

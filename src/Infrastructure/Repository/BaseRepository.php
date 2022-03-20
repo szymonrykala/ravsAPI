@@ -31,6 +31,8 @@ abstract class BaseRepository implements IRepository
 
     /** Database table name */
     protected string $table;
+
+    /** SQL statement */
     protected string $sql = ' ';
 
 
@@ -46,7 +48,6 @@ abstract class BaseRepository implements IRepository
 
     /**
      * Creates new Domain object from provided data
-     * @return Model
      */
     abstract protected function newItem(array $data): Model;
 
@@ -124,8 +125,6 @@ abstract class BaseRepository implements IRepository
 
     protected function executeQuery(): array
     {
-        // echo "\n" . $this->SQL . $this->SQLwhere . $this->SQLorder . $this->SQLlimit . "\n";
-        // var_dump($this->params);
         $result =  $this->db->query(
             $this->SQL . $this->SQLwhere . $this->SQLorder . $this->SQLlimit,
             $this->params
@@ -149,6 +148,7 @@ abstract class BaseRepository implements IRepository
 
         $key = get_class($this) . $id;
 
+        // gets item from cache if it's exists
         $item = $this->cache->get($key);
         if (!empty($item)) return $item;
 

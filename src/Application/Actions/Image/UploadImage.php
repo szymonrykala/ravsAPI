@@ -21,26 +21,28 @@ class UploadImage extends ImageAction
         $files = $this->request->getUploadedFiles();
 
         if (empty($files)) {
+            $this->logger->warning('No image was found while uploading');
             throw new HttpBadRequestException($this->request, 'Nie znaleziono żadnego obrazu');
         }
 
         $file = array_pop($files);
         if ($file->getError() !== UPLOAD_ERR_OK) {
+            $this->logger->error('Error while processing the request');
             throw new HttpBadRequestException($this->request, 'Wystąpił błąd podczas ładowania obrazu');
         }
 
         [$repo, $objectId] = $this->getPropperObjectSet();
         /** @var Model $object */
-        $object = $repo->byId((int)$objectId);
+        $object = $repo->byId((int)$objectId); // get object which image is uploading
 
-        $imageId = $this->imageRepository->save($file);
+        $imageId = $this->imageRepository->save($file); // save uploaded image
 
-        $object->imageId = $imageId;
-        $repo->save($object);
+        $object->imageId = $imageId; // assign new image to object
+        $repo->save($object); // save the image
 
         $this->imageRepository->delete($object->image); // delete the old image
 
-        $this->logger->info("Image of id `${imageId}` was uploaded.");
+        $this->logger->info("Image of resource id `${objectId}` was uploaded.");
 
         return $this->respondWithData($imageId, 201);
     }

@@ -1,18 +1,15 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application\Settings;
 
 class Settings implements SettingsInterface
 {
-    /**
-     * @var array
-     */
-    private $settings;
+    private array $settings;
 
     /**
      * Settings constructor.
-     * @param array $settings
      */
     public function __construct(array $settings)
     {
@@ -20,10 +17,9 @@ class Settings implements SettingsInterface
     }
 
     /**
-     * @param string $key
-     * @return mixed
+     * {@inheritDoc}
      */
-    public function get(string $key = '')
+    public function get(string $key = ''): mixed
     {
         return (empty($key)) ? $this->settings : $this->settings[$key];
     }

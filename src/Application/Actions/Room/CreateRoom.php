@@ -47,6 +47,9 @@ class CreateRoom extends RoomAction
             $form->seatsCount,
             $form->floor
         );
+
+        $this->logger->info("room id=${newRoomId} has been created");
+
         return $this->respondWithData($newRoomId);
     }
 }

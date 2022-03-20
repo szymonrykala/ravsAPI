@@ -44,13 +44,14 @@ class UpdateReservation extends ReservationAction
         /** @var Reservation $reservation */
         $reservation = $this->reservations->byId($reservationId);
 
-        $this->updatePolicy->__invoke($form, $reservation);
+        $this->updatePolicy->__invoke($form, $reservation); // execute updateing policy
 
         $reservation->update($form);
 
         $this->reservations->save($reservation);
 
-
+        $this->logger->info("reservation id=${reservationId} has been updated.");
+        
         return $this->respondWithData();
     }
 }

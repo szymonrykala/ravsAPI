@@ -20,9 +20,9 @@ class DeleteImage extends ImageAction
         $object = $repo->byId((int)$objectId);
 
         $repo->setDefaultImage($object);
+        $this->logger->info('Default image has been set');
         
         $this->imageRepository->delete($object->image);
-
         $this->logger->info('Image with id `' . $object->image->id . '` has been deleted.');
 
         return $this->respondWithData();

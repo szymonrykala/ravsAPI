@@ -6,6 +6,7 @@ namespace App\Utils;
 
 use JsonSerializable;
 
+
 class Pagination implements JsonSerializable
 {
     // prepare for links generation
@@ -13,7 +14,6 @@ class Pagination implements JsonSerializable
     public const CURRENT_PAGE = 'currentPage';
     public const ITEMS_ON_PAGE = 'itemsOnPage';
 
-    // onPage page total
 
     private int $pagesCount;
     private int $currentPage;

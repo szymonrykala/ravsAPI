@@ -27,6 +27,7 @@ class CreateReservation extends ReservationAction
     /**
      * {@inheritDoc}
      * @throws DomainBadRequestException
+     * @throws HttpBadRequestException
      */
     protected function action(): Response
     {
@@ -42,10 +43,11 @@ class CreateReservation extends ReservationAction
             if (isset($form->roomId)) $roomId = $form->roomId;
             else throw new HttpBadRequestException(
                 $this->request,
-                'Jeżeli używasz `/reservations`, musisz podać `roomId` w ładuknu wiadomości.'
+                'Jeżeli używasz `/reservations`, musisz podać `roomId` w ciele wiadomości.'
             );
         }
 
+        // overriding values
         $form->user = $this->session->userId;
         $form->room = $roomId;
         $form->building = $buildingId;
@@ -53,8 +55,7 @@ class CreateReservation extends ReservationAction
         $form->plannedEnd = new JsonDateTime($form->plannedEnd);
 
 
-
-        $this->createPolicy->__invoke($form);
+        $this->createPolicy->__invoke($form); //executing creating rules
 
         $id = $this->reservations->create(
             $form->title,
@@ -64,6 +65,8 @@ class CreateReservation extends ReservationAction
             $form->plannedStart,
             $form->plannedEnd
         );
+
+        $this->logger->info("Reservation id=${id} has been created.");
 
         return $this->respondWithData($id, 201);
     }

@@ -27,7 +27,9 @@ class MySQL implements IDatabase
      */
     public function connect(): void
     {
+        // parsing connection string
         $db = parse_url($this->settings->get('databaseUrl'));
+
         try {
             $this->conn = new PDO(
                 "mysql:" . sprintf(
@@ -53,9 +55,6 @@ class MySQL implements IDatabase
      */
     public function query(string $sql, array $params = []): array
     {
-        // echo $sql."\n";
-        // print_r($params);
-        // echo "\n";
         $query = new Query($this->conn, $sql, $params);
         return $query->execute();
     }

@@ -19,8 +19,10 @@ use Psr\Http\Server\{
 use RuntimeException;
 use stdClass;
 
+
 abstract class BaseMiddleware implements Middleware
 {
+    /** HTTP request */
     protected Request $request;
 
     public function __construct(
@@ -63,7 +65,7 @@ abstract class BaseMiddleware implements Middleware
     }
 
     /**
-     * returns session object
+     * returns session object with token data
      */
     protected function getSession():object
     {
@@ -72,6 +74,6 @@ abstract class BaseMiddleware implements Middleware
         if(!$session)
             throw new RuntimeException('Session is not set. Check order of the middlewares');
         
-            return $session;
+        return $session;
     }
 }

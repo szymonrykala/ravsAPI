@@ -17,7 +17,7 @@ interface IRoomRepository extends IRepository
     public function withBuilding(): IRoomRepository;
 
     /**
-     * {@inheritDoc}
+     * Saves room state
      */
     public function save(Room $room ): void;
 
@@ -34,4 +34,10 @@ interface IRoomRepository extends IRepository
         int     $seatsCount,
         int     $floor
     ): int;
+
+    /**
+     * search room by id and building id
+     * @throws DomainResourceNotFoundException
+     */
+    public function byIdAndBuildingId(int $roomId, int $buildingId): Room;
 }

@@ -11,16 +11,12 @@ interface IAddressRepository extends IRepository
 {
 
     /**
-     * @param Address $access
+     * saves address state
      */
     public function save(Address $address): void;
 
     /**
-     * @param string $country
-     * @param string $town
-     * @param string $postalCode
-     * @param string $street
-     * @param string $number
+     * {@inheritDoc}
      */
     public function create(
         string $country,

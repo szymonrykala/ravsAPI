@@ -10,7 +10,7 @@ use Psr\Http\Message\ServerRequestInterface;
 interface IRequestRepository extends IRepository
 {
     /**
-     * {@inheritDoc}
+     * Creates HTTP request log
      */
     public function create(ServerRequestInterface $request): void;
 

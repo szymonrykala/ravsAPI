@@ -29,6 +29,7 @@ final class Access extends Model
 
     /**
      * {@inheritDoc}
+     * @throws AccessUpdateException
      */
     public function validate(): void
     {

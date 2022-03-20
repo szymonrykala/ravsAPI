@@ -40,6 +40,8 @@ class AssignKey extends KeyAction
 
         $this->roomRepository->save($room);
 
+        $this->logger->info("Key ($form->RFIDTag) has been assigned to room id=${roomId}");
+
         return $this->respondWithData();
     }
 }

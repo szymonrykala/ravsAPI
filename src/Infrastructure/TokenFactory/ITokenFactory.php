@@ -13,11 +13,14 @@ interface ITokenFactory
 {
     /**
      * Creates token for specific $user
+     * @throws TokenFactoryException
      */
     public function generateToken(User $user): string;
 
     /**
      * Decodes recieved token
+     * @throws TokenExpiredException
+     * @throws TokenNotValidException
      */
     public function decode(string $userToken): stdClass;
 }

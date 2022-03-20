@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Mailing;
 
-use App\Application\Settings\SettingsInterface;
 use App\Domain\User\User;
+
 
 interface IMailingService
 {

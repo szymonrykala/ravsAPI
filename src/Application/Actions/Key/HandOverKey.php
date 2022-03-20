@@ -15,6 +15,8 @@ class HandOverKey extends KeyAction
 {
     /**
      * {@inheritDoc}
+     * @throws HttpConflictException
+     * @throws HttpInternalServerErrorException
      */
     protected function action(): Response
     {
@@ -38,18 +40,26 @@ class HandOverKey extends KeyAction
             $reservation->room->occupy();
 
             $message = "Rezerwacja rozpoczęta - wydaj klucz";
+            $this->logger->info("reservation id=${reservationId} started - excess the key");
+
         } elseif ($reservation->hasStarted()) {
             $this->checkIfNotTooEarly($reservation->plannedEnd);
             $reservation->end();
             $reservation->room->release();
 
             $message = "Rezerwacja zakończona - odbierz klucz";
+
+            $this->logger->info("ending reservation id=${reservationId} - take the key");
+
         } elseif ($reservation->hasEnded()) {
+            $this->logger->warning("reservation id=${reservationId} already passed");
             throw new HttpConflictException($this->request, 'Rezerwacja już się zakończyła.');
+
         } else {
+            $this->logger->error("Could not recognize reservation id=${reservationId} status");
             throw new HttpInternalServerErrorException(
                 $this->request,
-                "Nie udało się przetworzyć żądania"
+                "Nie udało się rozpoznać statusu rezerwacji."
             );
         }
 

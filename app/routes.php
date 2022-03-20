@@ -118,7 +118,7 @@ return function (App $app) {
         return $response;
     });
 
-
+    // API version 1
     $app->group('/v1', function (Group $v1) {
 
         $v1->group('', function (Group $unAuth) {

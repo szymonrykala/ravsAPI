@@ -31,6 +31,8 @@ final class ListReservations extends ReservationAction
             ->orderBy('planned_start', 'ASC')
             ->setPagination($pagination)
             ->all();
+        
+        $this->logger->info('reservations were listed');
 
         return $this->respondWithData($list);
     }
