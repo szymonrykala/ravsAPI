@@ -130,7 +130,7 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Infrastructure/Repository/BuildingRepository.php"><a href="files/src-infrastructure-repository-buildingrepository.html"><abbr title="src/Infrastructure/Repository/BuildingRepository.php">BuildingRepository.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">22</span>
+    <span class="phpdocumentor-element-found-in__line">20</span>
 
     </aside>
 
@@ -202,7 +202,7 @@
     <span>
                         &nbsp;: string            </span>
 </dt>
-<dd></dd>
+<dd>SQL statement</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
     <a href="classes/App-Infrastructure-Repository-BaseRepository.html#property_SQLlimit">$SQLlimit</a>
@@ -286,7 +286,7 @@
     <span>
                                 &nbsp;: int    </span>
 </dt>
-<dd></dd>
+<dd>Creates new building</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/App-Infrastructure-Repository-BuildingRepository.html#method_delete">delete()</a>
@@ -314,7 +314,7 @@
     <span>
                                 &nbsp;: void    </span>
 </dt>
-<dd></dd>
+<dd>Saves building state</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/App-Infrastructure-Repository-BuildingRepository.html#method_setDefaultImage">setDefaultImage()</a>
@@ -342,7 +342,7 @@
     <span>
                                 &nbsp;: <a href="classes/App-Domain-Building-IBuildingRepository.html"><abbr title="\App\Domain\Building\IBuildingRepository">IBuildingRepository</abbr></a>    </span>
 </dt>
-<dd>enable address loading</dd>
+<dd>enable address object loading</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a href="classes/App-Infrastructure-Repository-BaseRepository.html#method_executeQuery">executeQuery()</a>
@@ -354,7 +354,7 @@
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a href="classes/App-Infrastructure-Repository-BuildingRepository.html#method_newItem">newItem()</a>
     <span>
-                                &nbsp;: <a href="classes/App-Domain-Model-Model.html"><abbr title="\App\Domain\Model\Model">Model</abbr></a>    </span>
+                                &nbsp;: <a href="classes/App-Domain-Building-Building.html"><abbr title="\App\Domain\Building\Building">Building</abbr></a>    </span>
 </dt>
 <dd>Creates new Domain object from provided data</dd>
 
@@ -556,19 +556,19 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Infrastructure/Repository/BaseRepository.php"><a href="files/src-infrastructure-repository-baserepository.html"><abbr title="src/Infrastructure/Repository/BaseRepository.php">BaseRepository.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">34</span>
+    <span class="phpdocumentor-element-found-in__line">36</span>
 
     </aside>
 
-    
+        <p class="phpdocumentor-summary">SQL statement</p>
+
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
         <span class="phpdocumentor-signature__type">string</span>
     <span class="phpdocumentor-signature__name">$sql</span>
      = <span class="phpdocumentor-signature__default-value">&#039; &#039;</span></code>
 
-        <section class="phpdocumentor-description"></section>
-
+    
         <section class="phpdocumentor-description"></section>
 
     
@@ -692,7 +692,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Infrastructure/Repository/BuildingRepository.php"><a href="files/src-infrastructure-repository-buildingrepository.html"><abbr title="src/Infrastructure/Repository/BuildingRepository.php">BuildingRepository.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">24</span>
+    <span class="phpdocumentor-element-found-in__line">23</span>
 
     </aside>
 
@@ -926,7 +926,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Infrastructure/Repository/BaseRepository.php"><a href="files/src-infrastructure-repository-baserepository.html"><abbr title="src/Infrastructure/Repository/BaseRepository.php">BaseRepository.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">102</span>
+    <span class="phpdocumentor-element-found-in__line">103</span>
 
     </aside>
 
@@ -959,7 +959,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Infrastructure/Repository/BaseRepository.php"><a href="files/src-infrastructure-repository-baserepository.html"><abbr title="src/Infrastructure/Repository/BaseRepository.php">BaseRepository.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">141</span>
+    <span class="phpdocumentor-element-found-in__line">140</span>
 
     </aside>
 
@@ -1007,7 +1007,8 @@
 
     </aside>
 
-    
+        <p class="phpdocumentor-summary">Creates new building</p>
+
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
                 <span class="phpdocumentor-signature__name">create</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$name</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/App-Utils-JsonDateTime.html"><abbr title="\App\Utils\JsonDateTime">JsonDateTime</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$openTime</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/App-Utils-JsonDateTime.html"><abbr title="\App\Utils\JsonDateTime">JsonDateTime</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$closeTime</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$addressId</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int</span></code>
@@ -1070,7 +1071,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Infrastructure/Repository/BuildingRepository.php"><a href="files/src-infrastructure-repository-buildingrepository.html"><abbr title="src/Infrastructure/Repository/BuildingRepository.php">BuildingRepository.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">129</span>
+    <span class="phpdocumentor-element-found-in__line">128</span>
 
     </aside>
 
@@ -1114,7 +1115,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Infrastructure/Repository/BaseRepository.php"><a href="files/src-infrastructure-repository-baserepository.html"><abbr title="src/Infrastructure/Repository/BaseRepository.php">BaseRepository.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">113</span>
+    <span class="phpdocumentor-element-found-in__line">114</span>
 
     </aside>
 
@@ -1147,7 +1148,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Infrastructure/Repository/BaseRepository.php"><a href="files/src-infrastructure-repository-baserepository.html"><abbr title="src/Infrastructure/Repository/BaseRepository.php">BaseRepository.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">70</span>
+    <span class="phpdocumentor-element-found-in__line">71</span>
 
     </aside>
 
@@ -1203,7 +1204,8 @@
 
     </aside>
 
-    
+        <p class="phpdocumentor-summary">Saves building state</p>
+
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
                 <span class="phpdocumentor-signature__name">save</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><a href="classes/App-Domain-Building-Building.html"><abbr title="\App\Domain\Building\Building">Building</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$building</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
@@ -1286,7 +1288,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Infrastructure/Repository/BaseRepository.php"><a href="files/src-infrastructure-repository-baserepository.html"><abbr title="src/Infrastructure/Repository/BaseRepository.php">BaseRepository.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">81</span>
+    <span class="phpdocumentor-element-found-in__line">82</span>
 
     </aside>
 
@@ -1330,7 +1332,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Infrastructure/Repository/BaseRepository.php"><a href="files/src-infrastructure-repository-baserepository.html"><abbr title="src/Infrastructure/Repository/BaseRepository.php">BaseRepository.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">57</span>
+    <span class="phpdocumentor-element-found-in__line">58</span>
 
     </aside>
 
@@ -1378,7 +1380,7 @@
 
     </aside>
 
-        <p class="phpdocumentor-summary">enable address loading</p>
+        <p class="phpdocumentor-summary">enable address object loading</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
@@ -1407,7 +1409,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Infrastructure/Repository/BaseRepository.php"><a href="files/src-infrastructure-repository-baserepository.html"><abbr title="src/Infrastructure/Repository/BaseRepository.php">BaseRepository.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">125</span>
+    <span class="phpdocumentor-element-found-in__line">126</span>
 
     </aside>
 
@@ -1448,7 +1450,7 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-                <span class="phpdocumentor-signature__name">newItem</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$data</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/App-Domain-Model-Model.html"><abbr title="\App\Domain\Model\Model">Model</abbr></a></span></code>
+                <span class="phpdocumentor-signature__name">newItem</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$data</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/App-Domain-Building-Building.html"><abbr title="\App\Domain\Building\Building">Building</abbr></a></span></code>
 
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -1466,7 +1468,7 @@
     
 
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type"><a href="classes/App-Domain-Model-Model.html"><abbr title="\App\Domain\Model\Model">Model</abbr></a></span>
+    <span class="phpdocumentor-signature__response_type"><a href="classes/App-Domain-Building-Building.html"><abbr title="\App\Domain\Building\Building">Building</abbr></a></span>
             &mdash;
         
     

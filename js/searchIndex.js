@@ -203,12 +203,12 @@ Search.appendIndex(
         },                {
             "fqsen": "\\App\\Application\\Actions\\Action\u003A\u003A\u0024request",
             "name": "request",
-            "summary": "",
+            "summary": "HTTP\u0020request",
             "url": "classes/App-Application-Actions-Action.html#property_request"
         },                {
             "fqsen": "\\App\\Application\\Actions\\Action\u003A\u003A\u0024response",
             "name": "response",
-            "summary": "",
+            "summary": "HTTP\u0020response",
             "url": "classes/App-Application-Actions-Action.html#property_response"
         },                {
             "fqsen": "\\App\\Application\\Actions\\Action\u003A\u003A\u0024pagination",
@@ -218,7 +218,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\App\\Application\\Actions\\Action\u003A\u003A\u0024args",
             "name": "args",
-            "summary": "",
+            "summary": "HTTP\u0020query\u0020args\u0020and\u0020params",
             "url": "classes/App-Application-Actions-Action.html#property_args"
         },                {
             "fqsen": "\\App\\Application\\Actions\\Action\u003A\u003A\u0024logger",
@@ -1263,7 +1263,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\App\\Application\\Middleware\\Auth\\AuthorizationMiddleware\u003A\u003AgetResolver\u0028\u0029",
             "name": "getResolver",
-            "summary": "returns\u0020user\u0020access\u0020resolver\u0020function\u0020for\u0020the\u0020user",
+            "summary": "returns\u0020access\u0020resolver\u0020function\u0020for\u0020the\u0020current\u0020user",
             "url": "classes/App-Application-Middleware-Auth-AuthorizationMiddleware.html#method_getResolver"
         },                {
             "fqsen": "\\App\\Application\\Middleware\\Auth\\AuthorizationMiddleware\u003A\u003AresolvePremisesAccess\u0028\u0029",
@@ -1368,12 +1368,12 @@ Search.appendIndex(
         },                {
             "fqsen": "\\App\\Application\\Middleware\\BaseMiddleware\u003A\u003AgetSession\u0028\u0029",
             "name": "getSession",
-            "summary": "returns\u0020session\u0020object",
+            "summary": "returns\u0020session\u0020object\u0020with\u0020token\u0020data",
             "url": "classes/App-Application-Middleware-BaseMiddleware.html#method_getSession"
         },                {
             "fqsen": "\\App\\Application\\Middleware\\BaseMiddleware\u003A\u003A\u0024request",
             "name": "request",
-            "summary": "",
+            "summary": "HTTP\u0020request",
             "url": "classes/App-Application-Middleware-BaseMiddleware.html#property_request"
         },                {
             "fqsen": "\\App\\Application\\Middleware\\BaseMiddleware\u003A\u003A\u0024logger",
@@ -1433,7 +1433,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\App\\Application\\Middleware\\SessionMiddleware\u003A\u003AgetToken\u0028\u0029",
             "name": "getToken",
-            "summary": "",
+            "summary": "Gets\u0020token\u0020from\u0020authorization\u0020header",
             "url": "classes/App-Application-Middleware-SessionMiddleware.html#method_getToken"
         },                {
             "fqsen": "\\App\\Application\\Middleware\\SessionMiddleware\u003A\u003A\u0024tokenFactory",
@@ -1483,7 +1483,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\App\\Application\\Settings\\Settings\u003A\u003Aget\u0028\u0029",
             "name": "get",
-            "summary": "",
+            "summary": "returns\u0020value\u0020of\u0020settings\u0020parameter",
             "url": "classes/App-Application-Settings-Settings.html#method_get"
         },                {
             "fqsen": "\\App\\Application\\Settings\\Settings\u003A\u003A\u0024settings",
@@ -1498,7 +1498,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\App\\Application\\Settings\\SettingsInterface\u003A\u003Aget\u0028\u0029",
             "name": "get",
-            "summary": "",
+            "summary": "returns\u0020value\u0020of\u0020settings\u0020parameter",
             "url": "classes/App-Application-Settings-SettingsInterface.html#method_get"
         },                {
             "fqsen": "\\App\\Domain\\Access\\Access",
@@ -1608,7 +1608,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\App\\Domain\\Access\\IAccessRepository\u003A\u003Asave\u0028\u0029",
             "name": "save",
-            "summary": "\u007B\u0040inheritDoc\u007D",
+            "summary": "Saves\u0020access\u0020calss\u0020state",
             "url": "classes/App-Domain-Access-IAccessRepository.html#method_save"
         },                {
             "fqsen": "\\App\\Domain\\Access\\IAccessRepository\u003A\u003Acreate\u0028\u0029",
@@ -1713,12 +1713,12 @@ Search.appendIndex(
         },                {
             "fqsen": "\\App\\Domain\\Address\\IAddressRepository\u003A\u003Asave\u0028\u0029",
             "name": "save",
-            "summary": "",
+            "summary": "saves\u0020address\u0020state",
             "url": "classes/App-Domain-Address-IAddressRepository.html#method_save"
         },                {
             "fqsen": "\\App\\Domain\\Address\\IAddressRepository\u003A\u003Acreate\u0028\u0029",
             "name": "create",
-            "summary": "",
+            "summary": "\u007B\u0040inheritDoc\u007D",
             "url": "classes/App-Domain-Address-IAddressRepository.html#method_create"
         },                {
             "fqsen": "\\App\\Domain\\Address\\Validation\\AddressValidation",
@@ -1828,12 +1828,12 @@ Search.appendIndex(
         },                {
             "fqsen": "\\App\\Domain\\Building\\IBuildingRepository\u003A\u003AwithAddress\u0028\u0029",
             "name": "withAddress",
-            "summary": "enable\u0020address\u0020loading",
+            "summary": "enable\u0020address\u0020object\u0020loading",
             "url": "classes/App-Domain-Building-IBuildingRepository.html#method_withAddress"
         },                {
             "fqsen": "\\App\\Domain\\Building\\IBuildingRepository\u003A\u003Asave\u0028\u0029",
             "name": "save",
-            "summary": "",
+            "summary": "Saves\u0020building\u0020state",
             "url": "classes/App-Domain-Building-IBuildingRepository.html#method_save"
         },                {
             "fqsen": "\\App\\Domain\\Building\\IBuildingRepository\u003A\u003AsetDefaultImage\u0028\u0029",
@@ -1843,7 +1843,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\App\\Domain\\Building\\IBuildingRepository\u003A\u003Acreate\u0028\u0029",
             "name": "create",
-            "summary": "",
+            "summary": "Creates\u0020new\u0020building",
             "url": "classes/App-Domain-Building-IBuildingRepository.html#method_create"
         },                {
             "fqsen": "\\App\\Domain\\Building\\Validation\\BuildingValidation",
@@ -2283,7 +2283,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\App\\Domain\\Request\\IRequestRepository\u003A\u003Acreate\u0028\u0029",
             "name": "create",
-            "summary": "\u007B\u0040inheritDoc\u007D",
+            "summary": "Creates\u0020HTTP\u0020request\u0020log",
             "url": "classes/App-Domain-Request-IRequestRepository.html#method_create"
         },                {
             "fqsen": "\\App\\Domain\\Request\\IRequestRepository\u003A\u003AwhereLIKE\u0028\u0029",
@@ -2593,27 +2593,27 @@ Search.appendIndex(
         },                {
             "fqsen": "\\App\\Domain\\Reservation\\Reservation\u003A\u003AnotStarted\u0028\u0029",
             "name": "notStarted",
-            "summary": "",
+            "summary": "Checks\u0020if\u0020reservation\u0020has\u0020not\u0020stared\u0020yet",
             "url": "classes/App-Domain-Reservation-Reservation.html#method_notStarted"
         },                {
             "fqsen": "\\App\\Domain\\Reservation\\Reservation\u003A\u003AhasStarted\u0028\u0029",
             "name": "hasStarted",
-            "summary": "",
+            "summary": "checks\u0020if\u0020reservation\u0020has\u0020started",
             "url": "classes/App-Domain-Reservation-Reservation.html#method_hasStarted"
         },                {
             "fqsen": "\\App\\Domain\\Reservation\\Reservation\u003A\u003AhasEnded\u0028\u0029",
             "name": "hasEnded",
-            "summary": "",
+            "summary": "checks\u0020if\u0020reservation\u0020has\u0020ended",
             "url": "classes/App-Domain-Reservation-Reservation.html#method_hasEnded"
         },                {
             "fqsen": "\\App\\Domain\\Reservation\\Reservation\u003A\u003Astart\u0028\u0029",
             "name": "start",
-            "summary": "",
+            "summary": "Starts\u0020the\u0020reservation",
             "url": "classes/App-Domain-Reservation-Reservation.html#method_start"
         },                {
             "fqsen": "\\App\\Domain\\Reservation\\Reservation\u003A\u003Aend\u0028\u0029",
             "name": "end",
-            "summary": "",
+            "summary": "Ends\u0020the\u0020reservation",
             "url": "classes/App-Domain-Reservation-Reservation.html#method_end"
         },                {
             "fqsen": "\\App\\Domain\\Reservation\\Reservation\u003A\u003AjsonSerialize\u0028\u0029",
@@ -2763,7 +2763,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\App\\Domain\\Room\\IRoomRepository\u003A\u003Asave\u0028\u0029",
             "name": "save",
-            "summary": "\u007B\u0040inheritDoc\u007D",
+            "summary": "Saves\u0020room\u0020state",
             "url": "classes/App-Domain-Room-IRoomRepository.html#method_save"
         },                {
             "fqsen": "\\App\\Domain\\Room\\IRoomRepository\u003A\u003AsetDefaultImage\u0028\u0029",
@@ -2775,6 +2775,11 @@ Search.appendIndex(
             "name": "create",
             "summary": "\u007B\u0040inheritDoc\u007D",
             "url": "classes/App-Domain-Room-IRoomRepository.html#method_create"
+        },                {
+            "fqsen": "\\App\\Domain\\Room\\IRoomRepository\u003A\u003AbyIdAndBuildingId\u0028\u0029",
+            "name": "byIdAndBuildingId",
+            "summary": "search\u0020room\u0020by\u0020id\u0020and\u0020building\u0020id",
+            "url": "classes/App-Domain-Room-IRoomRepository.html#method_byIdAndBuildingId"
         },                {
             "fqsen": "\\App\\Domain\\Room\\RfidKeyNotValidException",
             "name": "RfidKeyNotValidException",
@@ -3013,7 +3018,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\App\\Domain\\Stats\\Stats\u003A\u003AaddStatsItem\u0028\u0029",
             "name": "addStatsItem",
-            "summary": "",
+            "summary": "adds\u0020item\u0020to\u0020the\u0020stats\u0020array",
             "url": "classes/App-Domain-Stats-Stats.html#method_addStatsItem"
         },                {
             "fqsen": "\\App\\Domain\\Stats\\Stats\u003A\u003AjsonSerialize\u0028\u0029",
@@ -3713,7 +3718,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\App\\Infrastructure\\Database\\Query\u003A\u003Aexecute\u0028\u0029",
             "name": "execute",
-            "summary": "",
+            "summary": "Executes\u0020sql\u0020query\u0020and\u0020handle\u0020errors",
             "url": "classes/App-Infrastructure-Database-Query.html#method_execute"
         },                {
             "fqsen": "\\App\\Infrastructure\\Mailing\\IMailingService",
@@ -3938,7 +3943,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\App\\Infrastructure\\Repository\\AccessRepository\u003A\u003Asave\u0028\u0029",
             "name": "save",
-            "summary": "\u007B\u0040inheritDoc\u007D",
+            "summary": "Saves\u0020access\u0020calss\u0020state",
             "url": "classes/App-Infrastructure-Repository-AccessRepository.html#method_save"
         },                {
             "fqsen": "\\App\\Infrastructure\\Repository\\AccessRepository\u003A\u003Acreate\u0028\u0029",
@@ -3968,12 +3973,12 @@ Search.appendIndex(
         },                {
             "fqsen": "\\App\\Infrastructure\\Repository\\AddressRepository\u003A\u003Asave\u0028\u0029",
             "name": "save",
-            "summary": "",
+            "summary": "saves\u0020address\u0020state",
             "url": "classes/App-Infrastructure-Repository-AddressRepository.html#method_save"
         },                {
             "fqsen": "\\App\\Infrastructure\\Repository\\AddressRepository\u003A\u003Acreate\u0028\u0029",
             "name": "create",
-            "summary": "",
+            "summary": "\u007B\u0040inheritDoc\u007D",
             "url": "classes/App-Infrastructure-Repository-AddressRepository.html#method_create"
         },                {
             "fqsen": "\\App\\Infrastructure\\Repository\\AddressRepository\u003A\u003A\u0024table",
@@ -4088,7 +4093,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\App\\Infrastructure\\Repository\\BaseRepository\u003A\u003A\u0024sql",
             "name": "sql",
-            "summary": "",
+            "summary": "SQL\u0020statement",
             "url": "classes/App-Infrastructure-Repository-BaseRepository.html#property_sql"
         },                {
             "fqsen": "\\App\\Infrastructure\\Repository\\BuildingRepository",
@@ -4103,7 +4108,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\App\\Infrastructure\\Repository\\BuildingRepository\u003A\u003AwithAddress\u0028\u0029",
             "name": "withAddress",
-            "summary": "enable\u0020address\u0020loading",
+            "summary": "enable\u0020address\u0020object\u0020loading",
             "url": "classes/App-Infrastructure-Repository-BuildingRepository.html#method_withAddress"
         },                {
             "fqsen": "\\App\\Infrastructure\\Repository\\BuildingRepository\u003A\u003AnewItem\u0028\u0029",
@@ -4113,7 +4118,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\App\\Infrastructure\\Repository\\BuildingRepository\u003A\u003Asave\u0028\u0029",
             "name": "save",
-            "summary": "",
+            "summary": "Saves\u0020building\u0020state",
             "url": "classes/App-Infrastructure-Repository-BuildingRepository.html#method_save"
         },                {
             "fqsen": "\\App\\Infrastructure\\Repository\\BuildingRepository\u003A\u003AsetDefaultImage\u0028\u0029",
@@ -4123,7 +4128,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\App\\Infrastructure\\Repository\\BuildingRepository\u003A\u003Acreate\u0028\u0029",
             "name": "create",
-            "summary": "",
+            "summary": "Creates\u0020new\u0020building",
             "url": "classes/App-Infrastructure-Repository-BuildingRepository.html#method_create"
         },                {
             "fqsen": "\\App\\Infrastructure\\Repository\\BuildingRepository\u003A\u003Adelete\u0028\u0029",
@@ -4173,7 +4178,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\App\\Infrastructure\\Repository\\ConfigurationRepository\u003A\u003A\u0024table",
             "name": "table",
-            "summary": "",
+            "summary": "\u007B\u0040inheritDoc\u007D",
             "url": "classes/App-Infrastructure-Repository-ConfigurationRepository.html#property_table"
         },                {
             "fqsen": "\\App\\Infrastructure\\Repository\\ConfigurationRepository\u003A\u003A\u0024db",
@@ -4248,7 +4253,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\App\\Infrastructure\\Repository\\RequestRepository\u003A\u003Acreate\u0028\u0029",
             "name": "create",
-            "summary": "\u007B\u0040inheritDoc\u007D",
+            "summary": "Creates\u0020HTTP\u0020request\u0020log",
             "url": "classes/App-Infrastructure-Repository-RequestRepository.html#method_create"
         },                {
             "fqsen": "\\App\\Infrastructure\\Repository\\RequestRepository\u003A\u003A\u0024table",
@@ -4363,7 +4368,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\App\\Infrastructure\\Repository\\RoomRepository\u003A\u003AbyIdAndBuildingId\u0028\u0029",
             "name": "byIdAndBuildingId",
-            "summary": "",
+            "summary": "search\u0020room\u0020by\u0020id\u0020and\u0020building\u0020id",
             "url": "classes/App-Infrastructure-Repository-RoomRepository.html#method_byIdAndBuildingId"
         },                {
             "fqsen": "\\App\\Infrastructure\\Repository\\RoomRepository\u003A\u003AsetDefaultImage\u0028\u0029",
@@ -4373,7 +4378,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\App\\Infrastructure\\Repository\\RoomRepository\u003A\u003Asave\u0028\u0029",
             "name": "save",
-            "summary": "\u007B\u0040inheritDoc\u007D",
+            "summary": "Saves\u0020room\u0020state",
             "url": "classes/App-Infrastructure-Repository-RoomRepository.html#method_save"
         },                {
             "fqsen": "\\App\\Infrastructure\\Repository\\RoomRepository\u003A\u003Acreate\u0028\u0029",
@@ -4413,12 +4418,12 @@ Search.appendIndex(
         },                {
             "fqsen": "\\App\\Infrastructure\\Repository\\StatsRepository\u003A\u003AsetBetween\u0028\u0029",
             "name": "setBetween",
-            "summary": "",
+            "summary": "sets\u0020sql\u0020query\u0020params\u0020to\u0020search\u0020reservation\u0020between\u0020dates",
             "url": "classes/App-Infrastructure-Repository-StatsRepository.html#method_setBetween"
         },                {
             "fqsen": "\\App\\Infrastructure\\Repository\\StatsRepository\u003A\u003Aexecute\u0028\u0029",
             "name": "execute",
-            "summary": "",
+            "summary": "executes\u0020the\u0020SQL\u0020request",
             "url": "classes/App-Infrastructure-Repository-StatsRepository.html#method_execute"
         },                {
             "fqsen": "\\App\\Infrastructure\\Repository\\StatsRepository\u003A\u003AfillDaysOfWeek\u0028\u0029",
