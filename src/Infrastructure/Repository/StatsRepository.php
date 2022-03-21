@@ -387,7 +387,7 @@ final class StatsRepository implements IStatsRepository
     }
 
     /** {@inheritDoc} */
-    public function getAllBuildingsStats(): Stats
+    public function getAllBuildingsStats(int $addressId): Stats
     {
         $sql = "SELECT b.id, 
                         b.name,
@@ -396,7 +396,7 @@ final class StatsRepository implements IStatsRepository
                     FROM {$this->reservations} res 
                         INNER JOIN {$this->rooms} r ON r.id = res.room
                         INNER JOIN {$this->buildings} b ON r.building = b.id
-                    WHERE {$this->between}
+                    WHERE {$this->between} AND b.address = ${addressId}
                     GROUP BY b.id 
                     ORDER BY b.id";
 

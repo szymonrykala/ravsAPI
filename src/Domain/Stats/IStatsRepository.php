@@ -28,7 +28,7 @@ interface IStatsRepository
     public function getRoomStats(int $id): Stats;
 
     /** Statistics for all Buildings */
-    public function getAllBuildingsStats(): Stats;
+    public function getAllBuildingsStats(int $addressId): Stats;
 
     /** Statistics for specific Building */
     public function getBuildingStats(int $id): Stats;

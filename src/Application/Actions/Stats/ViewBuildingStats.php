@@ -18,6 +18,7 @@ final class ViewBuildingStats extends StatsAction
     protected function action(): Response
     {
         $buildingId =  $this->resolveArg($this::BUILDING_ID, FALSE);
+        $addressId = $this->resolveArg($this::ADDRESS_ID);
 
         $date = new JsonDateTime('3 month ago');
         $time=$this->getTimeSpanParans($date->getDate());
@@ -27,7 +28,7 @@ final class ViewBuildingStats extends StatsAction
         /** @var Stats $stats */
         $stats = ($buildingId !== FALSE) ?
             $this->statsRepository->getBuildingStats((int)$buildingId)
-            : $this->statsRepository->getAllBuildingsStats();
+            : $this->statsRepository->getAllBuildingsStats((int)$addressId);
 
         $this->logger->info("Stats for buildings {$buildingId} was viewed");
 
