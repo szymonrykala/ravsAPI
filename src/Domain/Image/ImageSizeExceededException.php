@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Domain\Image;
 
-use App\Domain\Exception\DomainException;
+use App\Domain\Exception\DomainBadRequestException;
 
-class ImageSizeExceededException extends DomainException
+class ImageSizeExceededException extends DomainBadRequestException
 {
     public function __construct($size){
         parent::__construct(
